@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public class KeyBar {
 	public int x;
@@ -7,6 +8,9 @@ public class KeyBar {
 	public int height;
 	public PApplet p;
 	public String id;
+	public int hoverColor=253;
+	public int currColor=50;
+	public int normalColor=50;
 
 	public KeyBar(PApplet p, int x, int y, int width, int height) {
 		super();
@@ -18,7 +22,14 @@ public class KeyBar {
 	}
 	
 	public void draw(){
+		p.noStroke();
+		p.fill(currColor);
 		p.rect(x,y,width,height);
+	
+	}
+	
+	public void draw(PVector handLeft, PVector handRight){
+		
 		
 	}
 
