@@ -1,5 +1,9 @@
 import java.util.ArrayList;
 
+import components.KeyBar;
+
+import kinect.Kinect;
+
 
 
 import SimpleOpenNI.SimpleOpenNI;

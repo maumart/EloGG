@@ -1,3 +1,4 @@
+package kinect;
 import java.util.ArrayList;
 
 import SimpleOpenNI.SimpleOpenNI;
