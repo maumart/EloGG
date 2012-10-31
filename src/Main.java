@@ -9,7 +9,7 @@ import themidibus.MidiBus;
 
 
 public class Main extends PApplet {
-	public boolean kinectAvailable=true;
+	public boolean kinectAvailable=false;
 	public PVector handLeft;
 	public PVector handRight;
 	public ArrayList<KeyBar> keyBars= new ArrayList<KeyBar>();
