@@ -42,7 +42,7 @@ public class KeyBar {
 		keyPitchDepth[3] = posZ;
 
 		if (posX >= x && posX <= x + width && posY >= y
-				&& posY <= y + height * (1 / 4)) {
+				&& posY <= y + height * 0.25) {
 			int pitch = 3;
 			keyPitchDepth[2] = pitch;
 
