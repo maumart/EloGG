@@ -6,6 +6,7 @@ import themidibus.MidiBus;
 import SimpleOpenNI.SimpleOpenNI;
 import components.KeyBar;
 import kinect.Kinect;
+import kinect.KinectUser;
 
 @SuppressWarnings("serial")
 public class Main extends PApplet {
