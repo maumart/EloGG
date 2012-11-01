@@ -8,6 +8,7 @@ import components.KeyBar;
 import kinect.Kinect;
 import kinect.KinectUser;
 
+// foo
 @SuppressWarnings("serial")
 public class Main extends PApplet {
 	public boolean kinectAvailable = false;
