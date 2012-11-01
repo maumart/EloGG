@@ -1,12 +1,10 @@
 package kinect;
 import java.util.ArrayList;
 
-import SimpleOpenNI.SimpleOpenNI;
 import processing.core.PApplet;
-import processing.core.PVector;
+import SimpleOpenNI.SimpleOpenNI;
 
 public class Kinect extends PApplet {	
-	
 	public SimpleOpenNI kinect;
 	public PApplet p;
 	public ArrayList<KinectUser> users= new ArrayList<KinectUser>();	

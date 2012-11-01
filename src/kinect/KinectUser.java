@@ -1,3 +1,4 @@
+package kinect;
 import processing.core.PApplet;
 import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
