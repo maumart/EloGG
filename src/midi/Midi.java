@@ -18,13 +18,13 @@ public class Midi {
 	}
 	
 	
-	public void noteOn(int pitch, int velocity){
+	public void noteOn(int channel, int pitch, int velocity){
 		int vel = this.velocity;
 		if(velocity != -1) vel = velocity;
 		bus.sendNoteOn(channel, pitch, vel);
 	}
 	
-	public void noteOff(int pitch, int velocity){
+	public void noteOff(int channel, int pitch, int velocity){
 		int vel = this.velocity;
 		if(velocity != -1) vel = velocity;
 		bus.sendNoteOff(channel, pitch, vel);

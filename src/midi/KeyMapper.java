@@ -10,8 +10,8 @@ public class KeyMapper {
 
 	private Midi midi;
 
-	private int[][] pitches = { { 30, 40, 50, 60 }, { 70, 80, 90, 100 },
-			{ 30, 40, 50, 60 }, { 70, 80, 90, 100 } };
+	private int[][] pitches = { { 60, 62, 64, 65 }, { 67, 69, 71, 72 },
+			{ 60, 62, 64, 65 }, { 67, 69, 71, 72 } };
 
 	private int[] lastLeft = { -1, -1, -1, -1};
 	private int[] lastRight = { -1, -1, -1, -1};
@@ -42,12 +42,18 @@ public class KeyMapper {
 		int key = v[1];
 		int note = v[2];
 		int depth = v[3];
+		int channel = 0;
 		if (key == -1) {
 			// note off
 			p.println("stop sound 0");
 			if (side[0] != -1) {
 				p.println("stop sound 1");
-				midi.noteOff(pitches[side[1]][side[2]], -1);
+				if(side[1] > 1){
+					channel = 1;
+				} else {
+					channel = 0;
+				}
+				midi.noteOff(channel, pitches[side[1]][side[2]], -1);
 				side[0] = -1;
 			}
 			return;
@@ -57,13 +63,23 @@ public class KeyMapper {
 		} else {
 			if (side[0] != -1){
 				p.println("stop sound befor start new ");
-				midi.noteOff(pitches[side[1]][side[2]], -1);
+				if(side[1] > 1){
+					channel = 1;
+				} else {
+					channel = 0;
+				}
+				midi.noteOff(channel, pitches[side[1]][side[2]], -1);
 				side[0] = -1;
 			} else {
 				
 			}
 			p.println("start new sound 1");
-			midi.noteOn(pitches[key][note], -1);
+			if(key > 1){
+				channel = 1;
+			} else {
+				channel = 0;
+			}
+			midi.noteOn(channel, pitches[key][note], -1);
 			side[0] = v[0];
 			side[1] = v[1];
 			side[2] = v[2];
