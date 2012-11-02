@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import midi.KeyMapper;
+
 import processing.core.PApplet;
 import processing.core.PVector;
 import themidibus.MidiBus;
@@ -26,6 +28,8 @@ public class Main extends PApplet {
 
 	public PVector handVec;
 	public String strGesture;
+	
+	public KeyMapper mapper;
 
 	// CAM
 	// Capture cam;
@@ -35,7 +39,9 @@ public class Main extends PApplet {
 	public MidiBus myBus;
 
 	public void setup() {
-
+		
+		
+		mapper = new KeyMapper(this);
 		// Processing Stuff
 		this.size(640, 480);
 		this.stroke(255);
@@ -85,11 +91,14 @@ public class Main extends PApplet {
 		} else {
 
 			handLeft = new PVector(mouseX, mouseY, 0);
-			handRight = new PVector(mouseX, mouseY, 0);
-
+			//handRight = new PVector(mouseX, mouseY, 0);
+			handRight = new PVector(0, 0, 0);
 		}
 
 		// BB Test
+		
+		ArrayList<int[]> tmpLeft = new ArrayList<int[]>();
+		
 		for (KeyBar bar : keyBars) {
 
 			if (handLeft != null && handRight != null) {
@@ -101,24 +110,10 @@ public class Main extends PApplet {
 
 				this.fill(255, 0, 0);
 				float radius = 10;
-
-				if (valueLeft[1] != -1) {
-					/*
-					 * System.out.print("Hand: " + valueLeft[0]);
-					 * System.out.print(" Note: " + valueLeft[1]);
-					 * System.out.print(" Y-Wert: " + valueLeft[2]);
-					 * System.out.println(" Z-Wert: " + valueLeft[3]);
-					 */
-				}
-
-				if (valueRight[1] != -1) {
-					/*
-					 * System.out.print("Hand: " + valueRight[0]);
-					 * System.out.print(" Note: " + valueRight[1]);
-					 * System.out.print(" Y-Wert: " + valueRight[2]);
-					 * System.out.println(" Z-Wert: " + valueRight[3]);
-					 */
-				}
+				
+				tmpLeft.add(valueLeft);
+				//mapper.map(valueLeft);
+				
 
 				// Hoover
 				if ((valueLeft[1] != -1) || (valueRight[1] != -1)) {
@@ -138,6 +133,14 @@ public class Main extends PApplet {
 			bar.draw();
 
 		}
+		
+		for(int i = 0; i < tmpLeft.size(); i++){
+			if(tmpLeft.get(i)[1] >= 0){
+				mapper.map(tmpLeft.get(i));
+				return;
+			}
+		}
+		mapper.map(tmpLeft.get(0));
 
 	}
 

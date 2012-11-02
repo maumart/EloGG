@@ -71,7 +71,7 @@ public class KeyBar {
 			return keyPitchDepth;
 
 		} else {
-			keyPitchDepth[0] = -1;
+		//	keyPitchDepth[0] = -1;
 			keyPitchDepth[1] = -1;
 			keyPitchDepth[2] = -1;
 			keyPitchDepth[3] = -1;

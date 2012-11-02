@@ -7,14 +7,14 @@ public class Midi {
 	
 	public MidiBus bus;
 	private int channel;
-	private int velocity = 127;
+	private int velocity = 80;
 	private PApplet p;
 	
 	public Midi(PApplet p){
 		channel = 0;
 		this.p = p;
 		MidiBus.list();
-		bus = new MidiBus(p, -1, -1);
+		bus = new MidiBus(p, -1, 1);
 	}
 	
 	
