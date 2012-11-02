@@ -45,19 +45,14 @@ public class KinectUser {
 		kinect.convertRealWorldToProjective(rightHandReal, rightHandProjected);
 		kinect.convertRealWorldToProjective(leftHandReal, leftHandProjected);
 
-		// kinect.convertRealWorldToProjective(rightHandReal,
-		// rightHandProjectedUnscalled);
-		// kinect.convertRealWorldToProjective(leftHandReal,
-		// leftHandProjectedUnscalled);
-
 		// Handmittelpunkt
-		p.color(123, 123, 123);
-		p.fill(0, 255);
-		float rectSize = 10;		
-		p.rect(leftHandProjected.x - rectSize / 2, leftHandProjected.y
-				- rectSize / 2, rectSize, rectSize);
-		p.rect(rightHandProjected.x - rectSize / 2, rightHandProjected.y
-				- rectSize / 2, rectSize, rectSize);
+		p.fill(255, 0, 0);
+		float radius = 10;
+
+		p.ellipse(leftHandProjected.x, leftHandProjected.y, radius * 2,
+				radius * 2);
+		p.ellipse(rightHandProjected.x, rightHandProjected.y, radius * 2,
+				radius * 2);
 
 		this.leftHand = leftHandProjected;
 		this.rightHand = rightHandProjected;

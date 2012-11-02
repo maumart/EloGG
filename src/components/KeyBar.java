@@ -1,4 +1,5 @@
 package components;
+
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -26,7 +27,7 @@ public class KeyBar {
 	public void draw() {
 		p.noStroke();
 		p.fill(currColor);
-		p.rect(x, y, width, height);
+		p.rect(x, y, width, height, 50);
 
 	}
 
@@ -35,6 +36,7 @@ public class KeyBar {
 	}
 
 	public int[] intersects(int posX, int posY, int posZ, int hand) {
+
 		int[] keyPitchDepth = new int[4];
 
 		keyPitchDepth[0] = hand;

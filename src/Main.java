@@ -7,8 +7,10 @@ import SimpleOpenNI.SimpleOpenNI;
 import components.KeyBar;
 import kinect.Kinect;
 import kinect.KinectUser;
+import processing.opengl.*;
 
-// foo
+//import processing.video.*;
+
 @SuppressWarnings("serial")
 public class Main extends PApplet {
 	public boolean kinectAvailable = false;
@@ -22,14 +24,17 @@ public class Main extends PApplet {
 	boolean initialized;
 	Kinect k;
 
+	public PVector handVec;
+	public String strGesture;
+
+	// CAM
+	// Capture cam;
+	// String[] cameras = Capture.list();
+
 	// Midi
 	public MidiBus myBus;
 
 	public void setup() {
-		if (kinectAvailable) {
-			k = new Kinect(this);
-			kinect = k.getKinect();
-		}
 
 		// Processing Stuff
 		this.size(640, 480);
@@ -38,12 +43,20 @@ public class Main extends PApplet {
 		this.noFill();
 		this.smooth();
 		this.frameRate(60);
+		// this.perspective(80f, parseFloat(width / height), 10.0f, 150000.0f);
+
+		if (kinectAvailable) {
+			k = new Kinect(this);
+			kinect = k.getKinect();
+		}
 
 		// Bars erstellen
 		createKeyBar(4);
+
 	}
 
 	public void draw() {
+		hint(ENABLE_ACCURATE_2D);
 		this.background(0);
 
 		if (kinectAvailable) {
@@ -60,8 +73,6 @@ public class Main extends PApplet {
 					user.updateLimbs();
 					if (user.getLeftHand() != null
 							&& user.getLeftHand() != null) {
-
-						System.out.println(user.getLeftHand());
 
 						handLeft = user.getLeftHand();
 						handRight = user.getRightHand();
@@ -88,19 +99,25 @@ public class Main extends PApplet {
 				int[] valueRight = bar.intersects(Math.round(handRight.x),
 						Math.round(handRight.y), Math.round(handRight.z), 1);
 
+				this.fill(255, 0, 0);
+				float radius = 10;
+
 				if (valueLeft[1] != -1) {
-					System.out.print("Hand: " + valueLeft[0]);
-					System.out.print(" Note: " + valueLeft[1]);
-					System.out.print(" Y-Wert: " + valueLeft[2]);
-					System.out.println(" Z-Wert: " + valueLeft[3]);
+					/*
+					 * System.out.print("Hand: " + valueLeft[0]);
+					 * System.out.print(" Note: " + valueLeft[1]);
+					 * System.out.print(" Y-Wert: " + valueLeft[2]);
+					 * System.out.println(" Z-Wert: " + valueLeft[3]);
+					 */
 				}
 
 				if (valueRight[1] != -1) {
-					System.out.print("Hand: " + valueRight[0]);
-					System.out.print(" Note: " + valueRight[1]);
-					System.out.print(" Y-Wert: " + valueRight[2]);
-					System.out.println(" Z-Wert: " + valueRight[3]);
-
+					/*
+					 * System.out.print("Hand: " + valueRight[0]);
+					 * System.out.print(" Note: " + valueRight[1]);
+					 * System.out.print(" Y-Wert: " + valueRight[2]);
+					 * System.out.println(" Z-Wert: " + valueRight[3]);
+					 */
 				}
 
 				// Hoover
@@ -108,6 +125,12 @@ public class Main extends PApplet {
 					bar.currColor = bar.hoverColor;
 				} else {
 					bar.currColor = bar.normalColor;
+				}
+
+				if (!kinectAvailable) {
+
+					ellipse(handLeft.x, handLeft.y, radius * 2, radius * 2);
+					ellipse(handRight.x, handRight.y, radius * 2, radius * 2);
 				}
 
 			}
@@ -120,7 +143,7 @@ public class Main extends PApplet {
 
 	public void createKeyBar(int count) {
 		int padding = 20;
-		int gutter = (this.width - padding * 2) / (count * 2);
+		int gutter = (this.width - padding * 2) / ((count * 2));
 		int width = (this.width - padding * 2 - (gutter * (count - 1))) / count;
 		int height = this.height - padding * 2;
 		int y = padding;
@@ -135,8 +158,13 @@ public class Main extends PApplet {
 
 	}
 
+	static public void main(String args[]) {
+		PApplet.main(new String[] { "Main" });
+	}
+
 	// Callbacks Simple openni
 
+	// Callback Neuer User
 	public void onNewUser(int userId) {
 		println("Neuer User erkannt");
 		kinect.startPoseDetection("Psi", userId);
@@ -181,6 +209,41 @@ public class Main extends PApplet {
 	// Callback Pose Ende
 	public void onEndPose(String pose, int userId) {
 		println("onEndPose - userId: " + userId + ", pose: " + pose);
+	}
+
+	// Hands
+	// hand events
+	public void onCreateHands(int handId, PVector pos, float time) {
+		System.out.println("onCreateHands");
+
+	}
+
+	public void onUpdateHands(int handId, PVector pos, float time) {
+		System.out.println("onUpdateHandsCb");
+
+	}
+
+	public void onDestroyHands(int handId, float time) {
+		System.out.println("onDestroyHandsCb ");
+	}
+
+	// -----------------------------------------------------------------
+	// gesture events
+
+	public void onRecognizeGesture(String strGesture, PVector idPosition,
+			PVector endPosition) {
+		System.out.println("onRecognizeGesture - strGesture: " + strGesture
+				+ ", idPosition: " + idPosition + ", endPosition:"
+				+ endPosition);
+
+		kinect.removeGesture(strGesture);
+		kinect.startTrackingHands(endPosition);
+	}
+
+	public void onProgressGesture(String strGesture, PVector position,
+			float progress) {
+		// println("onProgressGesture - strGesture: " + strGesture +
+		// ", position: " + position + ", progress:" + progress);
 	}
 
 }
