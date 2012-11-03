@@ -161,8 +161,8 @@ public class Main extends PApplet {
 
 	}
 
-	static public void main(String args[]) {
-		PApplet.main(new String[] { "Main" });
+	public static void main(String args[]) {
+		PApplet.main(new String[] { "--present", "Main" });
 	}
 
 	// Callbacks Simple openni
