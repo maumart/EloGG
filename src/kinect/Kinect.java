@@ -11,11 +11,13 @@ public class Kinect {
 	public SimpleOpenNI kinect;
 	public PApplet p;
 	public ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
+	public PVector posProjected = new PVector();
+	public int handCount = 0;
+	public int handId = 0;
 
 	public Kinect(PApplet p) {
 		this.p = p;
 		this.kinect = new SimpleOpenNI(p, SimpleOpenNI.RUN_MODE_MULTI_THREADED);
-		// this.kinect = new SimpleOpenNI(p);
 		this.settings();
 
 	}
@@ -34,7 +36,7 @@ public class Kinect {
 	private void settings() {
 		// Quellen aktivieren
 		kinect.enableDepth();
-		// context.enableIR();
+		// kinect.enableIR();
 		kinect.enableRGB();
 		kinect.enableGesture(this);
 		kinect.enableHands(this);
@@ -47,14 +49,18 @@ public class Kinect {
 		kinect.setMirror(true);
 
 		// Gesten
-		kinect.addGesture("Wave");
-		kinect.addGesture("Click");
-		kinect.addGesture("RaiseHand");
+		// kinect.addGesture("Wave");
+		// kinect.addGesture("Click");
+		//kinect.addGesture("RaiseHand");
 
-		kinect.setSmoothingHands(.5f);
+		kinect.setSmoothingHands(.1f);
 
 		// Enable Scene
 		kinect.enableScene(640, 480, 60);
+	}
+
+	public PVector getUntrackedHands() {
+		return posProjected;
 	}
 
 	// Callbacks SimpleOpenNI
@@ -62,47 +68,44 @@ public class Kinect {
 	// Hands
 
 	public void onCreateHands(int handId, PVector pos, float time) {
-		System.out.println("onCreateHands");
-
+		this.handId = handId;
+		// System.out.println("onCreateHands");
 	}
 
 	public void onUpdateHands(int handId, PVector pos, float time) {
-		System.out.println("onUpdateHandsCb");
+		kinect.convertRealWorldToProjective(pos, posProjected);
+		System.out.println("Hands" + handId);
 
 	}
 
 	public void onDestroyHands(int handId, float time) {
 		System.out.println("onDestroyHandsCb ");
+		kinect.addGesture("RaiseHand");
 	}
 
-	// Gesture events
+	// Gestures
 
 	public void onRecognizeGesture(String strGesture, PVector idPosition,
 			PVector endPosition) {
-		System.out.println("onRecognizeGesture - strGesture: " + strGesture
-				+ ", idPosition: " + idPosition + ", endPosition:"
-				+ endPosition);
-
-		kinect.removeGesture(strGesture);
+		if (handCount > 1) {
+			kinect.removeGesture(strGesture);
+		}
 		kinect.startTrackingHands(endPosition);
+		handCount++;
 	}
 
 	public void onProgressGesture(String strGesture, PVector position,
 			float progress) {
-		// println("onProgressGesture - strGesture: " + strGesture +
-		// ", position: " + position + ", progress:" + progress);
 	}
 
 	// User tracking
 
 	// Callback New User
 	public void onNewUser(int userId) {
-		System.out.println("Neuer User erkannt");
+		System.out.println("New user detected");
 		kinect.startPoseDetection("Psi", userId);
 		kinect.startTrackingSkeleton(userId);
 
-		// Erkannter User zur Collection hinzufuegen
-		// KinectUser user = new KinectUser(this, kinect, userId);
 		KinectUser user = new KinectUser(p, kinect, userId);
 		userList.add(user);
 	}
@@ -120,6 +123,8 @@ public class Kinect {
 		if (successfull) {
 			System.out.println("  User calibrated !!!");
 			kinect.startTrackingSkeleton(userId);
+			kinect.removeGesture("RaiseHand");
+			kinect.stopTrackingHands(handId);
 
 		} else {
 			System.out.println("  Failed to calibrate user !!!");

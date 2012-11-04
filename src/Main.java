@@ -68,19 +68,27 @@ public class Main extends PApplet {
 			// Fetch User
 			userList = k.getUserList();
 
-			for (KinectUser user : userList) {
-
-				if (kinect.isTrackingSkeleton(user.userId)) {
-
-					user.updateLimbs();
-					if (user.getLeftHand() != null
-							&& user.getLeftHand() != null) {
-
-						handLeft = user.getLeftHand();
-						handRight = user.getRightHand();
-					}
-
+			if (userList.size() > 0) {				
+			
+				for (KinectUser user : userList) {
+	
+					if (kinect.isTrackingSkeleton(user.userId)) {
+	
+						user.updateLimbs();
+						if (user.getLeftHand() != null
+								&& user.getLeftHand() != null) {
+	
+							handLeft = user.getLeftHand();
+							handRight = user.getRightHand();
+						}
+	
+					} 
 				}
+			
+			} else {			
+				handLeft = k.getUntrackedHands();
+				handRight = new PVector(-50, -50, -50);
+				//	System.out.println(handLeft);
 			}
 
 		} else {
