@@ -28,19 +28,18 @@ public class Main extends PApplet {
 
 	public PVector handVec;
 	public String strGesture;
-	
-	public KeyMapper mapper;
 
-	// CAM
-	// Capture cam;
-	// String[] cameras = Capture.list();
+	public KeyMapper mapper;
 
 	// Midi
 	public MidiBus myBus;
 
 	public void setup() {
-		
-		
+		if (kinectAvailable) {
+			k = new Kinect(this);
+			kinect = k.getKinect();
+		}
+
 		mapper = new KeyMapper(this);
 		// Processing Stuff
 		this.size(640, 480);
@@ -51,14 +50,8 @@ public class Main extends PApplet {
 		this.frameRate(60);
 		// this.perspective(80f, parseFloat(width / height), 10.0f, 150000.0f);
 
-		if (kinectAvailable) {
-			k = new Kinect(this);
-			kinect = k.getKinect();
-		}
-
 		// Bars erstellen
 		createKeyBar(4);
-
 	}
 
 	public void draw() {
@@ -91,15 +84,18 @@ public class Main extends PApplet {
 		} else {
 
 			handLeft = new PVector(mouseX, mouseY, 0);
-			//handRight = new PVector(mouseX, mouseY, 0);
-			handRight = new PVector(0, 0, 0);
+			// handRight = new PVector(mouseX, mouseY, 0);
+			handRight = new PVector(-50, -50, -50);
 		}
 
 		// BB Test
-		
+
 		ArrayList<int[]> tmpLeft = new ArrayList<int[]>();
-		
+		ArrayList<int[]> tmpRight = new ArrayList<int[]>();
+
 		for (KeyBar bar : keyBars) {
+
+			bar.draw();
 
 			if (handLeft != null && handRight != null) {
 
@@ -108,40 +104,54 @@ public class Main extends PApplet {
 				int[] valueRight = bar.intersects(Math.round(handRight.x),
 						Math.round(handRight.y), Math.round(handRight.z), 1);
 
-				this.fill(255, 0, 0);
-				float radius = 10;
-				
 				tmpLeft.add(valueLeft);
-				//mapper.map(valueLeft);
-				
+				tmpRight.add(valueRight);
+				// mapper.map(valueLeft);
 
 				// Hoover
 				if ((valueLeft[1] != -1) || (valueRight[1] != -1)) {
-					bar.currColor = bar.hoverColor;
+					bar.hover(true);
 				} else {
-					bar.currColor = bar.normalColor;
+					bar.hover(false);
 				}
 
-				if (!kinectAvailable) {
-
-					ellipse(handLeft.x, handLeft.y, radius * 2, radius * 2);
-					ellipse(handRight.x, handRight.y, radius * 2, radius * 2);
-				}
+				// Draw Hands
+				visualizeHands(handLeft, handRight);
 
 			}
 
-			bar.draw();
-
 		}
-		
-		for(int i = 0; i < tmpLeft.size(); i++){
-			if(tmpLeft.get(i)[1] >= 0){
+
+		for (int i = 0; i < tmpLeft.size(); i++) {
+			if (tmpLeft.get(i)[1] >= 0) {
 				mapper.map(tmpLeft.get(i));
 				return;
 			}
 		}
-		mapper.map(tmpLeft.get(0));
 
+		for (int i = 0; i < tmpRight.size(); i++) {
+			if (tmpRight.get(i)[1] >= 0) {
+				mapper.map(tmpRight.get(i));
+				return;
+			}
+		}
+
+		// MAU Temp Fix
+		if (tmpLeft.size() > 0) {
+			mapper.map(tmpLeft.get(0));
+		}
+
+		if (tmpRight.size() > 0) {
+			mapper.map(tmpRight.get(0));
+		}
+
+	}
+
+	public void visualizeHands(PVector handLeft, PVector handRight) {
+		fill(255, 0, 0);
+		float radius = 10;
+		ellipse(handLeft.x, handLeft.y, radius * 2, radius * 2);
+		ellipse(handRight.x, handRight.y, radius * 2, radius * 2);
 	}
 
 	public void createKeyBar(int count) {

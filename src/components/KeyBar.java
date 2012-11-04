@@ -10,7 +10,7 @@ public class KeyBar {
 	public int height;
 	public PApplet p;
 	public String id;
-	public int hoverColor = 253;
+	public int hoverColor = 255;
 	public int currColor = 50;
 	public int normalColor = 50;
 	public int key;
@@ -27,7 +27,7 @@ public class KeyBar {
 	public void draw() {
 		p.noStroke();
 		p.fill(currColor);
-		p.rect(x, y, width, height, 50);
+		p.rect(x, y, width, height, 10);
 
 	}
 
@@ -68,10 +68,11 @@ public class KeyBar {
 				&& posY >= y + height * (3 / 4) && posY <= y + height) {
 			int pitch = 0;
 			keyPitchDepth[2] = pitch;
+
 			return keyPitchDepth;
 
 		} else {
-		//	keyPitchDepth[0] = -1;
+
 			keyPitchDepth[1] = -1;
 			keyPitchDepth[2] = -1;
 			keyPitchDepth[3] = -1;
@@ -79,6 +80,15 @@ public class KeyBar {
 			return keyPitchDepth;
 		}
 
+	}
+
+	public void hover(boolean hover) {
+		if (hover) {
+			this.currColor = this.hoverColor;
+		} else {
+			this.currColor = this.normalColor;
+
+		}
 	}
 
 }

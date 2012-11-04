@@ -46,6 +46,7 @@ public class KinectUser {
 		kinect.convertRealWorldToProjective(leftHandReal, leftHandProjected);
 
 		// Handmittelpunkt
+		/*
 		p.fill(255, 0, 0);
 		float radius = 10;
 
@@ -53,7 +54,7 @@ public class KinectUser {
 				radius * 2);
 		p.ellipse(rightHandProjected.x, rightHandProjected.y, radius * 2,
 				radius * 2);
-
+		*/
 		this.leftHand = leftHandProjected;
 		this.rightHand = rightHandProjected;
 	}
