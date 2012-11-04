@@ -15,11 +15,11 @@ import processing.opengl.*;
 
 @SuppressWarnings("serial")
 public class Main extends PApplet {
-	public boolean kinectAvailable = false;
-	public PVector handLeft;
-	public PVector handRight;
-	public ArrayList<KeyBar> keyBars = new ArrayList<KeyBar>();
-	public ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
+	private boolean kinectAvailable = true;
+	private PVector handLeft;
+	private PVector handRight;
+	private ArrayList<KeyBar> keyBars = new ArrayList<KeyBar>();
+	private ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
 
 	// Kinectstuff
 	SimpleOpenNI kinect;
@@ -65,6 +65,9 @@ public class Main extends PApplet {
 			// Kinectbild
 			image(kinect.sceneImage(), 0, 0);
 
+			// Fetch User
+			userList = k.getUserList();
+
 			for (KinectUser user : userList) {
 
 				if (kinect.isTrackingSkeleton(user.userId)) {
@@ -79,7 +82,6 @@ public class Main extends PApplet {
 
 				}
 			}
-			// System.out.println(userList.size());
 
 		} else {
 
@@ -173,90 +175,6 @@ public class Main extends PApplet {
 
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--present", "Main" });
-	}
-
-	// Callbacks Simple openni
-
-	// Callback Neuer User
-	public void onNewUser(int userId) {
-		println("Neuer User erkannt");
-		kinect.startPoseDetection("Psi", userId);
-		kinect.startTrackingSkeleton(userId);
-
-		// Erkannter User zur Collection hinzufuegen
-		KinectUser user = new KinectUser(this, kinect, userId);
-		userList.add(user);
-	}
-
-	// Callback Kalibrierungsbeginn
-	public void onStartCalibration(int userId) {
-		println("onStartCalibration - userId: " + userId);
-	}
-
-	// Callback Kalibrierungsende
-	public void onEndCalibration(int userId, boolean successfull) {
-		println("onEndCalibration - userId: " + userId + ", successfull: "
-				+ successfull);
-
-		if (successfull) {
-			println("  User calibrated !!!");
-			kinect.startTrackingSkeleton(userId);
-
-		} else {
-			println("  Failed to calibrate user !!!");
-			println("  Start pose detection");
-			kinect.startPoseDetection("Psi", userId);
-		}
-	}
-
-	// Callback Pose Begin
-	public void onStartPose(String pose, int userId) {
-		println("onStartPose - userId: " + userId + ", pose: " + pose);
-		println(" stop pose detection");
-
-		kinect.stopPoseDetection(userId);
-		kinect.requestCalibrationSkeleton(userId, true);
-
-	}
-
-	// Callback Pose Ende
-	public void onEndPose(String pose, int userId) {
-		println("onEndPose - userId: " + userId + ", pose: " + pose);
-	}
-
-	// Hands
-	// hand events
-	public void onCreateHands(int handId, PVector pos, float time) {
-		System.out.println("onCreateHands");
-
-	}
-
-	public void onUpdateHands(int handId, PVector pos, float time) {
-		System.out.println("onUpdateHandsCb");
-
-	}
-
-	public void onDestroyHands(int handId, float time) {
-		System.out.println("onDestroyHandsCb ");
-	}
-
-	// -----------------------------------------------------------------
-	// gesture events
-
-	public void onRecognizeGesture(String strGesture, PVector idPosition,
-			PVector endPosition) {
-		System.out.println("onRecognizeGesture - strGesture: " + strGesture
-				+ ", idPosition: " + idPosition + ", endPosition:"
-				+ endPosition);
-
-		kinect.removeGesture(strGesture);
-		kinect.startTrackingHands(endPosition);
-	}
-
-	public void onProgressGesture(String strGesture, PVector position,
-			float progress) {
-		// println("onProgressGesture - strGesture: " + strGesture +
-		// ", position: " + position + ", progress:" + progress);
 	}
 
 }
