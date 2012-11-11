@@ -1,17 +1,14 @@
 import java.util.ArrayList;
 
+import kinect.Kinect;
+import kinect.KinectUser;
 import midi.KeyMapper;
-
 import processing.core.PApplet;
 import processing.core.PVector;
 import themidibus.MidiBus;
 import SimpleOpenNI.SimpleOpenNI;
-import components.KeyBar;
-import kinect.Kinect;
-import kinect.KinectUser;
-import processing.opengl.*;
 
-//import processing.video.*;
+import components.KeyBar;
 
 @SuppressWarnings("serial")
 public class Main extends PApplet {
@@ -68,27 +65,27 @@ public class Main extends PApplet {
 			// Fetch User
 			userList = k.getUserList();
 
-			if (userList.size() > 0) {				
-			
+			if (userList.size() > 0) {
+
 				for (KinectUser user : userList) {
-	
+
 					if (kinect.isTrackingSkeleton(user.userId)) {
-	
+
 						user.updateLimbs();
 						if (user.getLeftHand() != null
 								&& user.getLeftHand() != null) {
-	
+
 							handLeft = user.getLeftHand();
 							handRight = user.getRightHand();
 						}
-	
-					} 
+
+					}
 				}
-			
-			} else {			
+
+			} else {
 				handLeft = k.getUntrackedHands();
 				handRight = new PVector(-50, -50, -50);
-				//	System.out.println(handLeft);
+				// System.out.println(handLeft);
 			}
 
 		} else {
