@@ -106,7 +106,7 @@ public class Kinect {
 		kinect.startPoseDetection("Psi", userId);
 		kinect.startTrackingSkeleton(userId);
 
-		KinectUser user = new KinectUser(p, kinect, userId);
+		KinectUser user = new KinectUser(kinect, userId);
 		userList.add(user);
 	}
 

@@ -52,7 +52,6 @@ public class Main extends PApplet {
 	}
 
 	public void draw() {
-		hint(ENABLE_ACCURATE_2D);
 		this.background(0);
 
 		if (kinectAvailable) {
@@ -65,28 +64,27 @@ public class Main extends PApplet {
 			// Fetch User
 			userList = k.getUserList();
 
-			if (userList.size() > 0) {
+			// if (userList.size() > 0) {
 
-				for (KinectUser user : userList) {
+			for (KinectUser user : userList) {
 
-					if (kinect.isTrackingSkeleton(user.userId)) {
+				if (kinect.isTrackingSkeleton(user.userId)) {
+					
+					// if (user.getLeftHand(true) != null
+					// && user.getLeftHand(true) != null) {
 
-						user.updateLimbs();
-						if (user.getLeftHand() != null
-								&& user.getLeftHand() != null) {
+					handLeft = user.getLeftHand(true);
+					handRight = user.getRightHand(true);
+					// }
 
-							handLeft = user.getLeftHand();
-							handRight = user.getRightHand();
-						}
-
-					}
 				}
-
-			} else {
-				handLeft = k.getUntrackedHands();
-				handRight = new PVector(-50, -50, -50);
-				// System.out.println(handLeft);
 			}
+
+			// } else {
+			// handLeft = k.getUntrackedHands();
+			// handRight = new PVector(-50, -50, -50);
+			// System.out.println(handLeft);
+			// }
 
 		} else {
 
@@ -96,7 +94,6 @@ public class Main extends PApplet {
 		}
 
 		// BB Test
-
 		ArrayList<int[]> tmpLeft = new ArrayList<int[]>();
 		ArrayList<int[]> tmpRight = new ArrayList<int[]>();
 
