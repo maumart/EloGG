@@ -12,23 +12,18 @@ import components.KeyBar;
 
 @SuppressWarnings("serial")
 public class Main extends PApplet {
-	private boolean kinectAvailable = true;
+	private boolean kinectAvailable = false;
 	private PVector handLeft;
 	private PVector handRight;
 	private ArrayList<KeyBar> keyBars = new ArrayList<KeyBar>();
 	private ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
 
 	// Kinectstuff
-	SimpleOpenNI kinect;
-	boolean initialized;
-	Kinect k;
-
-	public PVector handVec;
-	public String strGesture;
-
-	public KeyMapper mapper;
+	private SimpleOpenNI kinect;	
+	private Kinect k;	
 
 	// Midi
+	public KeyMapper mapper;
 	public MidiBus myBus;
 
 	public void setup() {
@@ -68,7 +63,7 @@ public class Main extends PApplet {
 
 			for (KinectUser user : userList) {
 
-				if (kinect.isTrackingSkeleton(user.userId)) {
+				if (kinect.isTrackingSkeleton(user.getUserId())) {
 					
 					// if (user.getLeftHand(true) != null
 					// && user.getLeftHand(true) != null) {
@@ -120,7 +115,8 @@ public class Main extends PApplet {
 				}
 
 				// Draw Hands
-				visualizeHands(handLeft, handRight);
+				visualizeHands(handLeft);
+				visualizeHands(handRight);
 
 			}
 
@@ -150,15 +146,14 @@ public class Main extends PApplet {
 		}
 
 	}
-
-	public void visualizeHands(PVector handLeft, PVector handRight) {
+	
+	private void visualizeHands(PVector vect) {
 		fill(255, 0, 0);
-		float radius = 10;
-		ellipse(handLeft.x, handLeft.y, radius * 2, radius * 2);
-		ellipse(handRight.x, handRight.y, radius * 2, radius * 2);
+		float radius = 10+vect.z;
+		ellipse(vect.x, vect.y, radius * 2, radius * 2);		
 	}
 
-	public void createKeyBar(int count) {
+	private void createKeyBar(int count) {
 		int padding = 20;
 		int gutter = (this.width - padding * 2) / ((count * 2));
 		int width = (this.width - padding * 2 - (gutter * (count - 1))) / count;

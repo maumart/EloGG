@@ -1,19 +1,17 @@
 package components;
 
 import processing.core.PApplet;
-import processing.core.PVector;
 
 public class KeyBar {
-	public int x;
-	public int y;
-	public int width;
-	public int height;
-	public PApplet p;
-	public String id;
-	public int hoverColor = 255;
-	public int currColor = 50;
-	public int normalColor = 50;
-	public int key;
+	private int x;
+	private int y;
+	private int width;
+	private int height;
+	private PApplet p;
+	private int hoverColor = 255;
+	private int currColor = 50;
+	private int normalColor = 50;
+	private int key;
 
 	public KeyBar(PApplet p, int x, int y, int width, int height, int key) {
 		this.x = x;
@@ -28,10 +26,6 @@ public class KeyBar {
 		p.noStroke();
 		p.fill(currColor);
 		p.rect(x, y, width, height, 10);
-
-	}
-
-	public void draw(PVector handLeft, PVector handRight) {
 
 	}
 

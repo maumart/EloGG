@@ -8,15 +8,13 @@ import SimpleOpenNI.SimpleOpenNI;
 
 @SuppressWarnings("serial")
 public class Kinect {
-	public SimpleOpenNI kinect;
-	public PApplet p;
-	public ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
-	public PVector posProjected = new PVector();
-	public int handCount = 0;
-	public int handId = 0;
+	private SimpleOpenNI kinect;	
+	private ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
+	private PVector posProjected = new PVector();
+	private int handCount = 0;
+	private int handId = 0;
 
-	public Kinect(PApplet p) {
-		this.p = p;
+	public Kinect(PApplet p) {		
 		this.kinect = new SimpleOpenNI(p, SimpleOpenNI.RUN_MODE_MULTI_THREADED);
 		this.settings();
 
@@ -43,7 +41,7 @@ public class Kinect {
 
 		// Alle Bones
 		// kinect.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
-		kinect.enableUser(SimpleOpenNI.SKEL_PROFILE_HEAD_HANDS, this);
+		kinect.enableUser(SimpleOpenNI.SKEL_PROFILE_UPPER, this);
 
 		// Spiegeln
 		kinect.setMirror(true);
