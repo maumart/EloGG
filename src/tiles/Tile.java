@@ -1,31 +1,48 @@
-package components;
+package tiles;
 
 import processing.core.PApplet;
 
-public class KeyBar {
+public class Tile {
 	private int x;
 	private int y;
 	private int width;
 	private int height;
-	private PApplet p;
 	private int hoverColor = 255;
 	private int currColor = 50;
 	private int normalColor = 50;
 	private int key;
+	private PApplet p;
 
-	public KeyBar(PApplet p, int x, int y, int width, int height, int key) {
+	public Tile(PApplet p, int x, int y, int width, int height, int key,
+			int color) {
+		this.p = p;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.p = p;
 		this.key = key;
+		this.currColor = color;
+		this.currColor = normalColor;
 	}
 
 	public void draw() {
 		p.noStroke();
 		p.fill(currColor);
 		p.rect(x, y, width, height, 0);
+
+	}
+
+	public int intersectTest(int posX, int posY, int posZ, int hand) {
+
+		if (posX >= x && posX <= x + width && posY >= y && posY <= y + height) {
+			//hover(true);
+			return 1;
+
+		} else {
+			//hover(false);
+			return 0;
+
+		}
 
 	}
 
@@ -42,6 +59,7 @@ public class KeyBar {
 			int pitch = 3;
 			keyPitchDepth[2] = pitch;
 
+			System.out.println("1");
 			return keyPitchDepth;
 
 		} else if (posX >= x && posX <= x + width
@@ -49,6 +67,7 @@ public class KeyBar {
 			int pitch = 2;
 			keyPitchDepth[2] = pitch;
 
+			System.out.println("2");
 			return keyPitchDepth;
 
 		} else if (posX >= x && posX <= x + width
@@ -56,6 +75,7 @@ public class KeyBar {
 			int pitch = 1;
 			keyPitchDepth[2] = pitch;
 
+			System.out.println("3");
 			return keyPitchDepth;
 
 		} else if (posX >= x && posX <= x + width
@@ -63,6 +83,7 @@ public class KeyBar {
 			int pitch = 0;
 			keyPitchDepth[2] = pitch;
 
+			System.out.println("4");
 			return keyPitchDepth;
 
 		} else {

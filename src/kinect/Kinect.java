@@ -44,7 +44,7 @@ public class Kinect {
 		kinect.enableUser(SimpleOpenNI.SKEL_PROFILE_UPPER, this);
 
 		// Spiegeln
-		kinect.setMirror(true);
+		kinect.setMirror(false);
 
 		// Gesten
 		// kinect.addGesture("Wave");

@@ -87,5 +87,9 @@ public class KeyMapper {
 		}
 
 	}
+	
+	public void changePitch(int value){
+		midi.sendControllerChange(0, 0, value);
+	}
 
 }

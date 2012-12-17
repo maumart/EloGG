@@ -14,7 +14,7 @@ import SimpleOpenNI.SimpleOpenNI;
 
 
 @SuppressWarnings("serial")
-public class Main extends PApplet {
+public class MainTiles extends PApplet {
 	private boolean kinectAvailable = true;
 	private PVector handLeft;
 	private PVector handRight;
@@ -41,8 +41,7 @@ public class Main extends PApplet {
 
 		mapper = new KeyMapper(this);
 		// Processing Stuff
-		//this.size(640, 480);
-		this.size(1024, 768);
+		this.size(640, 480);
 		this.stroke(255);
 		this.strokeWeight(5);
 		this.noFill();
@@ -51,14 +50,15 @@ public class Main extends PApplet {
 		// this.perspective(80f, parseFloat(width / height), 10.0f, 150000.0f);
 
 		// Bars erstellen
-		createKeyBar(4);
+		//createKeyBar(4);
 
 		// NEU
-		// tileMatrix = new TileMatrix(this, 4, 3);
+		tileMatrix = new TileMatrix(this, 4, 3,40,60);
 	}
 
 	public void draw() {
 		this.background(0);
+		
 
 		if (kinectAvailable) {
 			// Kinect updaten jeden Frame --> WICHTIG
@@ -109,12 +109,17 @@ public class Main extends PApplet {
 //			visualizeHands(handRight);
 //
 //		}
+		//Tiles draw
+		tileMatrix.draw(handLeft, handRight);
 
 		// BB Test
 		ArrayList<int[]> tmpLeft = new ArrayList<int[]>();
 		ArrayList<int[]> tmpRight = new ArrayList<int[]>();
+		
+		
 
-		for (KeyBar bar : keyBars) {
+		/*for (KeyBar bar : keyBars) {
+		
 
 			bar.draw();
 
@@ -172,7 +177,7 @@ public class Main extends PApplet {
 		if (tmpRight.size() > 0) {
 			//mapper.map(tmpRight.get(0));
 		}
-		
+		*/
 		
 		
 
@@ -203,7 +208,7 @@ public class Main extends PApplet {
 	}
 
 	public static void main(String args[]) {
-	    PApplet.main(new String[] {"--full-screen","--display=1", "Main" });
-	  }
+		PApplet.main(new String[] { "--present", "Main" });
+	}
 
 }

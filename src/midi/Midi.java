@@ -14,9 +14,8 @@ public class Midi {
 		channel = 0;
 		this.p = p;
 		MidiBus.list();
-		bus = new MidiBus(p, -1, 1);
-	}
-	
+		bus = new MidiBus(p, -1, 3);
+	}	
 	
 	public void noteOn(int channel, int pitch, int velocity){
 		int vel = this.velocity;
@@ -28,6 +27,11 @@ public class Midi {
 		int vel = this.velocity;
 		if(velocity != -1) vel = velocity;
 		bus.sendNoteOff(channel, pitch, vel);
+	}
+	
+	public void sendControllerChange(int channel, int number, int value){
+		bus.sendControllerChange(channel, number, value);
+		
 	}
 
 }
