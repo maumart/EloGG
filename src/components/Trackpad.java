@@ -66,7 +66,7 @@ public class Trackpad implements Itile {
 
 			effect = new Effect(id, mappedX, mappedY, mappedZ);
 
-			System.out.println(effect.toString());
+			//System.out.println(effect.toString());
 		}
 
 		return effect;

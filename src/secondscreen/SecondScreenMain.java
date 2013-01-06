@@ -6,6 +6,7 @@ import components.Layout;
 import kinect.Kinect;
 import kinect.KinectUser;
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
 import controlP5.ControlP5;
@@ -16,10 +17,6 @@ public class SecondScreenMain extends PApplet {
 	private PVector handLeft;
 	private PVector handRight;
 
-	// C5P
-	private ControlP5 mainFrame;
-	private ControlScreen controlFrame;
-
 	// Layout
 	private Layout layout;
 	private int paddingTop = 20;
@@ -28,6 +25,7 @@ public class SecondScreenMain extends PApplet {
 	private int paddingLeft = 20;
 	private int paddingRight = 20;
 	private int num = 4;
+	private float scaleFactor = 1.333f;
 
 	// Kinect
 	private boolean kinectAvailable = false;
@@ -41,35 +39,80 @@ public class SecondScreenMain extends PApplet {
 	}
 
 	public void setup() {
-		// this.size(640, 480);
+		if (kinectAvailable) {
+			k = new Kinect(this);
+			kinect = k.getKinect();
+		}
+
 		size(1024, 768);
+		// size(640, 480);
 		smooth();
 		frameRate(60);
 
 		// Second Screen
-		mainFrame = new ControlP5(this);
-		controlFrame = addControlFrame("controlFrame", this.width, this.height);
+		ControlP5 mainFrame = new ControlP5(this);
+		ControlScreen controlFrame = addControlFrame("controlFrame",
+				this.width, this.height);
 	}
 
 	public void draw() {
 		background(0);
 
-		// Hand
-		handLeft = new PVector(mouseX, mouseY, 0);
-		handRight = new PVector(0, 0, 0);
+		// Kinect
+		if (kinectAvailable) {
+			// Kinect updaten jeden Frame --> WICHTIG
+			kinect.update();
 
+			// Kinectbild
+			// image(kinect.sceneImage(), 0, 0);
+
+			// Fetch User
+			userList = k.getUserList();
+
+			// if (userList.size() > 0) {
+
+			for (KinectUser user : userList) {
+
+				if (kinect.isTrackingSkeleton(user.getUserId())) {
+					handLeft = user.getLeftHand(true);
+					handLeft.mult(scaleFactor);
+
+					handRight = user.getRightHand(true);
+					handRight.mult(scaleFactor);
+				}
+			}
+
+		} else {
+			// Hand
+			handLeft = new PVector(mouseX, mouseY, 0);
+			handRight = new PVector(0, 0, 0);
+		}
+
+		// Layout Change
 		if (!startGame) {
 			layout = new Layout(this, num, paddingTop, paddingBottom,
 					paddingLeft, paddingRight, margin);
 		}
 
-		layout.draw(handLeft, handRight);
+		// Game Loop
+		if (handLeft != null && handRight != null) {
+
+			layout.draw(handLeft, handRight);
+		}
+
 	}
 
 	public ControlScreen addControlFrame(String name, int width, int height) {
 		int border = 25;
 		Frame frame = new Frame(name);
-		ControlScreen cs = new ControlScreen(this, width, height);
+		ControlScreen cs;
+
+		if (kinectAvailable) {
+			cs = new ControlScreen(this, width, height, k);
+		} else {
+			cs = new ControlScreen(this, width, height);
+		}
+
 		frame.add(cs);
 		cs.init();
 

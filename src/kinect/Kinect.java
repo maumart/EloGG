@@ -17,7 +17,6 @@ public class Kinect {
 	public Kinect(PApplet p) {		
 		this.kinect = new SimpleOpenNI(p, SimpleOpenNI.RUN_MODE_MULTI_THREADED);
 		this.settings();
-
 	}
 
 	public SimpleOpenNI getKinect() {
@@ -44,7 +43,7 @@ public class Kinect {
 		kinect.enableUser(SimpleOpenNI.SKEL_PROFILE_UPPER, this);
 
 		// Spiegeln
-		kinect.setMirror(false);
+		kinect.setMirror(true);
 
 		// Gesten
 		// kinect.addGesture("Wave");

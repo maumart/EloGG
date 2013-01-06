@@ -11,9 +11,9 @@ public class Layout extends PApplet {
 	private PApplet p;
 	private int pTop;
 	private int pBottom;
+	private int margin;
 	private int pLeft = 20;
-	private int pRight = 20;
-	private int margin = 50;
+	private int pRight = 20;	
 
 	public Layout(PApplet p, int num, int paddingTop, int paddingBottom,
 			int paddingLeft, int paddingRight, int margin) {
@@ -41,6 +41,9 @@ public class Layout extends PApplet {
 		// Hand
 		p.fill(255, 0, 255);
 		p.ellipse(handLeft.x, handLeft.y, 15, 15);
+		
+		p.fill(0, 255, 0);
+		p.ellipse(handRight.x, handRight.y, 15, 15);
 	}
 
 	private void createButtons(int num) {

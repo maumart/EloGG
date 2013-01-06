@@ -58,22 +58,24 @@ public class Button implements Itile {
 //	}
 
 	@Override
-	public Effect intersects(int posX, int posY, int posZ, int hand) {
+	public Effect intersects(int posX, int posY, int posZ, int hand) {		
 		// TODO Auto-generated method stub
+		int mapStart = 0;
+		int mapEnd = 127;
 		hover(false);
 		Effect effect = new Effect(-1, -1, -1, -1);
 
 		if (posX >= x && posX <= x + width && posY >= y && posY <= y + height) {
 			hover(true);
 			int mappedX = (int) PApplet.map((float) posX, (float) x,
-					(float) (x + width), 0, 127);
+					(float) (x + width), mapStart, mapEnd);
 			int mappedY = (int) PApplet.map((float) posY, (float) y,
-					(float) (y + height), 0, 127);
+					(float) (y + height), mapStart, mapEnd);
 			int mappedZ = 0;
 
 			effect = new Effect(id, mappedX, mappedY, mappedZ);
 			
-			System.out.println(effect.toString());
+			//System.out.println(effect.toString());
 		}
 
 		return effect;
