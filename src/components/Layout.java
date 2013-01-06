@@ -1,13 +1,10 @@
-package tilesNew;
+package components;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import processing.core.PApplet;
 import processing.core.PVector;
-import components.Button;
-import components.Effect;
-import components.Itile;
-import components.Trackpad;
 
 public class Layout extends PApplet {
 	private List<Itile> tiles = new ArrayList<>();
@@ -32,22 +29,19 @@ public class Layout extends PApplet {
 	public void draw(PVector handLeft, PVector handRight) {
 		for (Itile tile : tiles) {
 
-			// Effect hoverLeft = tile.intersects(Math.round(handLeft.x),
-			// Math.round(handLeft.y), Math.round(handLeft.z), 0);
+			Effect effectLeft = tile.intersects(Math.round(handLeft.x),
+					Math.round(handLeft.y), Math.round(handLeft.z), 0);
 
 			// Effect hoverRight = tile.intersects(Math.round(handRight.x),
 			// Math.round(handRight.y), Math.round(handRight.z), 1);
 
-			// tile.hover();
 			tile.draw(p);
-
-			// System.out.println(hoverLeft.toString());
 
 		}
 
 		// Hand
 		p.fill(255, 0, 255);
-		p.ellipse(handLeft.x, handLeft.y, 20, 20);
+		p.ellipse(handLeft.x, handLeft.y, 15, 15);
 	}
 
 	private void createButtons(int num) {

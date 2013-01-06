@@ -9,6 +9,11 @@ public class Trackpad implements Itile {
 	private int y;
 	private int width;
 	private int height;
+	
+	private int colorNormal = 25;
+	private int colorHover = 255;
+	private int colorCurrent = 25;
+
 
 	public Trackpad(int id, int x, int y, int width, int height) {
 
@@ -28,15 +33,28 @@ public class Trackpad implements Itile {
 	}
 
 	@Override
-	public void hover() {
+	public void hover(boolean b) {	
 		// TODO Auto-generated method stub
-
+		if (b) {
+			colorCurrent = colorHover;
+		} else {
+			colorCurrent = colorNormal;
+		}		
 	}
 
 	@Override
-	public Effect intersects(int x, int y, int z, int hand) {
+	public Effect intersects(int posX, int posY, int posZ, int hand) {		
 		// TODO Auto-generated method stub
-		return null;
+		// int mappedX = PApplet.map(x, istart, istop, ostart, ostop);
+		hover(false);
+
+		if (posX >= x && posX <= x + width && posY >= y && posY <= y + height) {
+			System.out.println(id);
+			hover(true);
+		}
+
+		Effect e = new Effect(id, x, y, 0);
+		return e;
 	}
 
 	public Effect intersect(PVector handLeft, PVector handRight) {

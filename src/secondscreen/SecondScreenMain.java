@@ -2,23 +2,16 @@ package secondscreen;
 
 import java.awt.Frame;
 import java.util.ArrayList;
-import java.util.List;
-
-import components.Button;
-import components.Itile;
-
+import components.Layout;
 import kinect.Kinect;
 import kinect.KinectUser;
 import processing.core.PApplet;
 import processing.core.PVector;
-import tiles.TileMatrix;
-import tilesNew.Layout;
 import SimpleOpenNI.SimpleOpenNI;
-import controlP5.ControlEvent;
 import controlP5.ControlP5;
 
 @SuppressWarnings("serial")
-public class SecondScreenTest extends PApplet {
+public class SecondScreenMain extends PApplet {
 	private boolean startGame = false;
 	private PVector handLeft;
 	private PVector handRight;
@@ -41,11 +34,11 @@ public class SecondScreenTest extends PApplet {
 	private boolean kinectAvailable = false;
 	private SimpleOpenNI kinect;
 	private Kinect k;
-	private ArrayList<KinectUser> userList = new ArrayList<KinectUser>();	
+	private ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
 
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--full-screen", "--display=1",
-				"secondscreen.SecondScreenTest" });
+				"secondscreen.SecondScreenMain" });
 	}
 
 	public void setup() {
@@ -68,12 +61,9 @@ public class SecondScreenTest extends PApplet {
 		if (!startGame) {
 			layout = new Layout(this, num, paddingTop, paddingBottom,
 					paddingLeft, paddingRight, margin);
-			layout.draw(handLeft, handRight);
-
 		}
 
 		layout.draw(handLeft, handRight);
-
 	}
 
 	public ControlScreen addControlFrame(String name, int width, int height) {

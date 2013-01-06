@@ -4,11 +4,11 @@ import processing.core.PApplet;
 import processing.core.PVector;
 
 public class Button implements Itile {
+	private int id;
 	private int x;
 	private int y;
 	private int width;
 	private int height;
-	private int id;
 
 	private int colorNormal = 25;
 	private int colorHover = 255;
@@ -39,17 +39,40 @@ public class Button implements Itile {
 	}
 
 	@Override
-	public void hover() {
-		colorCurrent = colorHover;
+	public void hover(boolean b) {
 		// TODO Auto-generated method stub
+		if (b) {
+			colorCurrent = colorHover;
+		} else {
+			colorCurrent = colorNormal;
+		}
+	}
 
+	private int mapValue(int value) {
+		float start = 0;
+		float stop = 127;
+
+		int mappedValue = (int) PApplet.map((float) value, (float) x,
+				(float) (x + width), start, stop);
+		return mappedValue;
 	}
 
 	@Override
-	public Effect intersects(int x, int y, int z, int hand) {
+	public Effect intersects(int posX, int posY, int posZ, int hand) {
 		// TODO Auto-generated method stub
-		Effect e = new Effect(id, x, y, z);
-		
+		hover(false);
+		Effect e = new Effect(-1, -1, -1, -1);
+
+		if (posX >= x && posX <= x + width && posY >= y && posY <= y + height) {
+			hover(true);
+			int mappedX = mapValue(posX);
+			int mappedY = mapValue(posY);
+			int mappedZ = mapValue(posZ);
+
+			e = new Effect(id, mappedX, mappedY, mappedZ);
+			System.out.println(e.toString());
+		}
+
 		return e;
 	}
 

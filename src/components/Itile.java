@@ -6,8 +6,8 @@ import processing.core.PVector;
 public interface Itile {
 	public void draw(PApplet p);
 	
-	public void hover();
+	public void hover(boolean b);
 	
-	public Effect intersects(int x, int y, int z, int hand);	
+	public Effect intersects(int posX, int posY, int posZ, int hand);	
 
 }
