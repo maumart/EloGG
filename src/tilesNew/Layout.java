@@ -3,7 +3,9 @@ package tilesNew;
 import java.util.ArrayList;
 import java.util.List;
 import processing.core.PApplet;
+import processing.core.PVector;
 import components.Button;
+import components.Effect;
 import components.Itile;
 import components.Trackpad;
 
@@ -27,26 +29,37 @@ public class Layout extends PApplet {
 		createTrackpad();
 	}
 
-	public void draw() {
+	public void draw(PVector handLeft, PVector handRight) {
 		for (Itile tile : tiles) {
-			
-			tile.hover();
+
+			// Effect hoverLeft = tile.intersects(Math.round(handLeft.x),
+			// Math.round(handLeft.y), Math.round(handLeft.z), 0);
+
+			// Effect hoverRight = tile.intersects(Math.round(handRight.x),
+			// Math.round(handRight.y), Math.round(handRight.z), 1);
+
+			// tile.hover();
 			tile.draw(p);
+
+			// System.out.println(hoverLeft.toString());
+
 		}
+
+		// Hand
+		p.fill(255, 0, 255);
+		p.ellipse(handLeft.x, handLeft.y, 20, 20);
 	}
 
 	private void createButtons(int num) {
 		int heightAvailable = p.height - pTop - pBottom;
-
-		int buttonHeight = Math.round((heightAvailable - margin * (num - 1))
+		int buttonSize = Math.round((heightAvailable - margin * (num - 1))
 				/ num);
-		int buttonWidth = buttonHeight;
 
 		for (int i = 0; i < num; i++) {
 			int x = pLeft;
-			int y = pTop + buttonHeight * i + margin * i;
+			int y = pTop + buttonSize * i + margin * i;
 
-			Itile tile = new Button(x, y, buttonWidth, buttonHeight);
+			Itile tile = new Button(i, x, y, buttonSize, buttonSize);
 			tiles.add(tile);
 		}
 
@@ -59,7 +72,7 @@ public class Layout extends PApplet {
 		int width = p.width - pRight - x;
 		int height = p.height - pTop - pBottom;
 
-		Itile trackpad = new Trackpad(x, y, width, height);
+		Itile trackpad = new Trackpad(0, x, y, width, height);
 		tiles.add(trackpad);
 	}
 }

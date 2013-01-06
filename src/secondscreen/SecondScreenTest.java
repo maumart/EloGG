@@ -14,18 +14,21 @@ import processing.core.PVector;
 import tiles.TileMatrix;
 import tilesNew.Layout;
 import SimpleOpenNI.SimpleOpenNI;
+import controlP5.ControlEvent;
 import controlP5.ControlP5;
 
 @SuppressWarnings("serial")
 public class SecondScreenTest extends PApplet {
+	private boolean startGame = false;
 	private PVector handLeft;
-	private PVector handRight;	
+	private PVector handRight;
 
 	// C5P
 	private ControlP5 mainFrame;
 	private ControlScreen controlFrame;
 
 	// Layout
+	private Layout layout;
 	private int background = 0;
 	private int paddingTop = 20;
 	private int paddingBottom = 20;
@@ -38,7 +41,7 @@ public class SecondScreenTest extends PApplet {
 	private boolean kinectAvailable = false;
 	private SimpleOpenNI kinect;
 	private Kinect k;
-	private ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
+	private ArrayList<KinectUser> userList = new ArrayList<KinectUser>();	
 
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--full-screen", "--display=1",
@@ -60,14 +63,16 @@ public class SecondScreenTest extends PApplet {
 		this.background(background);
 
 		handLeft = new PVector(mouseX, mouseY, 0);
+		handRight = new PVector(0, 0, 0);
 
-		Layout layout = new Layout(this, num, paddingTop, paddingBottom,
-				paddingLeft, paddingRight, margin);
-		layout.draw();
+		if (!startGame) {
+			layout = new Layout(this, num, paddingTop, paddingBottom,
+					paddingLeft, paddingRight, margin);
+			layout.draw(handLeft, handRight);
 
-		// Hand
-		fill(255, 0, 255);
-		ellipse(handLeft.x, handLeft.y, 20, 20);
+		}
+
+		layout.draw(handLeft, handRight);
 
 	}
 
@@ -77,6 +82,7 @@ public class SecondScreenTest extends PApplet {
 		ControlScreen cs = new ControlScreen(this, width, height);
 		frame.add(cs);
 		cs.init();
+
 		frame.setTitle(name);
 		frame.setSize(width, height);
 		frame.setLocation(width + border, 0);
@@ -84,5 +90,4 @@ public class SecondScreenTest extends PApplet {
 		frame.setVisible(true);
 		return cs;
 	}
-
 }
