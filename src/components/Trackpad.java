@@ -19,7 +19,7 @@ public class Trackpad implements Itile {
 	@Override
 	public void draw(PApplet p) {
 		// TODO Auto-generated method stub
-		p.fill(200);
+		//p.fill(200);
 		p.rect(x, y, width, height);
 	}
 

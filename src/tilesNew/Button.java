@@ -1,4 +1,4 @@
-package components;
+package tilesNew;
 
 import processing.core.PApplet;
 
@@ -8,36 +8,22 @@ public class Button implements Itile {
 	private int width;
 	private int height;
 	
-	private int colorNormal=25;
-	private int colorHover=255;
-	private int colorCurrent=25;	
-	
 	public Button(int x, int y, int width, int height) {
 		super();
 		this.x = x;
 		this.y = y;
 		this.width = width;
-		this.height = height;		
-	}
-	
-	public int getX(){
-		return x;
-	}
-	
-	public int getWidth(){
-		return width;
-	}
+		this.height = height;
+	}	
 
 	@Override
 	public void draw(PApplet p) {
 		// TODO Auto-generated method stub
-		p.fill(colorCurrent);
 		p.rect(x, y, width, height);
 	}
 
 	@Override
-	public void hover() {	
-		colorCurrent= colorHover;
+	public void hover() {
 		// TODO Auto-generated method stub
 
 	}
