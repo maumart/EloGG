@@ -36,7 +36,6 @@ public class Layout extends PApplet {
 			// Math.round(handRight.y), Math.round(handRight.z), 1);
 
 			tile.draw(p);
-
 		}
 
 		// Hand
@@ -66,7 +65,7 @@ public class Layout extends PApplet {
 		int width = p.width - pRight - x;
 		int height = p.height - pTop - pBottom;
 
-		Itile trackpad = new Trackpad(0, x, y, width, height);
+		Itile trackpad = new Trackpad(-1, x, y, width, height);
 		tiles.add(trackpad);
 	}
 }

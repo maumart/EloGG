@@ -22,7 +22,6 @@ public class SecondScreenMain extends PApplet {
 
 	// Layout
 	private Layout layout;
-	private int background = 0;
 	private int paddingTop = 20;
 	private int paddingBottom = 20;
 	private int margin = 20;
@@ -43,9 +42,9 @@ public class SecondScreenMain extends PApplet {
 
 	public void setup() {
 		// this.size(640, 480);
-		this.size(1024, 768);
-		this.smooth();
-		this.frameRate(60);
+		size(1024, 768);
+		smooth();
+		frameRate(60);
 
 		// Second Screen
 		mainFrame = new ControlP5(this);
@@ -53,8 +52,9 @@ public class SecondScreenMain extends PApplet {
 	}
 
 	public void draw() {
-		this.background(background);
+		background(0);
 
+		// Hand
 		handLeft = new PVector(mouseX, mouseY, 0);
 		handRight = new PVector(0, 0, 0);
 
