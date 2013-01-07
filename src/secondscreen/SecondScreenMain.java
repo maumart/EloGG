@@ -2,13 +2,15 @@ package secondscreen;
 
 import java.awt.Frame;
 import java.util.ArrayList;
-import components.Layout;
+
 import kinect.Kinect;
 import kinect.KinectUser;
 import processing.core.PApplet;
-import processing.core.PImage;
 import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
+
+import components.Layout;
+
 import controlP5.ControlP5;
 
 @SuppressWarnings("serial")
@@ -83,7 +85,6 @@ public class SecondScreenMain extends PApplet {
 			}
 
 		} else {
-			// Hand
 			handLeft = new PVector(mouseX, mouseY, 0);
 			handRight = new PVector(0, 0, 0);
 		}
@@ -95,10 +96,7 @@ public class SecondScreenMain extends PApplet {
 		}
 
 		// Game Loop
-		if (handLeft != null && handRight != null) {
-
-			layout.draw(handLeft, handRight);
-		}
+		layout.draw(handLeft, handRight);
 
 	}
 

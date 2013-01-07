@@ -8,6 +8,6 @@ public interface Itile {
 	
 	public void hover(boolean b);
 	
-	public Effect intersects(int posX, int posY, int posZ, int hand);	
+	public Event intersects(int posX, int posY, int posZ, int hand);	
 
 }

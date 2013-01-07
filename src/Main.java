@@ -15,7 +15,7 @@ import SimpleOpenNI.SimpleOpenNI;
 
 @SuppressWarnings("serial")
 public class Main extends PApplet {
-	private boolean kinectAvailable = true;
+	private boolean kinectAvailable = false;
 	private PVector handLeft;
 	private PVector handRight;
 	private ArrayList<KeyBar> keyBars = new ArrayList<KeyBar>();

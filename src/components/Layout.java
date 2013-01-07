@@ -13,7 +13,7 @@ public class Layout extends PApplet {
 	private int pBottom;
 	private int margin;
 	private int pLeft = 20;
-	private int pRight = 20;	
+	private int pRight = 20;
 
 	public Layout(PApplet p, int num, int paddingTop, int paddingBottom,
 			int paddingLeft, int paddingRight, int margin) {
@@ -29,8 +29,16 @@ public class Layout extends PApplet {
 	public void draw(PVector handLeft, PVector handRight) {
 		for (Itile tile : tiles) {
 
-			Effect effectLeft = tile.intersects(Math.round(handLeft.x),
-					Math.round(handLeft.y), Math.round(handLeft.z), 0);
+			if (handLeft != null && handRight != null) {
+				Event effectLeft = tile.intersects(Math.round(handLeft.x),
+						Math.round(handLeft.y), Math.round(handLeft.z), 0);
+
+				p.fill(255, 0, 255);
+				p.ellipse(handLeft.x, handLeft.y, 15, 15);
+
+				p.fill(0, 255, 0);
+				p.ellipse(handRight.x, handRight.y, 15, 15);
+			}
 
 			// Effect hoverRight = tile.intersects(Math.round(handRight.x),
 			// Math.round(handRight.y), Math.round(handRight.z), 1);
@@ -38,12 +46,6 @@ public class Layout extends PApplet {
 			tile.draw(p);
 		}
 
-		// Hand
-		p.fill(255, 0, 255);
-		p.ellipse(handLeft.x, handLeft.y, 15, 15);
-		
-		p.fill(0, 255, 0);
-		p.ellipse(handRight.x, handRight.y, 15, 15);
 	}
 
 	private void createButtons(int num) {

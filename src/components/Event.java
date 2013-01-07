@@ -1,12 +1,12 @@
 package components;
 
-public class Effect {
+public class Event {
 	private int fx;
 	private int x;
 	private int y;
 	private int z;
 
-	public Effect(int fx, int x, int y, int z) {
+	public Event(int fx, int x, int y, int z) {
 		super();
 		this.fx = fx;
 		this.x = x;

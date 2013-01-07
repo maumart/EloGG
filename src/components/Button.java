@@ -58,12 +58,12 @@ public class Button implements Itile {
 //	}
 
 	@Override
-	public Effect intersects(int posX, int posY, int posZ, int hand) {		
+	public Event intersects(int posX, int posY, int posZ, int hand) {		
 		// TODO Auto-generated method stub
 		int mapStart = 0;
 		int mapEnd = 127;
 		hover(false);
-		Effect effect = new Effect(-1, -1, -1, -1);
+		Event effect = new Event(-1, -1, -1, -1);
 
 		if (posX >= x && posX <= x + width && posY >= y && posY <= y + height) {
 			hover(true);
@@ -73,15 +73,15 @@ public class Button implements Itile {
 					(float) (y + height), mapStart, mapEnd);
 			int mappedZ = 0;
 
-			effect = new Effect(id, mappedX, mappedY, mappedZ);
+			effect = new Event(id, mappedX, mappedY, mappedZ);
 			
-			//System.out.println(effect.toString());
+			System.out.println(effect.toString());
 		}
 
 		return effect;
 	}
 
-	public Effect intersect(PVector handLeft, PVector handRight) {
+	public Event intersect(PVector handLeft, PVector handRight) {
 		// TODO Auto-generated method stub
 		return null;
 	}

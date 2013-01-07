@@ -51,10 +51,10 @@ public class Trackpad implements Itile {
 	// }
 
 	@Override
-	public Effect intersects(int posX, int posY, int posZ, int hand) {
+	public Event intersects(int posX, int posY, int posZ, int hand) {
 		// TODO Auto-generated method stub
 		hover(false);
-		Effect effect = new Effect(-1, -1, -1, -1);
+		Event effect = new Event(-1, -1, -1, -1);
 
 		if (posX >= x && posX <= x + width && posY >= y && posY <= y + height) {
 			hover(true);
@@ -64,15 +64,15 @@ public class Trackpad implements Itile {
 					(float) (y + height), 0, 127);
 			int mappedZ = 0;
 
-			effect = new Effect(id, mappedX, mappedY, mappedZ);
+			effect = new Event(100, mappedX, mappedY, mappedZ);
 
-			//System.out.println(effect.toString());
+			System.out.println(effect.toString());
 		}
 
 		return effect;
 	}
 
-	public Effect intersect(PVector handLeft, PVector handRight) {
+	public Event intersect(PVector handLeft, PVector handRight) {
 		// TODO Auto-generated method stub
 		return null;
 	}
