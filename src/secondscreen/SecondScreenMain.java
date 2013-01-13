@@ -85,8 +85,10 @@ public class SecondScreenMain extends PApplet {
 			}
 
 		} else {
-			handLeft = new PVector(mouseX, mouseY, 0);
-			handRight = new PVector(0, 0, 0);
+			//handLeft = new PVector(mouseX, mouseY, 0);
+			//handRight = new PVector(0, 0, 0);
+			handLeft = new PVector(0, 0, 0);
+			handRight = new PVector(mouseX, mouseY, 0);
 		}
 
 		// Layout Change

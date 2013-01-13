@@ -29,17 +29,24 @@ public class Layout extends PApplet {
 	public void draw(PVector handLeft, PVector handRight) {
 		for (Itile tile : tiles) {
 
-			if (handLeft != null && handRight != null) {
-				Event effectLeft = tile.intersects(Math.round(handLeft.x),
-						Math.round(handLeft.y), Math.round(handLeft.z), 0);
+			if (handLeft != null && handRight != null) {			
+								
+				//Event effectLeft = tile.intersects(Math.round(handLeft.x),
+				//		Math.round(handLeft.y), Math.round(handLeft.z), 0);
+				
+				Event effectRight = tile.intersects(Math.round(handRight.x),
+						Math.round(handRight.y), Math.round(handRight.z), 0);
 
 				p.fill(255, 0, 255);
 				p.ellipse(handLeft.x, handLeft.y, 15, 15);
 
 				p.fill(0, 255, 0);
 				p.ellipse(handRight.x, handRight.y, 15, 15);
+				
+				System.out.println(effectRight.toString());
 			}
 
+			
 			// Effect hoverRight = tile.intersects(Math.round(handRight.x),
 			// Math.round(handRight.y), Math.round(handRight.z), 1);
 

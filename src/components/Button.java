@@ -48,17 +48,17 @@ public class Button implements Itile {
 		}
 	}
 
-//	private int mapValue(int value) {
-//		float start = 0;
-//		float stop = 127;
-//
-//		int mappedValue = (int) PApplet.map((float) value, (float) x,
-//				(float) (x + width), start, stop);
-//		return mappedValue;
-//	}
+	// private int mapValue(int value) {
+	// float start = 0;
+	// float stop = 127;
+	//
+	// int mappedValue = (int) PApplet.map((float) value, (float) x,
+	// (float) (x + width), start, stop);
+	// return mappedValue;
+	// }
 
 	@Override
-	public Event intersects(int posX, int posY, int posZ, int hand) {		
+	public Event intersects(int posX, int posY, int posZ, int hand) {
 		// TODO Auto-generated method stub
 		int mapStart = 0;
 		int mapEnd = 127;
@@ -73,9 +73,7 @@ public class Button implements Itile {
 					(float) (y + height), mapStart, mapEnd);
 			int mappedZ = 0;
 
-			effect = new Event(id, mappedX, mappedY, mappedZ);
-			
-			System.out.println(effect.toString());
+			effect = new Event(id, mappedX, mappedY, mappedZ);			
 		}
 
 		return effect;
