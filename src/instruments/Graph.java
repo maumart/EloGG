@@ -1,46 +1,67 @@
 package instruments;
 
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 import processing.core.PApplet;
-import controlP5.*;
+import processing.core.PVector;
+import controlP5.Chart;
+import controlP5.ControlP5;
 
 public class Graph extends PApplet {
-
 	ControlP5 cp5;
 
-	Chart myChart;
+	HashMap<String, Chart> charts = new HashMap<>();
+
+	PVector centerOfMass;
+	PVector handPos;
 
 	public void setup() {
-		size(400, 700);
+		size(1024, 768);
 		smooth();
+		frameRate(60);
+
+		int centerX = this.width / 2;
+		int centerY = this.height / 2;
+
+		centerOfMass = new PVector(centerX, centerY);
+		handPos = new PVector(mouseX, mouseY);
+
 		cp5 = new ControlP5(this);
-		cp5.printPublicMethodsFor(Chart.class);
-		myChart = cp5.addChart("hello").setPosition(50, 50).setSize(200, 200)
-				.setRange(-20, 20).setView(Chart.LINE) // use Chart.LINE,
-														// Chart.PIE,
-														// Chart.AREA,
-														// Chart.BAR_CENTERED
-		;
+		int sizeWidth = 400;
+		int sizeHeight = 150;
+		int frameRateCharts = (int) frameRate * 20;
 
-		myChart.getColor().setBackground(color(255, 100));
+		Chart xpos = cp5.addChart("X-Position").setPosition(50, 50)
+				.setSize(sizeWidth, sizeHeight).setRange(0, this.width)
+				.setView(Chart.AREA).addDataSet("xpos");
 
-		myChart.addDataSet("world");
-		myChart.setColors("world", color(255, 0, 255), color(255, 0, 0));
-		myChart.setData("world", new float[4]);
+		Chart ypos = cp5.addChart("Y-Position").setPosition(500, 50)
+				.setSize(sizeWidth, sizeHeight).setRange(0, this.height)
+				.setView(Chart.AREA).addDataSet("ypos");
 
-		myChart.setStrokeWeight(1.5f);
+		charts.put("xpos", xpos);
+		charts.put("ypos", ypos);
 
-		myChart.addDataSet("earth");
-		myChart.setColors("earth", color(255), color(0, 255, 0));
-		myChart.updateData("earth", 1, 2, 10, 3);
-
+		setStuff(frameRateCharts);
 	}
 
 	public void draw() {
 		background(0);
-		// unshift: add data from left to right (first in)
-		myChart.unshift("world", (sin(frameCount * 0.01f) * 10));
+		handPos = new PVector(mouseX, mouseY);
 
-		// push: add data from right to left (last in)
-		myChart.push("earth", (sin(frameCount * 0.1f) * 10));
+		charts.get("ypos").push("ypos", (float) handPos.y);
+		charts.get("xpos").push("xpos", (float) handPos.x);
+	}
+
+	private void setStuff(int frameRateCharts) {
+		// Color
+		for (Entry<String, Chart> e : charts.entrySet()) {
+			e.getValue().getColor().setBackground(color(255, 100));
+			e.getValue().setStrokeWeight(1f);
+			e.getValue().setColors(e.getKey(), color(255), color(0, 255, 0));
+			e.getValue().setData(e.getKey(), new float[frameRateCharts]);
+		}
+
 	}
 }
