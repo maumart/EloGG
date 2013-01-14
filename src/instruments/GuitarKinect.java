@@ -15,8 +15,8 @@ public class GuitarKinect extends PApplet {
 	private PVector centerOfMass = new PVector();
 
 	private PImage guitar;
-	public SimpleOpenNI context;
-	public boolean autoCalib = true;
+	private SimpleOpenNI context;
+	private boolean autoCalib = true;
 
 	public void setup() {
 		size(640, 480);
@@ -35,7 +35,7 @@ public class GuitarKinect extends PApplet {
 		context.seekPlayer(350, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
-		context.mirror();	
+		context.mirror();
 	}
 
 	public void draw() {
@@ -84,6 +84,8 @@ public class GuitarKinect extends PApplet {
 
 		// Lines and cirles
 		drawLine(handRight, centerOfMass);
+		calculateLength(handRight, centerOfMass);
+
 		drawCirce(centerOfMass, handRight);
 		drawBB(handRight, centerOfMass);
 
@@ -100,6 +102,19 @@ public class GuitarKinect extends PApplet {
 		image(guitar, 0, 0);
 
 		popMatrix();
+	}
+
+	private void calculateLength(PVector v1, PVector v2) {
+		int maxWidth = 250;
+		int minWidth = 50;
+
+		int minMapping = 0;
+		int maxMapping = 5;
+
+		float dist = v1.dist(v2);
+		int distMapped = (int) map(dist, minWidth, maxWidth, minMapping,
+				maxMapping);
+		System.out.println("Guitar Mapping "+distMapped);
 	}
 
 	private void drawLine(PVector v1, PVector v2) {
