@@ -1,14 +1,19 @@
 package instruments;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+
+import kinect.Kinect;
+import kinect.KinectUser;
+import SimpleOpenNI.SimpleOpenNI;
 
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 import processing.event.MouseEvent;
 
-public class Guitar extends PApplet {
+public class GuitarKinect extends PApplet {
 	private PVector handLeft;
 	private PVector handRight;
 
@@ -19,12 +24,14 @@ public class Guitar extends PApplet {
 
 	private PImage guitar;
 
+	private SimpleOpenNI kinect;
+	private Kinect k;
+	private ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
+
 	public void setup() {
 		size(1024, 768);
 		smooth();
 		frameRate(60);
-
-		// que = new ArrayDeque<>(25);
 
 		int centerX = this.width / 2;
 		int centerY = this.height / 2;
@@ -32,14 +39,44 @@ public class Guitar extends PApplet {
 
 		guitar = loadImage("guitar.png");
 		guitar.resize(300, 300);
+
+		k = new Kinect(this);
+		kinect = k.getKinect();
 	}
 
 	public void draw() {
+		translate(0,0);
 		background(0);
 		fill(255);
 		noStroke();
+		float scaleFactor = 1.4f;
 
+		// Kinect updaten jeden Frame --> WICHTIG
+		kinect.update();
+
+		// Fetch User
+		userList = k.getUserList();
+
+		// if (userList.size() > 0) {
+		
 		strumPoint = new PVector(mouseX, mouseY);
+
+		for (KinectUser user : userList) {
+
+			if (kinect.isTrackingSkeleton(user.getUserId())) {
+				handLeft = user.getLeftHand(true);
+				handLeft.mult(scaleFactor);
+
+				handRight = user.getRightHand(true);
+				handRight.mult(scaleFactor);
+				
+				centerOfMass= user.getCenterOfMass(true);
+				centerOfMass.mult(scaleFactor);
+				
+				strumPoint = handLeft;
+			}
+		}
+		
 		// https://forum.processing.org/topic/calculating-angles
 
 		// if (strumPoint.mag() > 500 ) strumPoint = new PVector(500,500);
@@ -62,10 +99,10 @@ public class Guitar extends PApplet {
 		translate(centerOfMass.x, centerOfMass.y);
 		rotate(angle);
 		translate(-guitar.width / 2, -guitar.height / 2);
-		
-		//guitar.resize(400,400);
-		image(guitar, 0, 0);		
-		
+
+		// guitar.resize(400,400);
+		image(guitar, 0, 0);
+
 		popMatrix();
 	}
 

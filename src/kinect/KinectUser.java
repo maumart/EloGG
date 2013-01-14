@@ -72,6 +72,22 @@ public class KinectUser {
 		return distance;
 	}
 
+	public PVector getCenterOfMass(boolean convertToProjection) {
+		kinect.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_TORSO,
+				centerOfMass);
+
+		if (convertToProjection) {
+			PVector centerOfMassProjected = new PVector();
+			kinect.convertRealWorldToProjective(centerOfMass,
+					centerOfMassProjected);
+			centerOfMassProjected.z = calculateStretch(centerOfMassProjected);
+
+			return centerOfMassProjected;
+		}
+
+		return centerOfMass;
+	}
+
 	/*
 	 * public PVector getLeftHand() { return leftHand; }
 	 * 
