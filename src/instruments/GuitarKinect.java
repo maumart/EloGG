@@ -35,8 +35,7 @@ public class GuitarKinect extends PApplet {
 		context.seekPlayer(350, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
-		context.mirror();
-		System.out.printf("This file has %s frames", context.framesPlayer());
+		context.mirror();	
 	}
 
 	public void draw() {
