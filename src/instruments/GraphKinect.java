@@ -1,17 +1,22 @@
 package instruments;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
+import kinect.Kinect;
+import kinect.KinectUser;
+import SimpleOpenNI.SimpleOpenNI;
 
 import processing.core.PApplet;
 import processing.core.PVector;
 import controlP5.Chart;
 import controlP5.ControlP5;
 
-public class Graph extends PApplet {
+public class GraphKinect extends PApplet {
 	private ControlP5 cp5;
 
 	private HashMap<String, Chart> charts = new HashMap<>();
@@ -20,11 +25,20 @@ public class Graph extends PApplet {
 
 	private PVector centerOfMass;
 	private PVector handPos;
+	
+	private SimpleOpenNI kinect;
+	private Kinect k;
+	private ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
+	private PVector handLeft;
+	private PVector handRight;
 
 	public void setup() {
 		size(1024, 768);
 		smooth();
 		frameRate(60);
+		
+		k = new Kinect(this);
+		kinect = k.getKinect();
 
 		int centerX = this.width / 2;
 		int centerY = this.height / 2;
@@ -79,6 +93,30 @@ public class Graph extends PApplet {
 	public void draw() {
 		background(0);
 		handPos = new PVector(mouseX, mouseY);
+		float scaleFactor = 1.4f;
+		
+		
+		
+		kinect.update();
+
+		// Fetch User
+		userList = k.getUserList();		
+
+		for (KinectUser user : userList) {
+
+			if (kinect.isTrackingSkeleton(user.getUserId())) {
+				handLeft = user.getLeftHand(true);
+				handLeft.mult(scaleFactor);
+
+				handRight = user.getRightHand(true);
+				handRight.mult(scaleFactor);			
+				
+				handPos = handLeft;
+				
+				rect(handPos.x,handPos.y,20,20);
+				
+			}
+		}		
 
 		// Update Charts
 		charts.get("ypos").push("ypos", (float) handPos.y);

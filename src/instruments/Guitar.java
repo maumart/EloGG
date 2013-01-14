@@ -18,6 +18,7 @@ public class Guitar extends PApplet {
 	private int rectWidth = 20;
 
 	private PImage guitar;
+	private PImage guitarRed;
 
 	public void setup() {
 		size(1024, 768);
@@ -31,7 +32,10 @@ public class Guitar extends PApplet {
 		centerOfMass = new PVector(centerX, centerY);
 
 		guitar = loadImage("guitar.png");
-		guitar.resize(300, 300);
+		guitarRed = loadImage("guitarRed.png");
+		
+		guitar.resize(500, 500);
+		guitarRed.resize(500, 500);
 	}
 
 	public void draw() {
@@ -64,7 +68,9 @@ public class Guitar extends PApplet {
 		translate(-guitar.width / 2, -guitar.height / 2);
 		
 		//guitar.resize(400,400);
-		image(guitar, 0, 0);		
+		if (angle > 2) {
+			image(guitarRed, 0, 0);
+		} else image(guitar, 0, 0);
 		
 		popMatrix();
 	}

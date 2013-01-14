@@ -1,106 +1,103 @@
 package instruments;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 
 import kinect.Kinect;
 import kinect.KinectUser;
-import SimpleOpenNI.SimpleOpenNI;
-
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
-import processing.event.MouseEvent;
+import SimpleOpenNI.SimpleOpenNI;
 
 public class GuitarKinect extends PApplet {
-	private PVector handLeft;
-	private PVector handRight;
-
-	private PVector centerOfMass;
-	private PVector headPoint;
-	private PVector strumPoint;
-	private int rectWidth = 20;
+	private PVector handLeft = new PVector();
+	private PVector handRight = new PVector();
+	private PVector centerOfMass = new PVector();
 
 	private PImage guitar;
-
-	private SimpleOpenNI kinect;
-	private Kinect k;
-	private ArrayList<KinectUser> userList = new ArrayList<KinectUser>();
+	public SimpleOpenNI context;
+	public boolean autoCalib = true;
 
 	public void setup() {
-		size(1024, 768);
+		size(640, 480);
 		smooth();
 		frameRate(60);
+		stroke(0, 0, 255);
+		strokeWeight(3);
 
-		int centerX = this.width / 2;
-		int centerY = this.height / 2;
-		centerOfMass = new PVector(centerX, centerY);
-
+		// Images
 		guitar = loadImage("guitar.png");
-		guitar.resize(300, 300);
+		guitar.resize(400, 400);
 
-		k = new Kinect(this);
-		kinect = k.getKinect();
+		// Kinect
+		context = new SimpleOpenNI(this);
+		context.openFileRecording("guitar_long.oni");
+		context.seekPlayer(350, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
+		context.enableScene(640, 480, 60);
+		context.mirror();
+		System.out.printf("This file has %s frames", context.framesPlayer());
 	}
 
 	public void draw() {
-		translate(0,0);
 		background(0);
+		translate(0, 0);
 		fill(255);
 		noStroke();
-		float scaleFactor = 1.4f;
 
-		// Kinect updaten jeden Frame --> WICHTIG
-		kinect.update();
+		// Kinect update
+		context.update();
 
-		// Fetch User
-		userList = k.getUserList();
+		// Image
+		image(context.rgbImage(), 0, 0);
+		// image(context.sceneImage(), 0, 0);
 
-		// if (userList.size() > 0) {
-		
-		strumPoint = new PVector(mouseX, mouseY);
+		// Skelett
+		int[] userList = context.getUsers();
+		for (int i = 0; i < userList.length; i++) {
+			if (context.isTrackingSkeleton(userList[i])) {
 
-		for (KinectUser user : userList) {
+				// Get joints
+				context.getJointPositionSkeleton(userList[i],
+						SimpleOpenNI.SKEL_RIGHT_HAND, handRight);
+				context.getJointPositionSkeleton(userList[i],
+						SimpleOpenNI.SKEL_LEFT_HAND, handLeft);
+				context.getCoM(userList[i], centerOfMass);
 
-			if (kinect.isTrackingSkeleton(user.getUserId())) {
-				handLeft = user.getLeftHand(true);
-				handLeft.mult(scaleFactor);
+				// Convert joints
+				context.convertRealWorldToProjective(centerOfMass, centerOfMass);
+				context.convertRealWorldToProjective(handLeft, handLeft);
+				context.convertRealWorldToProjective(handRight, handRight);
 
-				handRight = user.getRightHand(true);
-				handRight.mult(scaleFactor);
-				
-				centerOfMass= user.getCenterOfMass(true);
-				centerOfMass.mult(scaleFactor);
-				
-				strumPoint = handLeft;
+				// Draw joints
+				drawOverlay();
 			}
 		}
-		
-		// https://forum.processing.org/topic/calculating-angles
+	}
 
-		// if (strumPoint.mag() > 500 ) strumPoint = new PVector(500,500);
+	private void drawOverlay() {
+		int rectWidth = 15;
 
-		// Rechtecken
+		// Rectangles
 		drawRect(centerOfMass, rectWidth);
-		drawRect(strumPoint, rectWidth);
-		drawLine(strumPoint, centerOfMass);
+		drawRect(handLeft, rectWidth);
+		drawRect(handRight, rectWidth);
 
-		drawCirce(centerOfMass, strumPoint);
-		drawBB(strumPoint, centerOfMass);
+		// Lines and cirles
+		drawLine(handRight, centerOfMass);
+		drawCirce(centerOfMass, handRight);
+		drawBB(handRight, centerOfMass);
 
 		// Rotation
 		pushMatrix();
-		float angle = atan2(centerOfMass.x - strumPoint.x, centerOfMass.y
-				- strumPoint.y);
-		angle *= -1;
 
-		System.out.println(angle);
+		float angle = atan2(centerOfMass.x - handRight.x, centerOfMass.y
+				- handRight.y)
+				* -1;
+
 		translate(centerOfMass.x, centerOfMass.y);
 		rotate(angle);
 		translate(-guitar.width / 2, -guitar.height / 2);
-
-		// guitar.resize(400,400);
 		image(guitar, 0, 0);
 
 		popMatrix();
@@ -112,11 +109,7 @@ public class GuitarKinect extends PApplet {
 		line(v1.x, v1.y, v2.x, v2.y);
 
 		float dist = v1.dist(v2);
-		// float angle = PVector.angleBetween(v1, v2);
-		// angle = radians(angle);
-
-		float angle = degrees(atan2(centerOfMass.x - strumPoint.x,
-				centerOfMass.y - strumPoint.y));
+		float angle = degrees(atan2(v1.x - v2.x, v1.y - v2.y));
 
 		text(dist, 50, 50);
 		text(angle, 50, 100);
@@ -134,7 +127,7 @@ public class GuitarKinect extends PApplet {
 		stroke(255, 0, 125);
 		strokeWeight(2);
 		noFill();
-		// translate(-size / 2, -size / 2);
+
 		float distance = dist(v1.x, v1.y, v2.x, v2.y);
 		ellipse(v1.x, v1.y, distance * 2, distance * 2);
 		popMatrix();
@@ -150,8 +143,57 @@ public class GuitarKinect extends PApplet {
 		popMatrix();
 	}
 
-	// Callback Debug
-	public void mousePressed() {
-		centerOfMass = new PVector(mouseX, mouseY);
+	// Callbacks SimpleOpenNI
+
+	public void onNewUser(int userId) {
+		println("onNewUser - userId: " + userId);
+		println("  start pose detection");
+
+		if (autoCalib)
+			context.requestCalibrationSkeleton(userId, true);
+		else
+			context.startPoseDetection("Psi", userId);
+	}
+
+	public void onLostUser(int userId) {
+		println("onLostUser - userId: " + userId);
+	}
+
+	public void onExitUser(int userId) {
+		println("onExitUser - userId: " + userId);
+	}
+
+	public void onReEnterUser(int userId) {
+		println("onReEnterUser - userId: " + userId);
+	}
+
+	public void onStartCalibration(int userId) {
+		println("onStartCalibration - userId: " + userId);
+	}
+
+	public void onEndCalibration(int userId, boolean successfull) {
+		println("onEndCalibration - userId: " + userId + ", successfull: "
+				+ successfull);
+
+		if (successfull) {
+			println("  User calibrated !!!");
+			context.startTrackingSkeleton(userId);
+		} else {
+			println("  Failed to calibrate user !!!");
+			println("  Start pose detection");
+			context.startPoseDetection("Psi", userId);
+		}
+	}
+
+	public void onStartPose(String pose, int userId) {
+		println("onStartPose - userId: " + userId + ", pose: " + pose);
+		println(" stop pose detection");
+
+		context.stopPoseDetection(userId);
+		context.requestCalibrationSkeleton(userId, true);
+	}
+
+	public void onEndPose(String pose, int userId) {
+		println("onEndPose - userId: " + userId + ", pose: " + pose);
 	}
 }
