@@ -1,9 +1,5 @@
 package instruments;
 
-import java.util.ArrayList;
-
-import kinect.Kinect;
-import kinect.KinectUser;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
@@ -112,8 +108,8 @@ public class GuitarKinect extends PApplet {
 		int maxMapping = 5;
 
 		float dist = v1.dist(v2);
-		int distMapped = (int) map(dist, minWidth, maxWidth, minMapping,
-				maxMapping);
+		int distMapped = Math.round(map(dist, minWidth, maxWidth, minMapping,
+				maxMapping));
 		System.out.println("Guitar Mapping "+distMapped);
 	}
 
