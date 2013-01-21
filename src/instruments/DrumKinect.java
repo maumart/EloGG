@@ -1,11 +1,11 @@
 package instruments;
 
+import SimpleOpenNI.SimpleOpenNI;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
-import SimpleOpenNI.SimpleOpenNI;
 
-public class GuitarKinect extends PApplet {
+public class DrumKinect extends PApplet {
 	private PVector handLeft = new PVector();
 	private PVector handRight = new PVector();
 	private PVector centerOfMass = new PVector();
@@ -21,14 +21,10 @@ public class GuitarKinect extends PApplet {
 		stroke(0, 0, 255);
 		strokeWeight(3);
 
-		// Images
-		guitar = loadImage("guitar.png");
-		guitar.resize(400, 400);
-
 		// Kinect
 		context = new SimpleOpenNI(this);
-		context.openFileRecording("guitar_long.oni");
-		context.seekPlayer(350, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context.openFileRecording("drum_long.oni");
+		context.seekPlayer(30, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
 		context.mirror();
@@ -71,37 +67,33 @@ public class GuitarKinect extends PApplet {
 	}
 
 	private void drawOverlay() {
-		int rectWidth = 15;
+		int rectWidth = 25;
 
 		// Rectangles
-		drawRect(centerOfMass, rectWidth);
+		// drawRect(centerOfMass, rectWidth);
 		drawRect(handLeft, rectWidth);
 		drawRect(handRight, rectWidth);
 
-		// Lines and cirles
-		drawLine(handRight, centerOfMass);
-		calculateLength(handRight, centerOfMass);
-
-		drawCirce(centerOfMass, handRight);
-		drawBB(handRight, centerOfMass);
-
-		// Rotation
-		pushMatrix();
-
-		float angle = atan2(centerOfMass.x - handRight.x, centerOfMass.y
-				- handRight.y)
-				* -1;
-
-		translate(centerOfMass.x, centerOfMass.y);
-		rotate(angle);
-		translate(-guitar.width / 2, -guitar.height / 2);
-		image(guitar, 0, 0);
-
-		popMatrix();
+		// Drums
+		drawDrums(centerOfMass, 4, rectWidth);
 	}
 
-	private void calculateAngle(PVector v1, PVector v2) {
+	private void drawDrums(PVector v1, int num, int size) {
+		pushMatrix();
+		pushStyle();
+		fill(200, 100);
 
+		translate(0, 0);
+
+		int padding = 20;
+		int widthRect = (width - padding) / num;
+
+		for (int i = 0; i < num; i++) {
+			rect((widthRect * i) + i, v1.y, widthRect, widthRect);
+		}
+
+		popStyle();
+		popMatrix();
 	}
 
 	private void calculateLength(PVector v1, PVector v2) {
@@ -206,7 +198,6 @@ public class GuitarKinect extends PApplet {
 		context.stopPoseDetection(userId);
 		context.requestCalibrationSkeleton(userId, true);
 	}
-
 	public void onEndPose(String pose, int userId) {
 		println("onEndPose - userId: " + userId + ", pose: " + pose);
 	}

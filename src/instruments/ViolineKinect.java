@@ -5,12 +5,14 @@ import processing.core.PImage;
 import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
 
-public class GuitarKinect extends PApplet {
-	private PVector handLeft = new PVector();
+public class ViolineKinect extends PApplet {
+
+	private PVector shoulderLeft = new PVector();
 	private PVector handRight = new PVector();
+	private PVector handLeft = new PVector();
 	private PVector centerOfMass = new PVector();
 
-	private PImage guitar;
+	private PImage violine;
 	private SimpleOpenNI context;
 	private boolean autoCalib = true;
 
@@ -20,18 +22,18 @@ public class GuitarKinect extends PApplet {
 		frameRate(60);
 		stroke(0, 0, 255);
 		strokeWeight(3);
-
+		
 		// Images
-		guitar = loadImage("guitar.png");
-		guitar.resize(400, 400);
+		violine = loadImage("violine.png");
+		violine.resize(400, 400);
 
 		// Kinect
 		context = new SimpleOpenNI(this);
-		context.openFileRecording("guitar_long.oni");
-		context.seekPlayer(350, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context.openFileRecording("violine_new.oni");
+		context.seekPlayer(50, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
-		context.mirror();
+		context.mirror();		
 	}
 
 	public void draw() {
@@ -42,7 +44,6 @@ public class GuitarKinect extends PApplet {
 
 		// Kinect update
 		context.update();
-
 		// Image
 		image(context.rgbImage(), 0, 0);
 		// image(context.sceneImage(), 0, 0);
@@ -55,17 +56,27 @@ public class GuitarKinect extends PApplet {
 				// // Get joints
 				context.getJointPositionSkeleton(userList[i],
 						SimpleOpenNI.SKEL_RIGHT_HAND, handRight);
+
+				context.getJointPositionSkeleton(userList[i],
+						SimpleOpenNI.SKEL_RIGHT_SHOULDER, shoulderLeft);
+
+				context.getJointPositionSkeleton(userList[i],
+						SimpleOpenNI.SKEL_NECK, shoulderLeft);
+
 				context.getJointPositionSkeleton(userList[i],
 						SimpleOpenNI.SKEL_LEFT_HAND, handLeft);
+
 				context.getCoM(userList[i], centerOfMass);
 
 				// Convert joints
 				context.convertRealWorldToProjective(centerOfMass, centerOfMass);
-				context.convertRealWorldToProjective(handLeft, handLeft);
+				context.convertRealWorldToProjective(shoulderLeft, shoulderLeft);
 				context.convertRealWorldToProjective(handRight, handRight);
+				context.convertRealWorldToProjective(handLeft, handLeft);
 
 				// Draw joints
-				drawOverlay();
+				drawOverlay();	
+				drawStick();
 			}
 		}
 	}
@@ -74,34 +85,41 @@ public class GuitarKinect extends PApplet {
 		int rectWidth = 15;
 
 		// Rectangles
-		drawRect(centerOfMass, rectWidth);
-		drawRect(handLeft, rectWidth);
+		// drawRect(centerOfMass, rectWidth);
+		// drawRect(shoulderLeft, rectWidth);
 		drawRect(handRight, rectWidth);
+		drawRect(handLeft, rectWidth);
 
 		// Lines and cirles
-		drawLine(handRight, centerOfMass);
-		calculateLength(handRight, centerOfMass);
+		// drawLine(handRight, centerOfMass);
+		// calculateLength(handRight, centerOfMass);
 
-		drawCirce(centerOfMass, handRight);
-		drawBB(handRight, centerOfMass);
+		// drawCirce(centerOfMass, handRight);
+		// drawBB(handRight, centerOfMass);
 
 		// Rotation
 		pushMatrix();
 
-		float angle = atan2(centerOfMass.x - handRight.x, centerOfMass.y
+		float angle = atan2(shoulderLeft.x - handRight.x, shoulderLeft.y
 				- handRight.y)
 				* -1;
 
-		translate(centerOfMass.x, centerOfMass.y);
+		translate(shoulderLeft.x, shoulderLeft.y);
 		rotate(angle);
-		translate(-guitar.width / 2, -guitar.height / 2);
-		image(guitar, 0, 0);
+		translate(-violine.width / 2, -violine.height / 2);
+		image(violine, 0, 0);
 
 		popMatrix();
 	}
-
-	private void calculateAngle(PVector v1, PVector v2) {
-
+	
+	private void drawStick(){
+		pushStyle();
+		stroke(2);
+		
+		int rectWidth = 15;		
+		line(handLeft.x, handLeft.y, handLeft.x*2, handLeft.y*2);
+		
+		popStyle();
 	}
 
 	private void calculateLength(PVector v1, PVector v2) {

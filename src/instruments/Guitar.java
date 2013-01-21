@@ -32,7 +32,7 @@ public class Guitar extends PApplet {
 		centerOfMass = new PVector(centerX, centerY);
 
 		guitar = loadImage("guitar.png");
-		guitarRed = loadImage("guitarRed.png");
+		guitarRed = loadImage("guitar.png");
 		
 		guitar.resize(500, 500);
 		guitarRed.resize(500, 500);

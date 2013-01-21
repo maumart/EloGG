@@ -5,7 +5,7 @@ import SimpleOpenNI.SimpleOpenNI;
 
 public class Recorder extends PApplet {
 	public SimpleOpenNI context;
-	public boolean recordFlag = false;
+	public boolean recordFlag = true;
 
 	public void setup() {
 		context = new SimpleOpenNI(this);
@@ -44,7 +44,7 @@ public class Recorder extends PApplet {
 
 			// setup the recording
 			context.enableRecorder(SimpleOpenNI.RECORD_MEDIUM_FILE,
-					"guitar.oni");
+					"violine_new.oni");
 
 			// select the recording channels
 			context.addNodeToRecording(SimpleOpenNI.NODE_DEPTH,
