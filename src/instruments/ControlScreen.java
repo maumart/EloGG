@@ -1,9 +1,11 @@
 package instruments;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import processing.core.PApplet;
 import processing.core.PFont;
@@ -22,6 +24,7 @@ public class ControlScreen extends PApplet {
 	private int width;
 	private int height;
 	private int controlMargin = 40;
+	private Queue<PVector> strum;
 
 	private SimpleOpenNI context;
 	private int sf = 2;
@@ -57,7 +60,7 @@ public class ControlScreen extends PApplet {
 
 	public void draw() {
 		this.background(0);
-
+		strum = new ArrayDeque<PVector>(10);
 		/*
 		 * int length = controllList.size(); for (int i = 0; i < length; i++) {
 		 * Controller controllElement = (Controller) controllList.get(i);
@@ -138,6 +141,9 @@ public class ControlScreen extends PApplet {
 				bodyParts.put("elbowRight", elbowRight);
 				bodyParts.put("shoulderRight", shoulderRight);
 				bodyParts.put("centerOfMass", centerOfMass);
+
+				// Strum
+				strum.add(handLeft);
 			}
 		}
 		return bodyParts;
@@ -171,20 +177,30 @@ public class ControlScreen extends PApplet {
 					bp.get("shoulderRight").x, bp.get("shoulderRight").y);
 
 			// handLeft 2 Shoulder
-
 			pushStyle();
 
 			stroke(255, 0, 255);
 			line(bp.get("handLeft").x, bp.get("handLeft").y,
 					bp.get("shoulderLeft").x, bp.get("shoulderLeft").y);
-			System.out.println(mapDistance(bp.get("handLeft"), bp.get("shoulderLeft")));
+			
+			//System.out.println(mapDistance(bp.get("handLeft"),
+			//		bp.get("shoulderLeft")));
+			
+			System.out.println(mapAngle(bp.get("handLeft"),
+					bp.get("shoulderLeft")));
+			
 			popStyle();
 		}
 	}
-	
-	private float mapDistance(PVector v1, PVector v2){
-		float dist = v1.dist(v2);		
+
+	private float mapDistance(PVector v1, PVector v2) {
+		float dist = v1.dist(v2);
 		return dist;
+	}
+
+	private float mapAngle(PVector v1, PVector v2) {
+		float angle = 90f - degrees(atan2(v1.x - v2.x, v1.y - v2.y) );
+		return angle;
 	}
 
 	private void addControlElements(ControlP5 cp5) {
