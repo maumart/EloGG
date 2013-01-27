@@ -1,16 +1,19 @@
 package instruments;
 
+import java.awt.Frame;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
+import controlP5.ControlP5;
 
 public class GuitarKinect extends PApplet {
 	private PVector handLeft = new PVector();
 	private PVector handRight = new PVector();
 	private PVector centerOfMass = new PVector();
 
-	private PImage guitar;
+	private PImage instrument;
 	private SimpleOpenNI context;
 	private boolean autoCalib = true;
 
@@ -22,8 +25,8 @@ public class GuitarKinect extends PApplet {
 		strokeWeight(3);
 
 		// Images
-		guitar = loadImage("guitar.png");
-		guitar.resize(400, 400);
+		instrument = loadImage("guitar.png");
+		instrument.resize(500, 500);
 
 		// Kinect
 		context = new SimpleOpenNI(this);
@@ -32,6 +35,11 @@ public class GuitarKinect extends PApplet {
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
 		context.mirror();
+
+		// Second Screen
+		ControlP5 mainFrame = new ControlP5(this);
+		ControlScreen controlFrame = addControlFrame("controlFrame",
+				this.width, this.height);
 	}
 
 	public void draw() {
@@ -44,10 +52,18 @@ public class GuitarKinect extends PApplet {
 		context.update();
 
 		// Image
+		pushStyle();
+
 		image(context.rgbImage(), 0, 0);
+
+		popStyle();
 		// image(context.sceneImage(), 0, 0);
 
 		// Skelett
+		getuserLimbs();
+	}
+
+	private void getuserLimbs() {
 		int[] userList = context.getUsers();
 		for (int i = 0; i < userList.length; i++) {
 			if (context.isTrackingSkeleton(userList[i])) {
@@ -67,6 +83,7 @@ public class GuitarKinect extends PApplet {
 				// Draw joints
 				drawOverlay();
 			}
+
 		}
 	}
 
@@ -94,14 +111,10 @@ public class GuitarKinect extends PApplet {
 
 		translate(centerOfMass.x, centerOfMass.y);
 		rotate(angle);
-		translate(-guitar.width / 2, -guitar.height / 2);
-		image(guitar, 0, 0);
+		translate(-instrument.width / 2, -instrument.height / 2);
+		image(instrument, 0, 0);
 
 		popMatrix();
-	}
-
-	private void calculateAngle(PVector v1, PVector v2) {
-
 	}
 
 	private void calculateLength(PVector v1, PVector v2) {
@@ -114,7 +127,7 @@ public class GuitarKinect extends PApplet {
 		float dist = v1.dist(v2);
 		int distMapped = Math.round(map(dist, minWidth, maxWidth, minMapping,
 				maxMapping));
-		System.out.println("Guitar Mapping " + distMapped);
+		// System.out.println("Guitar Mapping " + distMapped);
 	}
 
 	private void drawLine(PVector v1, PVector v2) {
@@ -155,6 +168,24 @@ public class GuitarKinect extends PApplet {
 		rect(v1.x, v1.y, v2.x, v2.y);
 		popStyle();
 		popMatrix();
+	}
+
+	public ControlScreen addControlFrame(String name, int width, int height) {
+		int border = 25;
+		Frame frame = new Frame(name);
+		ControlScreen cs;
+
+		cs = new ControlScreen(this, width, height, context);
+
+		frame.add(cs);
+		cs.init();
+
+		frame.setTitle(name);
+		frame.setSize(width, height);
+		frame.setLocation(width + border, 0);
+		frame.setResizable(false);
+		frame.setVisible(true);
+		return cs;
 	}
 
 	// Callbacks SimpleOpenNI
