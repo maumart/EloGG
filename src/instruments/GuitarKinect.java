@@ -63,7 +63,7 @@ public class GuitarKinect extends PApplet {
 		getuserLimbs();
 	}
 
-	private void getuserLimbs() {
+	public void getuserLimbs() {
 		int[] userList = context.getUsers();
 		for (int i = 0; i < userList.length; i++) {
 			if (context.isTrackingSkeleton(userList[i])) {
@@ -83,7 +83,6 @@ public class GuitarKinect extends PApplet {
 				// Draw joints
 				drawOverlay();
 			}
-
 		}
 	}
 
