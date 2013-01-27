@@ -12,6 +12,7 @@ import processing.core.PFont;
 import processing.core.PImage;
 import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
+import controlP5.Chart;
 import controlP5.ControlP5;
 import controlP5.ControllerInterface;
 import controlP5.Slider;
@@ -28,6 +29,8 @@ public class ControlScreen extends PApplet {
 
 	private SimpleOpenNI context;
 	private int sf = 2;
+	private Chart angleLeft;
+	private float test = 55f;
 
 	// initial values
 	private int paddingTop = 20;
@@ -56,6 +59,10 @@ public class ControlScreen extends PApplet {
 		PFont p = createFont("Verdana", 12, true);
 		cp5.setFont(p);
 		// addControlElements(cp5);
+
+		angleLeft = cp5.addChart("Angle Left").setPosition(350, 0)
+				.setSize(320, 240).setRange(0, 180).setView(Chart.LINE)
+				.addDataSet("test");
 	}
 
 	public void draw() {
@@ -182,13 +189,16 @@ public class ControlScreen extends PApplet {
 			stroke(255, 0, 255);
 			line(bp.get("handLeft").x, bp.get("handLeft").y,
 					bp.get("shoulderLeft").x, bp.get("shoulderLeft").y);
-			
-			//System.out.println(mapDistance(bp.get("handLeft"),
-			//		bp.get("shoulderLeft")));
-			
+
+			// System.out.println(mapDistance(bp.get("handLeft"),
+			// bp.get("shoulderLeft")));
+
 			System.out.println(mapAngle(bp.get("handLeft"),
 					bp.get("shoulderLeft")));
-			
+
+			angleLeft.push("test",
+					mapAngle(bp.get("handLeft"), bp.get("shoulderLeft")));
+
 			popStyle();
 		}
 	}
@@ -199,7 +209,7 @@ public class ControlScreen extends PApplet {
 	}
 
 	private float mapAngle(PVector v1, PVector v2) {
-		float angle = 90f - degrees(atan2(v1.x - v2.x, v1.y - v2.y) );
+		float angle = 90f + degrees(atan2(v1.x - v2.x, v1.y - v2.y));
 		return angle;
 	}
 
