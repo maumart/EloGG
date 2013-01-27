@@ -22,7 +22,9 @@ public class ControlScreen extends PApplet {
 	private int width;
 	private int height;
 	private int controlMargin = 40;
+
 	private SimpleOpenNI context;
+	private int sf = 2;
 
 	// initial values
 	private int paddingTop = 20;
@@ -68,8 +70,8 @@ public class ControlScreen extends PApplet {
 		if (context != null) {
 			if (context.isInit()) {
 				PImage scene = context.sceneImage();
-				image(scene, 0, 0, 320, 240);
-				
+				image(scene, 0, 0, scene.width / sf, scene.height / sf);
+
 				drawBodyParts(getBodyParts());
 			}
 		}
@@ -108,9 +110,9 @@ public class ControlScreen extends PApplet {
 
 				// Get Shoulder
 				context.getJointPositionSkeleton(userList[i],
-						SimpleOpenNI.SKEL_RIGHT_ELBOW, shoulderRight);
+						SimpleOpenNI.SKEL_RIGHT_SHOULDER, shoulderRight);
 				context.getJointPositionSkeleton(userList[i],
-						SimpleOpenNI.SKEL_LEFT_ELBOW, shoulderLeft);
+						SimpleOpenNI.SKEL_LEFT_SHOULDER, shoulderLeft);
 
 				// COM
 				context.getCoM(userList[i], centerOfMass);
@@ -142,22 +144,47 @@ public class ControlScreen extends PApplet {
 
 	}
 
-	private void drawBodyParts(Map<String, PVector> bodyParts) {
-		if (bodyParts.size() > 0) {
-			System.out.println(bodyParts.get("handLeft"));
+	private void drawBodyParts(Map<String, PVector> bp) {
+		stroke(255);
+		strokeWeight(5);
 
-			PVector handLeft = bodyParts.get("handLeft");
-			handLeft.div(2);
-			PVector elbowLeft = bodyParts.get("elbowLeft");
-			elbowLeft.div(2);
-			PVector handRight = bodyParts.get("handRight");
-			PVector elbowRight = bodyParts.get("elbowRight");
+		if (bp.size() > 0) {
+			// Verkleinern
+			for (PVector part : bp.values()) {
+				part.div(sf);
+			}
 
-			stroke(255);
-			strokeWeight(5);
-			line(handLeft.x, handLeft.y, elbowLeft.x, elbowLeft.y);
+			// Hand Left 2 Elbow Left
+			line(bp.get("handLeft").x, bp.get("handLeft").y,
+					bp.get("elbowLeft").x, bp.get("elbowLeft").y);
 
+			// Hand Right 2 Elbow Right
+			line(bp.get("handRight").x, bp.get("handRight").y,
+					bp.get("elbowRight").x, bp.get("elbowRight").y);
+
+			// UpperArm Left 2 Shoulder Left
+			line(bp.get("elbowLeft").x, bp.get("elbowLeft").y,
+					bp.get("shoulderLeft").x, bp.get("shoulderLeft").y);
+
+			// UpperArm Right 2 Shoulder Right
+			line(bp.get("elbowRight").x, bp.get("elbowRight").y,
+					bp.get("shoulderRight").x, bp.get("shoulderRight").y);
+
+			// handLeft 2 Shoulder
+
+			pushStyle();
+
+			stroke(255, 0, 255);
+			line(bp.get("handLeft").x, bp.get("handLeft").y,
+					bp.get("shoulderLeft").x, bp.get("shoulderLeft").y);
+			System.out.println(mapDistance(bp.get("handLeft"), bp.get("shoulderLeft")));
+			popStyle();
 		}
+	}
+	
+	private float mapDistance(PVector v1, PVector v2){
+		float dist = v1.dist(v2);		
+		return dist;
 	}
 
 	private void addControlElements(ControlP5 cp5) {
