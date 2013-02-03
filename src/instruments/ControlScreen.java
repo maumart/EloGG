@@ -30,7 +30,8 @@ public class ControlScreen extends PApplet {
 	private SimpleOpenNI context;
 	private int sf = 2;
 	private Chart angleLeft;
-	private float test = 55f;
+	public float test = 55f;
+	private float lastAngle = 0f;
 
 	// initial values
 	private int paddingTop = 20;
@@ -60,9 +61,8 @@ public class ControlScreen extends PApplet {
 		cp5.setFont(p);
 		// addControlElements(cp5);
 
-		angleLeft = cp5.addChart("Angle Left").setPosition(350, 0)
-				.setSize(320, 240).setRange(0, 180).setView(Chart.LINE)
-				.addDataSet("test");
+		angleLeft = cp5.addChart("Angle Left").setPosition(350, 0).setSize(320, 240).setRange(0, 180)
+				.setView(Chart.AREA).addDataSet("test");
 	}
 
 	public void draw() {
@@ -85,7 +85,6 @@ public class ControlScreen extends PApplet {
 				drawBodyParts(getBodyParts());
 			}
 		}
-
 	}
 
 	private Map getBodyParts() {
@@ -107,22 +106,16 @@ public class ControlScreen extends PApplet {
 			if (context.isTrackingSkeleton(userList[i])) {
 
 				// Get Hands
-				context.getJointPositionSkeleton(userList[i],
-						SimpleOpenNI.SKEL_RIGHT_HAND, handRight);
-				context.getJointPositionSkeleton(userList[i],
-						SimpleOpenNI.SKEL_LEFT_HAND, handLeft);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HAND, handRight);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND, handLeft);
 
 				// Get Elbow
-				context.getJointPositionSkeleton(userList[i],
-						SimpleOpenNI.SKEL_RIGHT_ELBOW, elbowRight);
-				context.getJointPositionSkeleton(userList[i],
-						SimpleOpenNI.SKEL_LEFT_ELBOW, elbowLeft);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_ELBOW, elbowRight);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_ELBOW, elbowLeft);
 
 				// Get Shoulder
-				context.getJointPositionSkeleton(userList[i],
-						SimpleOpenNI.SKEL_RIGHT_SHOULDER, shoulderRight);
-				context.getJointPositionSkeleton(userList[i],
-						SimpleOpenNI.SKEL_LEFT_SHOULDER, shoulderLeft);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER, shoulderRight);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_SHOULDER, shoulderLeft);
 
 				// COM
 				context.getCoM(userList[i], centerOfMass);
@@ -134,8 +127,7 @@ public class ControlScreen extends PApplet {
 				context.convertRealWorldToProjective(elbowLeft, elbowLeft);
 				context.convertRealWorldToProjective(elbowRight, elbowRight);
 
-				context.convertRealWorldToProjective(shoulderRight,
-						shoulderRight);
+				context.convertRealWorldToProjective(shoulderRight, shoulderRight);
 				context.convertRealWorldToProjective(shoulderLeft, shoulderLeft);
 
 				context.convertRealWorldToProjective(centerOfMass, centerOfMass);
@@ -149,12 +141,9 @@ public class ControlScreen extends PApplet {
 				bodyParts.put("shoulderRight", shoulderRight);
 				bodyParts.put("centerOfMass", centerOfMass);
 
-				// Strum
-				strum.add(handLeft);
 			}
 		}
 		return bodyParts;
-
 	}
 
 	private void drawBodyParts(Map<String, PVector> bp) {
@@ -168,36 +157,35 @@ public class ControlScreen extends PApplet {
 			}
 
 			// Hand Left 2 Elbow Left
-			line(bp.get("handLeft").x, bp.get("handLeft").y,
-					bp.get("elbowLeft").x, bp.get("elbowLeft").y);
+			line(bp.get("handLeft").x, bp.get("handLeft").y, bp.get("elbowLeft").x, bp.get("elbowLeft").y);
 
 			// Hand Right 2 Elbow Right
-			line(bp.get("handRight").x, bp.get("handRight").y,
-					bp.get("elbowRight").x, bp.get("elbowRight").y);
+			line(bp.get("handRight").x, bp.get("handRight").y, bp.get("elbowRight").x, bp.get("elbowRight").y);
 
 			// UpperArm Left 2 Shoulder Left
-			line(bp.get("elbowLeft").x, bp.get("elbowLeft").y,
-					bp.get("shoulderLeft").x, bp.get("shoulderLeft").y);
+			line(bp.get("elbowLeft").x, bp.get("elbowLeft").y, bp.get("shoulderLeft").x, bp.get("shoulderLeft").y);
 
 			// UpperArm Right 2 Shoulder Right
-			line(bp.get("elbowRight").x, bp.get("elbowRight").y,
-					bp.get("shoulderRight").x, bp.get("shoulderRight").y);
+			line(bp.get("elbowRight").x, bp.get("elbowRight").y, bp.get("shoulderRight").x, bp.get("shoulderRight").y);
 
 			// handLeft 2 Shoulder
 			pushStyle();
 
 			stroke(255, 0, 255);
-			line(bp.get("handLeft").x, bp.get("handLeft").y,
-					bp.get("shoulderLeft").x, bp.get("shoulderLeft").y);
+			line(bp.get("handLeft").x, bp.get("handLeft").y, bp.get("shoulderLeft").x, bp.get("shoulderLeft").y);
 
 			// System.out.println(mapDistance(bp.get("handLeft"),
 			// bp.get("shoulderLeft")));
 
-			System.out.println(mapAngle(bp.get("handLeft"),
-					bp.get("shoulderLeft")));
+			// System.out.println(mapAngle(bp.get("handLeft"),
+			// bp.get("shoulderLeft")));
 
-			angleLeft.push("test",
-					mapAngle(bp.get("handLeft"), bp.get("shoulderLeft")));
+			// Add to Graph
+			angleLeft.push("test", mapAngle(bp.get("handLeft"), bp.get("shoulderLeft")));
+
+			// Strum
+			// lastAngle = strum.peek().x;
+			// strum.add(bp.get("handLeft"));
 
 			popStyle();
 		}
@@ -214,25 +202,21 @@ public class ControlScreen extends PApplet {
 	}
 
 	private void addControlElements(ControlP5 cp5) {
-		Slider slidernumber = cp5.addSlider("Effects #").plugTo(p, "num")
-				.setRange(2, 6).setValue(num);
+		Slider slidernumber = cp5.addSlider("Effects #").plugTo(p, "num").setRange(2, 6).setValue(num);
 
-		Slider sliderPaddingTop = cp5.addSlider("Padding-Top")
-				.plugTo(p, "paddingTop").setRange(0, 100).setValue(paddingTop);
+		Slider sliderPaddingTop = cp5.addSlider("Padding-Top").plugTo(p, "paddingTop").setRange(0, 100)
+				.setValue(paddingTop);
 
-		Slider sliderPaddingBottom = cp5.addSlider("Padding-Bottom")
-				.plugTo(p, "paddingBottom").setRange(0, 100)
+		Slider sliderPaddingBottom = cp5.addSlider("Padding-Bottom").plugTo(p, "paddingBottom").setRange(0, 100)
 				.setValue(paddingBottom);
 
-		Slider sliderMargin = cp5.addSlider("Margin").plugTo(p, "margin")
-				.setRange(10, 100).setValue(margin);
+		Slider sliderMargin = cp5.addSlider("Margin").plugTo(p, "margin").setRange(10, 100).setValue(margin);
 
-		Slider sliderScaleFactor = cp5.addSlider("Scale")
-				.plugTo(p, "scaleFactor").setRange(1f, 3f)
+		Slider sliderScaleFactor = cp5.addSlider("Scale").plugTo(p, "scaleFactor").setRange(1f, 3f)
 				.setValue(scaleFactor);
 
-		Toggle onOffToggle = cp5.addToggle("Launch").plugTo(p, "startGame")
-				.setSize(50, 20).setValue(false).setMode(ControlP5.SWITCH);
+		Toggle onOffToggle = cp5.addToggle("Launch").plugTo(p, "startGame").setSize(50, 20).setValue(false)
+				.setMode(ControlP5.SWITCH);
 
 		controllList.add(slidernumber);
 		controllList.add(sliderPaddingTop);

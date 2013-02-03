@@ -38,8 +38,7 @@ public class GuitarKinect extends PApplet {
 
 		// Second Screen
 		ControlP5 mainFrame = new ControlP5(this);
-		ControlScreen controlFrame = addControlFrame("controlFrame",
-				this.width, this.height);
+		ControlScreen controlFrame = addControlFrame("controlFrame", this.width, this.height);
 	}
 
 	public void draw() {
@@ -69,10 +68,8 @@ public class GuitarKinect extends PApplet {
 			if (context.isTrackingSkeleton(userList[i])) {
 
 				// // Get joints
-				context.getJointPositionSkeleton(userList[i],
-						SimpleOpenNI.SKEL_RIGHT_HAND, handRight);
-				context.getJointPositionSkeleton(userList[i],
-						SimpleOpenNI.SKEL_LEFT_HAND, handLeft);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HAND, handRight);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND, handLeft);
 				context.getCoM(userList[i], centerOfMass);
 
 				// Convert joints
@@ -104,9 +101,7 @@ public class GuitarKinect extends PApplet {
 		// Rotation
 		pushMatrix();
 
-		float angle = atan2(centerOfMass.x - handRight.x, centerOfMass.y
-				- handRight.y)
-				* -1;
+		float angle = atan2(centerOfMass.x - handRight.x, centerOfMass.y - handRight.y) * -1;
 
 		translate(centerOfMass.x, centerOfMass.y);
 		rotate(angle);
@@ -124,8 +119,7 @@ public class GuitarKinect extends PApplet {
 		int maxMapping = 5;
 
 		float dist = v1.dist(v2);
-		int distMapped = Math.round(map(dist, minWidth, maxWidth, minMapping,
-				maxMapping));
+		int distMapped = Math.round(map(dist, minWidth, maxWidth, minMapping, maxMapping));
 		// System.out.println("Guitar Mapping " + distMapped);
 	}
 
@@ -216,8 +210,7 @@ public class GuitarKinect extends PApplet {
 	}
 
 	public void onEndCalibration(int userId, boolean successfull) {
-		println("onEndCalibration - userId: " + userId + ", successfull: "
-				+ successfull);
+		println("onEndCalibration - userId: " + userId + ", successfull: " + successfull);
 
 		if (successfull) {
 			println("  User calibrated !!!");
