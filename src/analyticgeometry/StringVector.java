@@ -47,16 +47,43 @@ public class StringVector extends PApplet {
 
 		// Point 2
 		PVector v4 = new PVector(COM.x - rv.x, COM.y - rv.y);
+		ellipse(v4.x, v4.y, size, size);
 
+		// Saite 0
 		line(COM.x, COM.y, Math.abs(rv.x + COM.x), Math.abs(rv.y + COM.y));
 		line(COM.x, COM.y, Math.abs(rv.x - COM.x), Math.abs(rv.y - COM.y));
 
-		System.out.println(rv);
-		
-		ellipse(v4.x, v4.y, size, size);
+		// Orthogonaler Vektor
+		PVector ov = new PVector(rv.x, rv.y);
+		ov.normalize();
+		// ov.mult(100);
+		ov = new PVector(ov.y, -ov.x);
+
+		ellipse(ov.x + COM.x, ov.y + COM.y, size, size);
+		line(COM.x, COM.y, Math.abs(ov.x + COM.x), Math.abs(ov.y + COM.y));
+
+		// Zweite Saite
+		createStrings(COM, ov, rv);
 
 		popMatrix();
-
 	}
 
+	private void createStrings(PVector COM, PVector ov, PVector rv) {
+		int padding = 10;
+
+		for (int i = 0; i < numStrings; i++) {
+
+			ov.add(padding, padding, 0);
+			PVector newCOM = new PVector(ov.x + COM.x, ov.y + COM.y);
+
+			// Vertikale Linie
+			line(COM.x, COM.y, Math.abs(ov.x + COM.x), Math.abs(ov.y + COM.y));
+
+			// Saite
+			line(newCOM.x, newCOM.y, Math.abs(rv.x + newCOM.x), Math.abs(rv.y + newCOM.y));
+			line(newCOM.x, newCOM.y, Math.abs(rv.x - newCOM.x), Math.abs(rv.y - newCOM.y));
+
+		}
+
+	}
 }
