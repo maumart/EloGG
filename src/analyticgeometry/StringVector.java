@@ -55,8 +55,8 @@ public class StringVector extends PApplet {
 
 		// Orthogonaler Vektor
 		PVector ov = new PVector(rv.x, rv.y);
-		ov.normalize();
-		// ov.mult(100);
+		ov.normalize();		 
+		ov.mult(100);
 		ov = new PVector(ov.y, -ov.x);
 
 		ellipse(ov.x + COM.x, ov.y + COM.y, size, size);
@@ -71,13 +71,13 @@ public class StringVector extends PApplet {
 	private void createStrings(PVector COM, PVector ov, PVector rv) {
 		int padding = 10;
 
-		for (int i = 0; i < numStrings; i++) {
-
-			ov.add(padding, padding, 0);
+		for (int i = 1; i < numStrings; i++) {
+			ov.normalize();
+			ov.mult(padding * i);
 			PVector newCOM = new PVector(ov.x + COM.x, ov.y + COM.y);
 
 			// Vertikale Linie
-			line(COM.x, COM.y, Math.abs(ov.x + COM.x), Math.abs(ov.y + COM.y));
+			line(newCOM.x, newCOM.y, Math.abs(ov.x + newCOM.x), Math.abs(ov.y + newCOM.y));
 
 			// Saite
 			line(newCOM.x, newCOM.y, Math.abs(rv.x + newCOM.x), Math.abs(rv.y + newCOM.y));
