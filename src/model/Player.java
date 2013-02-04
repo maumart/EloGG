@@ -6,7 +6,7 @@ import processing.core.PVector;
 
 public class Player {
 	private int id;
-	private PVector handLeft;
+	public PVector handLeft;
 	private PVector handRight;
 	private PVector elbowLeft;
 	private PVector elbowRight;
@@ -15,10 +15,19 @@ public class Player {
 	private PVector head;
 	private PVector neck;
 	private PVector torso;
-	private PVector centerOfMass;
+	public PVector centerOfMass;
 
 	private Queue<PVector> GuitarStrum;
 	private Queue<PVector> GuitarHead;
+	
+	public Player() {
+			
+	}
+	
+	public Player(int id) {
+		super();
+		this.id = id;	
+	}
 
 	public Player(int id, PVector handLeft, PVector handRight, PVector centerOfMass) {
 		super();

@@ -1,16 +1,92 @@
 package analyticgeometry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import model.Player;
 import processing.core.PApplet;
 import processing.core.PVector;
 
 public class StringVector extends PApplet {
-	private PVector COM = new PVector(320, 240);
-	private PVector handLeft;
-	private PVector point1 = new PVector(600, 100);
 
-	private int numStrings = 5;
-	private Player p;
+	private interface KinectInstrument {
+		public void update(Player player);
+
+		public void draw();
+	}
+
+	private class Guitar implements KinectInstrument {
+		List<GuitarString> _myStrings = new ArrayList<>();
+		private float _myNumbrOfStrings;
+
+		private float _myStringSpace;
+		private float _myNeckDistance;
+		private float _myFredDistance;
+
+		private PVector centerOfMass = new PVector(320, 240);		
+
+		public Guitar(float _myNumbrOfStrings, float _myStringSpace, float _myNeckDistance, float _myFredDistance) {
+			super();
+			this._myNumbrOfStrings = _myNumbrOfStrings;
+			this._myStringSpace = _myStringSpace;
+			this._myNeckDistance = _myNeckDistance;
+			this._myFredDistance = _myFredDistance;
+
+			strings(_myNumbrOfStrings);
+		}
+
+		private void strings(float numberOfStrings) {
+			_myStrings.clear();
+			if (numberOfStrings < 1)
+				return;
+			float padding = -(numberOfStrings - 1) / 2;
+			for (int i = 0; i < numberOfStrings; i++) {
+				_myStrings.add(new GuitarString(padding));
+				padding += 1;
+			}
+		}
+
+		public void update(Player player) {
+			// Ausgangsvektoren
+			PVector v1 = player.handLeft;		
+
+			// Richtungsvektor zu punkt 1 aka Linke Hand
+			PVector rv = new PVector(v1.x - centerOfMass.x, v1.y - centerOfMass.y);
+			rv.normalize();
+
+			PVector ov = new PVector(rv.y, -rv.x);
+
+			PVector neckPos = new PVector(rv.x, rv.y);
+			neckPos.mult(_myNeckDistance);
+
+			PVector fredPos = new PVector(rv.x, rv.y);
+			fredPos.mult(-_myFredDistance);
+
+			for (GuitarString myString : _myStrings) {
+				PVector translation = new PVector(ov.x, ov.y);
+				translation.mult(myString.padding * _myStringSpace);
+
+				myString.start().set(neckPos);
+				myString.start().add(translation);
+				myString.end().set(fredPos);
+				myString.end().add(translation);
+
+				// System.out.println(myString.start());
+			}
+
+		}
+
+		public void draw() {
+			stroke(255, 0, 255);
+			strokeWeight(2);
+
+			for (GuitarString myString : _myStrings) {
+
+				line(myString.start().x, myString.start().y, myString.end().x, myString.end().y);
+			}
+
+		}
+	}
 
 	public void setup() {
 		size(640, 480);
@@ -25,65 +101,22 @@ public class StringVector extends PApplet {
 
 	public void draw() {
 		background(0);
-		translate(0, 0);
 
-		int size = 10;
+		Player p = new Player();
+		p.setHandLeft(new PVector(mouseX, mouseY));
+		p.setCOM(new PVector(320, 240));
+
+		//System.out.println(p.handLeft);
 
 		pushMatrix();
+		translate(p.centerOfMass.x, p.centerOfMass.y);
 
-		// COM
-		ellipse(COM.x, COM.y, size, size);
+		Guitar g = new Guitar(4, 20, 200, 100);
 
-		// point1
-		point1 = new PVector(mouseX, mouseY);
-		ellipse(point1.x, point1.y, size, size);
-
-		// Ausgangsvektoren
-		PVector v1 = point1;
-		PVector v2 = COM;
-
-		// Richtungsvektor zu punkt 1 aka Linke Hand
-		PVector rv = new PVector(v1.x - v2.x, v1.y - v2.y);
-
-		// Point 2
-		PVector v4 = new PVector(COM.x - rv.x, COM.y - rv.y);
-		ellipse(v4.x, v4.y, size, size);
-
-		// Saite 0
-		line(COM.x, COM.y, Math.abs(rv.x + COM.x), Math.abs(rv.y + COM.y));
-		line(COM.x, COM.y, Math.abs(rv.x - COM.x), Math.abs(rv.y - COM.y));
-
-		// Orthogonaler Vektor
-		PVector ov = new PVector(rv.x, rv.y);
-		ov.normalize();		 
-		ov.mult(100);
-		ov = new PVector(ov.y, -ov.x);
-
-		ellipse(ov.x + COM.x, ov.y + COM.y, size, size);
-		line(COM.x, COM.y, Math.abs(ov.x + COM.x), Math.abs(ov.y + COM.y));
-
-		// Zweite Saite
-		createStrings(COM, ov, rv);
+		g.update(p);
+		g.draw();
 
 		popMatrix();
-	}
-
-	private void createStrings(PVector COM, PVector ov, PVector rv) {
-		int padding = 10;
-
-		for (int i = 1; i < numStrings; i++) {
-			ov.normalize();
-			ov.mult(padding * i);
-			PVector newCOM = new PVector(ov.x + COM.x, ov.y + COM.y);
-
-			// Vertikale Linie
-			line(newCOM.x, newCOM.y, Math.abs(ov.x + newCOM.x), Math.abs(ov.y + newCOM.y));
-
-			// Saite
-			line(newCOM.x, newCOM.y, Math.abs(rv.x + newCOM.x), Math.abs(rv.y + newCOM.y));
-			line(newCOM.x, newCOM.y, Math.abs(rv.x - newCOM.x), Math.abs(rv.y - newCOM.y));
-
-		}
 
 	}
 }
