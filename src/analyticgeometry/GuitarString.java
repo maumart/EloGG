@@ -21,9 +21,7 @@ public class GuitarString {
 	
 	public PVector end(){
 		return vectorEnde;
-	}
-	
-	
+	}	
 	
 	public void draw(){
 		

@@ -23,7 +23,7 @@ public class StringVector extends PApplet {
 		private float _myNeckDistance;
 		private float _myFredDistance;
 
-		private PVector centerOfMass = new PVector(320, 240);		
+		private PVector centerOfMass = new PVector(320, 240);
 
 		public Guitar(float _myNumbrOfStrings, float _myStringSpace, float _myNeckDistance, float _myFredDistance) {
 			super();
@@ -48,7 +48,7 @@ public class StringVector extends PApplet {
 
 		public void update(Player player) {
 			// Ausgangsvektoren
-			PVector v1 = player.handLeft;		
+			PVector v1 = player.handLeft;
 
 			// Richtungsvektor zu punkt 1 aka Linke Hand
 			PVector rv = new PVector(v1.x - centerOfMass.x, v1.y - centerOfMass.y);
@@ -88,6 +88,8 @@ public class StringVector extends PApplet {
 		}
 	}
 
+	/* InnerClass Kram Ende */
+
 	public void setup() {
 		size(640, 480);
 		frameRate(60);
@@ -106,7 +108,7 @@ public class StringVector extends PApplet {
 		p.setHandLeft(new PVector(mouseX, mouseY));
 		p.setCOM(new PVector(320, 240));
 
-		//System.out.println(p.handLeft);
+		// System.out.println(p.handLeft);
 
 		pushMatrix();
 		translate(p.centerOfMass.x, p.centerOfMass.y);
