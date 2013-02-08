@@ -48,12 +48,12 @@ public class StringVector extends PApplet {
 
 		public void update(Player player) {
 			// Ausgangsvektoren
-			PVector v1 = player.handLeft;
+			PVector v1 = new PVector(500, 100);
+			PVector vRight = player.handRight.get();
 
 			// Richtungsvektor zu punkt 1 aka Linke Hand
 			PVector rv = new PVector(v1.x - centerOfMass.x, v1.y - centerOfMass.y);
 			rv.normalize();
-
 			PVector ov = new PVector(rv.y, -rv.x);
 
 			PVector neckPos = new PVector(rv.x, rv.y);
@@ -71,19 +71,50 @@ public class StringVector extends PApplet {
 				myString.end().set(fredPos);
 				myString.end().add(translation);
 
-				// System.out.println(myString.start());
+				// Temp
+				//vRight.x = vRight.x - 0;
+				//vRight.y = vRight.y - 0;
+
+				vRight.normalize();
+				PVector pv = new PVector(ov.x, ov.y);
+				pv.mult(100);
+				//line(rv.x, rv.y, pv.x, pv.y);
+
+				pv.normalize();
+
+				float dotProduct = vRight.dot(pv);
+				myString.dotProduct= dotProduct;
+				
+				if (dotProduct > 0) {
+					System.out.println("# "+myString.padding+" over");
+				}
+				
+				if (dotProduct < 0) {
+					System.out.println("# "+myString.padding+" under");
+				}				
+				
 			}
 
 		}
 
-		public void draw() {
+		public void draw(Player player) {
 			stroke(255, 0, 255);
 			strokeWeight(2);
 
 			for (GuitarString myString : _myStrings) {
-
+				stroke(0, 255, 255);
 				line(myString.start().x, myString.start().y, myString.end().x, myString.end().y);
+
 			}
+
+			//translate(-player.centerOfMass.x, -player.centerOfMass.y);
+
+			ellipse(player.handRight.x, player.handRight.y, 10, 10);
+		}
+
+		@Override
+		public void draw() {
+			// TODO Auto-generated method stub
 
 		}
 	}
@@ -105,18 +136,19 @@ public class StringVector extends PApplet {
 		background(0);
 
 		Player p = new Player();
-		p.setHandLeft(new PVector(mouseX, mouseY));
-		p.setCOM(new PVector(320, 240));
 
-		// System.out.println(p.handLeft);
+		p.setCOM(new PVector(320, 240));
+		p.setHandLeft(new PVector(mouseX-p.centerOfMass.x, mouseY-p.centerOfMass.y));
+		p.setHandRight(new PVector(mouseX-p.centerOfMass.x, mouseY-p.centerOfMass.y));
+		
 
 		pushMatrix();
 		translate(p.centerOfMass.x, p.centerOfMass.y);
 
-		Guitar g = new Guitar(4, 20, 200, 100);
+		Guitar g = new Guitar(5, 20, 300, 100);
 
 		g.update(p);
-		g.draw();
+		g.draw(p);
 
 		popMatrix();
 

@@ -7,15 +7,15 @@ import processing.core.PVector;
 public class Player {
 	private int id;
 	public PVector handLeft;
-	private PVector handRight;
+	public PVector handRight;
+	public PVector centerOfMass;
 	private PVector elbowLeft;
 	private PVector elbowRight;
 	private PVector shoulderLeft;
 	private PVector shoulderRight;
 	private PVector head;
 	private PVector neck;
-	private PVector torso;
-	public PVector centerOfMass;
+	private PVector torso;	
 
 	private Queue<PVector> GuitarStrum;
 	private Queue<PVector> GuitarHead;
