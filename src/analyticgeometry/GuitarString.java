@@ -6,8 +6,7 @@ public class GuitarString {
 	private PVector vectorStart;
 	private PVector vectorEnde;
 	public float padding;
-	public float dotProduct=1;
-	
+	public float dotProduct=1;	
 
 	public GuitarString(float padding) {
 		super();
@@ -18,11 +17,18 @@ public class GuitarString {
 	
 	public PVector halfVektor(){
 		 PVector pv = new PVector(vectorEnde.x-vectorStart.x,vectorEnde.y-vectorStart.y);		 
-		 
 		 return pv;
 	}
 	
 	public PVector orthogonalVector(){
+		 PVector pv = new PVector(-vectorEnde.y-vectorStart.y,vectorEnde.x-vectorStart.x);
+		 //pv.normalize();
+		 //PVector rv = new PVector(vectorEnde.x-vectorStart.x,vectorEnde.y-vectorStart.y);		 
+		 
+		 return pv;
+	}
+	
+	public PVector directionVector(){
 		 PVector pv = new PVector(-vectorEnde.y-vectorStart.y,vectorEnde.x-vectorStart.x);
 		 //pv.normalize();
 		 //PVector rv = new PVector(vectorEnde.x-vectorStart.x,vectorEnde.y-vectorStart.y);		 

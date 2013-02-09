@@ -1,4 +1,4 @@
-package model;
+package analyticgeometry;
 
 import java.util.Queue;
 
