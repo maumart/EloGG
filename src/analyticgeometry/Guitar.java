@@ -8,15 +8,13 @@ import processing.core.PVector;
 
 public class Guitar implements KinectInstrument {
 	List<GuitarString> _myStrings = new ArrayList<>();
-	private float _myNumbrOfStrings;
 
-	private float _myStringSpace;
-	private float _myNeckDistance;
-	private float _myFredDistance;
-	
+	private float _myNumbrOfStrings; // Anzahl Saiten
+	private float _myStringSpace; // Abstand Saiten
+	private float _myNeckDistance; // Abstand COM - Head
+	private float _myFredDistance; // Abstand COM - Tail
+
 	public PApplet p;
-
-	private PVector centerOfMass = new PVector(320, 240);
 
 	public Guitar(float _myNumbrOfStrings, float _myStringSpace, float _myNeckDistance, float _myFredDistance, PApplet p) {
 		super();
@@ -24,20 +22,21 @@ public class Guitar implements KinectInstrument {
 		this._myStringSpace = _myStringSpace;
 		this._myNeckDistance = _myNeckDistance;
 		this._myFredDistance = _myFredDistance;
-		
 		this.p = p;
 
-		strings(_myNumbrOfStrings);
+		generateStrings(_myNumbrOfStrings);
 	}
 
-	private void strings(float numberOfStrings) {
+	private void generateStrings(float numberOfStrings) {
 		_myStrings.clear();
 		if (numberOfStrings < 1)
 			return;
 		float padding = -(numberOfStrings - 1) / 2;
 		for (int i = 0; i < numberOfStrings; i++) {
-			_myStrings.add(new GuitarString(padding));
+			_myStrings.add(new GuitarString(padding,i));
 			padding += 1;
+			
+			System.out.println(padding);
 		}
 	}
 
@@ -47,7 +46,9 @@ public class Guitar implements KinectInstrument {
 		PVector vRight = player.handRight.get();
 
 		// Richtungsvektor zu punkt 1 aka Linke Hand
-		PVector rv = new PVector(v1.x - centerOfMass.x, v1.y - centerOfMass.y);
+		// PVector rv = new PVector(v1.x - centerOfMass.x, v1.y -
+		// centerOfMass.y);
+		PVector rv = new PVector(v1.x - player.centerOfMass.x, v1.y - player.centerOfMass.y);
 		rv.normalize();
 		PVector ov = new PVector(rv.y, -rv.x);
 
@@ -81,12 +82,14 @@ public class Guitar implements KinectInstrument {
 			myString.dotProduct = dotProduct;
 
 			if (dotProduct > 0) {
-				System.out.println("# " + myString.padding + " over");
+				//System.out.println("# " + myString.padding + " over");
+
 			}
 
 			if (dotProduct < 0) {
-				System.out.println("# " + myString.padding + " under");
+				//System.out.println("# " + myString.padding + " under");
 			}
+			//System.out.println(myString.padding);
 
 		}
 
@@ -107,9 +110,5 @@ public class Guitar implements KinectInstrument {
 		p.ellipse(player.handRight.x, player.handRight.y, 10, 10);
 	}
 
-	@Override
-	public void draw() {
-		// TODO Auto-generated method stub
-
-	}
+	
 }

@@ -1,55 +1,56 @@
 package analyticgeometry;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class StringVector extends PApplet {	
+public class MainGuitar extends PApplet {
+	private Player p;
+	private KinectData k;
+	private KinectInstrument instrument;
 
 	public void setup() {
+		// Processing Stuff
 		size(640, 480);
 		frameRate(60);
 		smooth();
-		// translate(0, 0);
-
 		stroke(255, 0, 255);
 		strokeWeight(2);
-		// p = new Player(0, handLeft, handRight, centerOfMass)
+
+		// New Player
+		p = new Player();
+
+		// Kinect
+		k = new KinectData();
+		
+		// New Guitar
+		instrument = new Guitar(2, 20, 300, 100, this);
 	}
 
 	public void draw() {
 		background(0);
 
-		// Kinect
-		KinectData k = new KinectData();
+		// Workaround
 		k.setMousePosition(new PVector(mouseX, mouseY));
 
-		// Player
-		Player p = new Player();
-		// p.setCOM(new PVector(320, 240));
+		// Personen Koordinaten updaten
 		p.setCOM(k.centerOfMass());
-		p.setHandRight(k.handRight());
+		p.setHandRight(k.handRight());		
 
 		// k.setMousePosition(new PVector(mouseX - p.centerOfMass.x, mouseY -
 		// p.centerOfMass.y));
-
 		// p.setHandLeft(new PVector(mouseX - p.centerOfMass.x, mouseY -
 		// p.centerOfMass.y));
-
 		// p.setHandRight(new PVector(mouseX - p.centerOfMass.x, mouseY -
 		// p.centerOfMass.y));
 
 		pushMatrix();
+
+		// Ursprung zum COM verschieben
 		translate(p.centerOfMass.x, p.centerOfMass.y);
 
-		Guitar g = new Guitar(1, 20, 300, 100, this);
-
-		g.update(p);
-		g.draw(p);
+		instrument.update(p);
+		instrument.draw(p);
 
 		popMatrix();
-
 	}
 }

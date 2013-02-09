@@ -19,9 +19,11 @@ public class KinectData {
 	}
 
 	public void setMousePosition(PVector mouse) {
-		this.handRight = new PVector();
-		this.handRight.x= mouse.x-centerOfMass.x;
-		this.handRight.y= mouse.y-centerOfMass.y;
+		if (!kinectAvailable) {
+			this.handRight = new PVector();
+			this.handRight.x = mouse.x - centerOfMass.x;
+			this.handRight.y = mouse.y - centerOfMass.y;
+		}
 	}
 
 	public PVector centerOfMass() {

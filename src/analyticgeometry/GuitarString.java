@@ -5,14 +5,17 @@ import processing.core.PVector;
 public class GuitarString {
 	private PVector vectorStart;
 	private PVector vectorEnde;
+	public int	id;
+	
 	public float padding;
 	public float dotProduct=1;	
 
-	public GuitarString(float padding) {
+	public GuitarString(float padding, int id) {
 		super();
 		this.vectorStart = new PVector();
 		this.vectorEnde = new PVector();
 		this.padding = padding;
+		this.id = id;
 	}
 	
 	public PVector halfVektor(){
