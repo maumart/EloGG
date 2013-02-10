@@ -39,7 +39,8 @@ public class MainGuitar extends PApplet {
 
 		// Midi
 		midi = new Midi();
-
+		
+		instrument = new Guitar(4, 10, 200, 100, this, midi,4);
 	}
 
 	public void draw() {
@@ -60,9 +61,7 @@ public class MainGuitar extends PApplet {
 		if (kinectReady) {
 
 			// New Guitar
-			//instrument = new Guitar(1, 100, 200, 100, this, midi);			
-			
-			instrument = new Guitar(1, 10, p.armLegth(), 100, this, midi,4);
+			//instrument = new Guitar(1, 100, 200, 100, this, midi);		
 			
 			//System.out.println(p.armLegth());
 
@@ -88,7 +87,7 @@ public class MainGuitar extends PApplet {
 			instrument.draw(p);
 			instrument.checkFredMatch(p);
 			instrument.checkNeckMatch(p);
-			instrument.checkHeadFred();
+			//instrument.checkHeadFred();
 
 			popMatrix();
 		}

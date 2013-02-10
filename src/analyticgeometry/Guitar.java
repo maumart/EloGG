@@ -18,9 +18,9 @@ public class Guitar implements KinectInstrument {
 	public PApplet p;
 	public boolean debug = false;
 	private Midi midi;
+
+	private boolean fredValue = false;
 	
-	private float fredValue =0;
-	private float neckValue = 0;
 
 	public Guitar(float _myNumbrOfStrings, float _myStringSpace, float _myNeckDistance, float _myFredDistance,
 			PApplet p, Midi midi, int numberOfNeckAreas) {
@@ -129,26 +129,27 @@ public class Guitar implements KinectInstrument {
 			PVector tempCenter = myString.centerOfVector.get();
 			tempCenter.normalize();
 
-			float dotProduct = v2.dot(ov2);			
-			fredValue = dotProduct;
+			float dotProduct = v2.dot(ov2);
 
-			// System.out.println(dotProduct);
-
-			if (dotProduct > 0) {
-				// System.out.println("# " + myString.id + " over");
-				
-			}
-
-			if (dotProduct < 0) {
-				// System.out.println("# " + myString.id + " under");
-				// midi.playMidi(myString.id);
+			// Crap
+			if (myString.dotProduct < 0 && dotProduct > 0) {
+				// System.out.println("pass");
+				fredValue = true;
+			} else if (myString.dotProduct > 0 && dotProduct < 0) {
+				// System.out.println("pass");
+				fredValue = true;
 			}
 			
+			// Check
+			int neckValue = checkNeckMatch(player);			
+
+			// Neues Dot Product Speichern
 			myString.dotProduct = dotProduct;
+			midi.playMidi(myString.id, neckValue);
 		}
 	}
 
-	public void checkNeckMatch(Player player) {
+	public int checkNeckMatch(Player player) {
 		// PVector v1 = player.handLeft.get();
 		PVector v1 = player.getHandLeftAbsolute().get();
 		// v1.normalize();
@@ -156,6 +157,8 @@ public class Guitar implements KinectInstrument {
 		// PVector rv = new PVector(v1.x - player.centerOfMass.x, v1.y -
 		// player.centerOfMass.y);
 		// rv.normalize();
+		
+		float neckValue=0;
 
 		for (GuitarString myString : _myStrings) {
 			PVector rv2 = new PVector(myString.centerOfVector.x, myString.centerOfVector.y);
@@ -164,18 +167,17 @@ public class Guitar implements KinectInstrument {
 					- myString.centerOfVector.y);
 
 			// Distance Center of Vector Hand
-			float distance = v1.dist(myString.centerOfVector);			
-			
+			float distance = v1.dist(myString.centerOfVector);
+
 			// Limit Max Distance
 			if (distance > _myNeckDistance) {
 				v1.set(endVector);
 			}
-			
+
 			// Mapping
 			float mappedValue = PApplet.map(distance, 0, _myNeckDistance, 0, numberOfNeckAreas);
-			//System.out.println(Math.round(mappedValue));
-			
-			neckValue= mappedValue;
+			// System.out.println(Math.round(mappedValue));
+			neckValue = mappedValue;
 
 			// Player Hand
 			p.ellipse(v1.x, v1.y, 10, 10);
@@ -185,14 +187,17 @@ public class Guitar implements KinectInstrument {
 			// myString.centerOfVector.y);
 
 			// Endvektor
-			p.ellipse(endVector.x, endVector.y, 10, 10);
+			p.ellipse(endVector.x, endVector.y, 10, 10);			
+			
 		}
-
+		
+		return Math.round(neckValue);
 	}
-	
-	public void checkHeadFred(){
-		System.out.println("Fred " + fredValue);
-		System.out.println("Neck " + Math.round(neckValue));		
+
+	public void checkHeadFred() {
+		//midi.playMidi(myString.id);
+		// System.out.println("Fred " + fredValue);
+		// System.out.println("Neck " + Math.round(neckValue));
 	}
 
 	public void draw(Player player) {
@@ -201,15 +206,12 @@ public class Guitar implements KinectInstrument {
 
 		for (GuitarString myString : _myStrings) {
 			p.stroke(0, 255, 255);
-			// p.line(myString.start().x, myString.start().y, myString.end().x,
-			// myString.end().y);
+			p.line(myString.start().x, myString.start().y, myString.end().x,
+			myString.end().y);
 		}
 
 		// Draw Player
-		// p.ellipse(player.getHandLeftAbsolute().x,
-		// player.getHandLeftAbsolute().y, 10, 10);
-		// p.ellipse(player.getHandRightAbsolute().x,
-		// player.getHandRightAbsolute().y, 10, 10);
+		//p.ellipse(player.getHandLeftAbsolute().x,player.getHandLeftAbsolute().y, 10, 10);
+		p.ellipse(player.getHandRightAbsolute().x,player.getHandRightAbsolute().y, 10, 10);
 	}
-	
 }
