@@ -27,7 +27,7 @@ public class MainGuitar extends PApplet {
 		midi = new Midi();
 
 		// New Guitar
-		instrument = new Guitar(3, 100, 100, 100, this, midi);
+		instrument = new Guitar(2, 100, 100, 100, this, midi);
 	}
 
 	public void draw() {
