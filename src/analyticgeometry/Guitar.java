@@ -87,6 +87,7 @@ public class Guitar implements KinectInstrument {
 		PVector v2 = player.handRight.get();
 		v2.normalize();
 
+		int i = 0;
 		for (GuitarString myString : _myStrings) {
 
 			// Vektor von Center of Vector zu Ende/Start
@@ -97,18 +98,29 @@ public class Guitar implements KinectInstrument {
 			// Orthogonaler Vektor zum RV2
 			PVector ov2 = new PVector(rv2.y, -rv2.x);
 			ov2.normalize();
-			// ov2.mult(10f);
+			// ov2.mult(60f);
 
 			// frickity frack
-			PVector testVector = new PVector(myString.centerOfVector.x, myString.centerOfVector.y);
-			testVector.add(ov2);
-			testVector.mult(5);
+			int testArea = 30;
+			PVector testVectorTop = myString.centerOfVector.get();
+			PVector testVectorBottom = myString.centerOfVector.get();
 
-			// p.ellipse(testVector.x, testVector.y, 10, 10);
-			// p.line(myString.centerOfVector.x, myString.centerOfVector.y,
-			// -ov2.x,-ov2.y );
+			testVectorTop.normalize();
+			testVectorBottom.normalize();
+
+			testVectorTop.mult(testArea);
+			testVectorBottom.mult(-testArea);
+
+			testVectorTop.add(myString.centerOfVector.get());
+			testVectorBottom.add(myString.centerOfVector.get());
 
 			if (debug) {
+
+				p.ellipse(testVectorTop.x, testVectorTop.y, 10, 10);
+				p.ellipse(testVectorBottom.x, testVectorBottom.y, 10, 10);
+				p.line(testVectorTop.x, testVectorTop.y, testVectorBottom.x, testVectorBottom.y);
+
+				// p.ellipse(rv2.x, rv2.y, 10, 10);
 
 				// ov2.mult(50);
 				// rv2.normalize();
@@ -118,14 +130,19 @@ public class Guitar implements KinectInstrument {
 				// p.line(myString.centerOfVector.x, myString.centerOfVector.y,
 				// ov2.x, ov2.y);
 
-				// p.ellipse(myString.centerOfVector.x,
-				// myString.centerOfVector.y, 10, 10);
-				p.ellipse(rv2.x, rv2.y, 10, 10);
+				// p.ellipse(rv2.x, rv2.y, 10, 10);
 
 				p.pushStyle();
 				p.fill(255, 0, 0);
 
-				p.ellipse(myString.centerOfVector.x, myString.centerOfVector.y, 10, 10);
+				// p.ellipse(myString.centerOfVector.x,
+				// myString.centerOfVector.y, 10, 10);
+				// p.ellipse(rv2.x*50, rv2.y*50, 10, 10);
+				// p.ellipse(ov2.x, ov2.y, 10, 10);
+				// p.ellipse(myString.centerOfVector.x+rv2.x*50,
+				// myString.centerOfVector.y+rv2.y*50, 10, 10);
+				// p.ellipse(myString.centerOfVector.x+ov2.x*10,
+				// myString.centerOfVector.y+ov2.y*10, 10, 10);
 				p.fill(255, 0, 255);
 				p.popStyle();
 
@@ -133,18 +150,19 @@ public class Guitar implements KinectInstrument {
 
 				float dotProduct = v2.dot(ov2);
 				myString.dotProduct = dotProduct;
+				System.out.println(dotProduct);
 
 				if (dotProduct > 0) {
-					System.out.println("# " + myString.id + " over");
+					// System.out.println("# " + myString.id + " over");
 				}
 
 				if (dotProduct < 0) {
-					System.out.println("# " + myString.id + " under");
-					midi.playMidi(myString.id);
+					// System.out.println("# " + myString.id + " under");
+					// midi.playMidi(myString.id);
 				}
 
 			}
-
+			i++;
 		}
 
 	}
