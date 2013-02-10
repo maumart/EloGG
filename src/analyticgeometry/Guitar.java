@@ -41,13 +41,13 @@ public class Guitar implements KinectInstrument {
 			_myStrings.add(new GuitarString(padding, i));
 			padding += 1;
 
-			System.out.println(padding);
+			//System.out.println(padding);
 		}
 	}
 
 	public void update(Player player) {
 		// Ausgangsvektoren
-		PVector v1 = player.handLeft.get();
+		PVector v1 = player.handLeft.get();		
 
 		// Richtungsvektor zu punkt 1 aka Linke Hand
 		PVector rv = new PVector(v1.x - player.centerOfMass.x, v1.y - player.centerOfMass.y);
@@ -78,7 +78,7 @@ public class Guitar implements KinectInstrument {
 			myString.start().set(neckPos);
 			myString.start().add(translation);
 			myString.end().set(fredPos);
-			myString.end().add(translation);
+			myString.end().add(translation);			
 		}
 
 	}
@@ -114,7 +114,6 @@ public class Guitar implements KinectInstrument {
 			testVectorBottom.add(myString.centerOfVector.get());
 
 			if (debug) {
-
 				p.ellipse(testVectorTop.x, testVectorTop.y, 10, 10);
 				p.ellipse(testVectorBottom.x, testVectorBottom.y, 10, 10);
 				p.line(testVectorTop.x, testVectorTop.y, testVectorBottom.x, testVectorBottom.y);
@@ -136,12 +135,12 @@ public class Guitar implements KinectInstrument {
 				myString.dotProduct = dotProduct;				
 
 				if (dotProduct > 0) {
-					System.out.println("# " + myString.id + " over");
+					//System.out.println("# " + myString.id + " over");
 				}
 
 				if (dotProduct < 0) {
-					System.out.println("# " + myString.id + " under");
-					midi.playMidi(myString.id);
+					//System.out.println("# " + myString.id + " under");
+					//midi.playMidi(myString.id);
 				}
 			}
 
@@ -156,7 +155,6 @@ public class Guitar implements KinectInstrument {
 		for (GuitarString myString : _myStrings) {
 			p.stroke(0, 255, 255);
 			p.line(myString.start().x, myString.start().y, myString.end().x, myString.end().y);
-
 		}
 
 		// translate(-player.centerOfMass.x, -player.centerOfMass.y);
