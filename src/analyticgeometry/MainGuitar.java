@@ -86,7 +86,7 @@ public class MainGuitar extends PApplet {
 
 			instrument.update(p);
 			instrument.draw(p);
-			instrument.checkMatch(p);
+			instrument.checkFredMatch(p);
 
 			popMatrix();
 		}

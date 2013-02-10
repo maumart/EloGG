@@ -15,7 +15,7 @@ public class Guitar implements KinectInstrument {
 	private float _myFredDistance; // Abstand COM - Tail
 
 	public PApplet p;
-	public boolean debug = true;
+	public boolean debug = false;
 	private Midi midi;
 
 	public Guitar(float _myNumbrOfStrings, float _myStringSpace, float _myNeckDistance, float _myFredDistance,
@@ -41,13 +41,13 @@ public class Guitar implements KinectInstrument {
 			_myStrings.add(new GuitarString(padding, i));
 			padding += 1;
 
-			//System.out.println(padding);
+			// System.out.println(padding);
 		}
 	}
 
 	public void update(Player player) {
 		// Ausgangsvektoren
-		PVector v1 = player.handLeft.get();		
+		PVector v1 = player.handLeft.get();
 
 		// Richtungsvektor zu punkt 1 aka Linke Hand
 		PVector rv = new PVector(v1.x - player.centerOfMass.x, v1.y - player.centerOfMass.y);
@@ -78,17 +78,18 @@ public class Guitar implements KinectInstrument {
 			myString.start().set(neckPos);
 			myString.start().add(translation);
 			myString.end().set(fredPos);
-			myString.end().add(translation);			
+			myString.end().add(translation);
 		}
 
 	}
 
-	public void checkMatch(Player player) {
+	public void checkFredMatch(Player player) {
 		PVector v2 = player.handRight.get();
 		v2.normalize();
+		
+		p.ellipse(v2.x, v2.y, 10, 10);
 
 		for (GuitarString myString : _myStrings) {
-
 			// Vektor von Center of Vector zu Ende/Start
 			PVector rv2 = new PVector(myString.start().x - myString.centerOfVector.x, myString.start().y
 					- myString.centerOfVector.y);
@@ -124,28 +125,27 @@ public class Guitar implements KinectInstrument {
 				p.fill(255, 0, 255);
 				p.popStyle();
 
-				testVectorTop.normalize();
-				testVectorBottom.normalize();
-
-				PVector tempCenter = myString.centerOfVector.get();
-				tempCenter.normalize();
-
-				float dotProduct = v2.dot(ov2);			
-
-				myString.dotProduct = dotProduct;				
-
-				if (dotProduct > 0) {
-					//System.out.println("# " + myString.id + " over");
-				}
-
-				if (dotProduct < 0) {
-					//System.out.println("# " + myString.id + " under");
-					//midi.playMidi(myString.id);
-				}
 			}
 
-		}
+			testVectorTop.normalize();
+			testVectorBottom.normalize();
 
+			PVector tempCenter = myString.centerOfVector.get();
+			tempCenter.normalize();
+
+			float dotProduct = v2.dot(ov2);
+
+			myString.dotProduct = dotProduct;
+
+			if (dotProduct > 0) {
+				// System.out.println("# " + myString.id + " over");
+			}
+
+			if (dotProduct < 0) {
+				// System.out.println("# " + myString.id + " under");
+				// midi.playMidi(myString.id);
+			}
+		}
 	}
 
 	public void draw(Player player) {
