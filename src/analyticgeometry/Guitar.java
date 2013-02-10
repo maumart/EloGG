@@ -85,9 +85,7 @@ public class Guitar implements KinectInstrument {
 
 	public void checkFredMatch(Player player) {
 		PVector v2 = player.handRight.get();
-		v2.normalize();
-		
-		p.ellipse(v2.x, v2.y, 10, 10);
+		v2.normalize();	
 
 		for (GuitarString myString : _myStrings) {
 			// Vektor von Center of Vector zu Ende/Start
@@ -124,7 +122,6 @@ public class Guitar implements KinectInstrument {
 
 				p.fill(255, 0, 255);
 				p.popStyle();
-
 			}
 
 			testVectorTop.normalize();
@@ -147,6 +144,12 @@ public class Guitar implements KinectInstrument {
 			}
 		}
 	}
+	
+	public void checkNeckMatch(Player player) {
+		PVector v2 = player.handLeft.get();		
+		v2.normalize();	
+	
+	}
 
 	public void draw(Player player) {
 		p.stroke(255, 0, 255);
@@ -155,11 +158,10 @@ public class Guitar implements KinectInstrument {
 		for (GuitarString myString : _myStrings) {
 			p.stroke(0, 255, 255);
 			p.line(myString.start().x, myString.start().y, myString.end().x, myString.end().y);
-		}
-
-		// translate(-player.centerOfMass.x, -player.centerOfMass.y);
-
-		p.ellipse(player.handRight.x, player.handRight.y, 10, 10);
+		}		
+		
+		// Draw Player
+		p.ellipse(player.getHandLeftAbsolute().x, player.getHandLeftAbsolute().y, 10, 10);
+		p.ellipse(player.getHandRightAbsolute().x, player.getHandRightAbsolute().y, 10, 10);
 	}
-
 }

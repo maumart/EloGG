@@ -82,6 +82,22 @@ public class Player {
 	public void setCOM(PVector v) {
 		centerOfMass = v;
 	}
+	
+	public PVector getHandRightAbsolute(){
+		PVector newVector = new PVector();
+		newVector.x = handRight.x-centerOfMass.x;
+		newVector.y = handRight.y-centerOfMass.y;
+				
+		return newVector;
+	}
+	
+	public PVector getHandLeftAbsolute(){
+		PVector newVector = new PVector();
+		newVector.x = handLeft.x-centerOfMass.x;
+		newVector.y = handLeft.y-centerOfMass.y;
+				
+		return newVector;
+	}
 
 	public int armLegth() {
 		int armLengthDefault = 200;
