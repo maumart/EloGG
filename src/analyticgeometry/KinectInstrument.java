@@ -5,4 +5,5 @@ public interface KinectInstrument {
 	public void draw(Player player);
 	public void checkFredMatch(Player player);
 	public void checkNeckMatch(Player player);
+	public void checkHeadFred();
 }

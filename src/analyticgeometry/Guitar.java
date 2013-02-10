@@ -13,13 +13,17 @@ public class Guitar implements KinectInstrument {
 	private float _myStringSpace; // Abstand Saiten
 	private float _myNeckDistance; // Abstand COM - Head
 	private float _myFredDistance; // Abstand COM - Tail
+	private float numberOfNeckAreas;
 
 	public PApplet p;
 	public boolean debug = false;
 	private Midi midi;
+	
+	private float fredValue =0;
+	private float neckValue = 0;
 
 	public Guitar(float _myNumbrOfStrings, float _myStringSpace, float _myNeckDistance, float _myFredDistance,
-			PApplet p, Midi midi) {
+			PApplet p, Midi midi, int numberOfNeckAreas) {
 		super();
 		this._myNumbrOfStrings = _myNumbrOfStrings;
 		this._myStringSpace = _myStringSpace;
@@ -28,6 +32,7 @@ public class Guitar implements KinectInstrument {
 
 		this.p = p;
 		this.midi = midi;
+		this.numberOfNeckAreas = numberOfNeckAreas;
 
 		generateStrings(_myNumbrOfStrings);
 	}
@@ -84,8 +89,8 @@ public class Guitar implements KinectInstrument {
 	}
 
 	public void checkFredMatch(Player player) {
-		PVector v2 = player.handRight.get();
-		v2.normalize();	
+		PVector v2 = player.getHandRightAbsolute().get();
+		v2.normalize();
 
 		for (GuitarString myString : _myStrings) {
 			// Vektor von Center of Vector zu Ende/Start
@@ -116,12 +121,6 @@ public class Guitar implements KinectInstrument {
 				p.ellipse(testVectorTop.x, testVectorTop.y, 10, 10);
 				p.ellipse(testVectorBottom.x, testVectorBottom.y, 10, 10);
 				p.line(testVectorTop.x, testVectorTop.y, testVectorBottom.x, testVectorBottom.y);
-
-				p.pushStyle();
-				p.fill(255, 0, 0);
-
-				p.fill(255, 0, 255);
-				p.popStyle();
 			}
 
 			testVectorTop.normalize();
@@ -130,25 +129,70 @@ public class Guitar implements KinectInstrument {
 			PVector tempCenter = myString.centerOfVector.get();
 			tempCenter.normalize();
 
-			float dotProduct = v2.dot(ov2);
+			float dotProduct = v2.dot(ov2);			
+			fredValue = dotProduct;
 
-			myString.dotProduct = dotProduct;
+			// System.out.println(dotProduct);
 
 			if (dotProduct > 0) {
 				// System.out.println("# " + myString.id + " over");
+				
 			}
 
 			if (dotProduct < 0) {
 				// System.out.println("# " + myString.id + " under");
 				// midi.playMidi(myString.id);
 			}
+			
+			myString.dotProduct = dotProduct;
 		}
 	}
-	
+
 	public void checkNeckMatch(Player player) {
-		PVector v2 = player.handLeft.get();		
-		v2.normalize();	
+		// PVector v1 = player.handLeft.get();
+		PVector v1 = player.getHandLeftAbsolute().get();
+		// v1.normalize();
+
+		// PVector rv = new PVector(v1.x - player.centerOfMass.x, v1.y -
+		// player.centerOfMass.y);
+		// rv.normalize();
+
+		for (GuitarString myString : _myStrings) {
+			PVector rv2 = new PVector(myString.centerOfVector.x, myString.centerOfVector.y);
+
+			PVector endVector = new PVector(myString.start().x - myString.centerOfVector.x, myString.start().y
+					- myString.centerOfVector.y);
+
+			// Distance Center of Vector Hand
+			float distance = v1.dist(myString.centerOfVector);			
+			
+			// Limit Max Distance
+			if (distance > _myNeckDistance) {
+				v1.set(endVector);
+			}
+			
+			// Mapping
+			float mappedValue = PApplet.map(distance, 0, _myNeckDistance, 0, numberOfNeckAreas);
+			//System.out.println(Math.round(mappedValue));
+			
+			neckValue= mappedValue;
+
+			// Player Hand
+			p.ellipse(v1.x, v1.y, 10, 10);
+
+			// COM des Vektors zu Hand
+			// p.line(v1.x, v1.y, myString.centerOfVector.x,
+			// myString.centerOfVector.y);
+
+			// Endvektor
+			p.ellipse(endVector.x, endVector.y, 10, 10);
+		}
+
+	}
 	
+	public void checkHeadFred(){
+		System.out.println("Fred " + fredValue);
+		System.out.println("Neck " + Math.round(neckValue));		
 	}
 
 	public void draw(Player player) {
@@ -157,11 +201,15 @@ public class Guitar implements KinectInstrument {
 
 		for (GuitarString myString : _myStrings) {
 			p.stroke(0, 255, 255);
-			p.line(myString.start().x, myString.start().y, myString.end().x, myString.end().y);
-		}		
-		
+			// p.line(myString.start().x, myString.start().y, myString.end().x,
+			// myString.end().y);
+		}
+
 		// Draw Player
-		p.ellipse(player.getHandLeftAbsolute().x, player.getHandLeftAbsolute().y, 10, 10);
-		p.ellipse(player.getHandRightAbsolute().x, player.getHandRightAbsolute().y, 10, 10);
+		// p.ellipse(player.getHandLeftAbsolute().x,
+		// player.getHandLeftAbsolute().y, 10, 10);
+		// p.ellipse(player.getHandRightAbsolute().x,
+		// player.getHandRightAbsolute().y, 10, 10);
 	}
+	
 }
