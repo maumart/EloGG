@@ -158,7 +158,7 @@ public class Guitar implements KinectInstrument {
 
 				if (dotProduct < 0) {
 					// System.out.println("# " + myString.id + " under");
-					// midi.playMidi(myString.id);
+					midi.playMidi(myString.id);
 				}
 
 			}
