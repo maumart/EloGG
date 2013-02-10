@@ -15,14 +15,19 @@ public class Guitar implements KinectInstrument {
 	private float _myFredDistance; // Abstand COM - Tail
 
 	public PApplet p;
+	public boolean debug = true;
+	private Midi midi;
 
-	public Guitar(float _myNumbrOfStrings, float _myStringSpace, float _myNeckDistance, float _myFredDistance, PApplet p) {
+	public Guitar(float _myNumbrOfStrings, float _myStringSpace, float _myNeckDistance, float _myFredDistance,
+			PApplet p, Midi midi) {
 		super();
 		this._myNumbrOfStrings = _myNumbrOfStrings;
 		this._myStringSpace = _myStringSpace;
 		this._myNeckDistance = _myNeckDistance;
 		this._myFredDistance = _myFredDistance;
+
 		this.p = p;
+		this.midi = midi;
 
 		generateStrings(_myNumbrOfStrings);
 	}
@@ -33,63 +38,112 @@ public class Guitar implements KinectInstrument {
 			return;
 		float padding = -(numberOfStrings - 1) / 2;
 		for (int i = 0; i < numberOfStrings; i++) {
-			_myStrings.add(new GuitarString(padding,i));
+			_myStrings.add(new GuitarString(padding, i));
 			padding += 1;
-			
+
 			System.out.println(padding);
 		}
 	}
 
 	public void update(Player player) {
 		// Ausgangsvektoren
-		PVector v1 = new PVector(500, 100);
-		PVector vRight = player.handRight.get();
+		PVector v1 = player.handLeft.get();
 
 		// Richtungsvektor zu punkt 1 aka Linke Hand
-		// PVector rv = new PVector(v1.x - centerOfMass.x, v1.y -
-		// centerOfMass.y);
 		PVector rv = new PVector(v1.x - player.centerOfMass.x, v1.y - player.centerOfMass.y);
 		rv.normalize();
-		PVector ov = new PVector(rv.y, -rv.x);
 
+		// Ortsvektor -> Orthogonal zu RV
+		PVector ov = new PVector(rv.y, -rv.x);
+		ov.normalize();
+
+		// Position des Necks
 		PVector neckPos = new PVector(rv.x, rv.y);
 		neckPos.mult(_myNeckDistance);
 
+		// Position des Freds
 		PVector fredPos = new PVector(rv.x, rv.y);
 		fredPos.mult(-_myFredDistance);
 
 		for (GuitarString myString : _myStrings) {
+
+			// Verschiebungsvektor vom COM
 			PVector translation = new PVector(ov.x, ov.y);
 			translation.mult(myString.padding * _myStringSpace);
 
+			// Neuer COM des Vektors
+			myString.centerOfVector = translation.get();
+
+			// Start und Ende verschieben
 			myString.start().set(neckPos);
 			myString.start().add(translation);
 			myString.end().set(fredPos);
 			myString.end().add(translation);
+		}
 
-			// Temp
-			// vRight.x = vRight.x - 0;
-			// vRight.y = vRight.y - 0;
+	}
 
-			vRight.normalize();
-			PVector pv = new PVector(ov.x, ov.y);
-			pv.mult(100);
-			// line(rv.x, rv.y, pv.x, pv.y);
+	public void checkMatch(Player player) {
+		PVector v2 = player.handRight.get();
+		v2.normalize();
 
-			pv.normalize();
+		for (GuitarString myString : _myStrings) {
 
-			float dotProduct = vRight.dot(pv);
-			myString.dotProduct = dotProduct;
+			// Vektor von Center of Vector zu Ende/Start
+			PVector rv2 = new PVector(myString.start().x - myString.centerOfVector.x, myString.start().y
+					- myString.centerOfVector.y);
+			rv2.normalize();
 
-			if (dotProduct > 0) {
-				//System.out.println("# " + myString.padding + " over");
+			// Orthogonaler Vektor zum RV2
+			PVector ov2 = new PVector(rv2.y, -rv2.x);
+			ov2.normalize();
+			// ov2.mult(10f);
+
+			// frickity frack
+			PVector testVector = new PVector(myString.centerOfVector.x, myString.centerOfVector.y);
+			testVector.add(ov2);
+			testVector.mult(5);
+
+			// p.ellipse(testVector.x, testVector.y, 10, 10);
+			// p.line(myString.centerOfVector.x, myString.centerOfVector.y,
+			// -ov2.x,-ov2.y );
+
+			if (debug) {
+
+				// ov2.mult(50);
+				// rv2.normalize();
+				// p.line(myString.centerOfVector.x, myString.centerOfVector.y,
+				// rv2.x, rv2.y);
+
+				// p.line(myString.centerOfVector.x, myString.centerOfVector.y,
+				// ov2.x, ov2.y);
+
+				// p.ellipse(myString.centerOfVector.x,
+				// myString.centerOfVector.y, 10, 10);
+				p.ellipse(rv2.x, rv2.y, 10, 10);
+
+				p.pushStyle();
+				p.fill(255, 0, 0);
+
+				p.ellipse(myString.centerOfVector.x, myString.centerOfVector.y, 10, 10);
+				p.fill(255, 0, 255);
+				p.popStyle();
+
+				// System.out.println(dotProduct);
+
+				float dotProduct = v2.dot(ov2);
+				myString.dotProduct = dotProduct;
+
+				if (dotProduct > 0) {
+					System.out.println("# " + myString.id + " over");
+				}
+
+				if (dotProduct < 0) {
+					System.out.println("# " + myString.id + " under");
+					midi.playMidi(myString.id);
+				}
 
 			}
-
-			if (dotProduct < 0) {
-				//System.out.println("# " + myString.padding + " under");
-			}
-			//System.out.println(myString.padding);
 
 		}
 
@@ -110,5 +164,4 @@ public class Guitar implements KinectInstrument {
 		p.ellipse(player.handRight.x, player.handRight.y, 10, 10);
 	}
 
-	
 }

@@ -6,9 +6,8 @@ import processing.core.PVector;
 
 public class Player {
 	private int id;
-	public PVector handLeft;
-	public PVector handRight;
-	public PVector centerOfMass;
+	private int armLength = 100;
+	
 	private PVector elbowLeft;
 	private PVector elbowRight;
 	private PVector shoulderLeft;
@@ -19,6 +18,10 @@ public class Player {
 
 	private Queue<PVector> GuitarStrum;
 	private Queue<PVector> GuitarHead;
+	
+	public PVector handLeft;
+	public PVector handRight;
+	public PVector centerOfMass;
 	
 	public Player() {
 			
@@ -71,5 +74,9 @@ public class Player {
 	
 	public void setCOM(PVector v) {
 		centerOfMass=v;
+	}
+	
+	public int armLegth(){
+		return armLength;
 	}
 }

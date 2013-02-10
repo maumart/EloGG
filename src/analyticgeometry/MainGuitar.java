@@ -7,6 +7,7 @@ public class MainGuitar extends PApplet {
 	private Player p;
 	private KinectData k;
 	private KinectInstrument instrument;
+	private Midi midi;
 
 	public void setup() {
 		// Processing Stuff
@@ -21,9 +22,12 @@ public class MainGuitar extends PApplet {
 
 		// Kinect
 		k = new KinectData();
-		
+
+		// Midi
+		midi = new Midi();
+
 		// New Guitar
-		instrument = new Guitar(2, 20, 300, 100, this);
+		instrument = new Guitar(1, 100, 100, 100, this, midi);
 	}
 
 	public void draw() {
@@ -34,7 +38,8 @@ public class MainGuitar extends PApplet {
 
 		// Personen Koordinaten updaten
 		p.setCOM(k.centerOfMass());
-		p.setHandRight(k.handRight());		
+		p.setHandRight(k.handRight());
+		p.setHandLeft(k.handLeft());
 
 		// k.setMousePosition(new PVector(mouseX - p.centerOfMass.x, mouseY -
 		// p.centerOfMass.y));
@@ -50,6 +55,7 @@ public class MainGuitar extends PApplet {
 
 		instrument.update(p);
 		instrument.draw(p);
+		instrument.checkMatch(p);
 
 		popMatrix();
 	}

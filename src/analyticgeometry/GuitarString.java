@@ -5,7 +5,9 @@ import processing.core.PVector;
 public class GuitarString {
 	private PVector vectorStart;
 	private PVector vectorEnde;
-	public int	id;
+	public PVector centerOfVector; 
+	
+	public int	id;	
 	
 	public float padding;
 	public float dotProduct=1;	
@@ -48,6 +50,11 @@ public class GuitarString {
 	}	
 	
 	public void draw(){
+		
+		
+	}
+	
+	public void calculateDotProduct(PVector v){
 		
 		
 	}
