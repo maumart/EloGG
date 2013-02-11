@@ -28,22 +28,21 @@ public class MainGuitar extends PApplet {
 
 		// Kinect
 		k = new KinectData();
-		// ****
+
 		context = new SimpleOpenNI(this);
-		//context.openFileRecording("mau.oni");
-		//context.seekPlayer(350, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context.openFileRecording("mau2.oni");
+		context.seekPlayer(100, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableDepth();
 		context.enableRGB();
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
 		//context.setSmoothingHands(0.5f);
 		context.mirror();
-		// *****
 
 		// Midi
 		midi = new Midi(this);
 		
-		instrument = new Guitar(1, 10, 300, 100, this, midi,5);
+		instrument = new Guitar(2, 70, 300, 100, this, midi,5);
 	}
 
 	public void draw() {

@@ -189,14 +189,14 @@ public class Guitar implements KinectInstrument {
 			neckValue = mappedValue;
 
 			// Player Hand
-			p.ellipse(v1.x, v1.y, 10, 10);
+			//p.ellipse(v1.x, v1.y, 10, 10);
 
 			// COM des Vektors zu Hand
 			// p.line(v1.x, v1.y, myString.centerOfVector.x,
 			// myString.centerOfVector.y);
 
 			// Endvektor
-			p.ellipse(endVector.x, endVector.y, 10, 10);
+			//p.ellipse(endVector.x, endVector.y, 10, 10);
 
 		}
 
@@ -221,6 +221,6 @@ public class Guitar implements KinectInstrument {
 		// Draw Player
 		// p.ellipse(player.getHandLeftAbsolute().x,player.getHandLeftAbsolute().y,
 		// 10, 10);
-		p.ellipse(player.getHandRightAbsolute().x, player.getHandRightAbsolute().y, 10, 10);
+		//p.ellipse(player.getHandRightAbsolute().x, player.getHandRightAbsolute().y, 10, 10);
 	}
 }
