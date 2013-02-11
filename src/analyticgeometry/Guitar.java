@@ -138,8 +138,12 @@ public class Guitar implements KinectInstrument {
 				// System.out.println("pass");
 				fredValue = true;
 				System.out.println("hit up - Neck"+ neckValue);
+				midi.playMidi(myString.id, neckValue, true);
+				
+				
 			}  else if (myString.dotProduct > 0 && dotProduct < 0) {
 				fredValue = true;
+				midi.playMidi(myString.id, neckValue, false);
 				System.out.println("hit down- Neck"+ neckValue);
 			}			
 
@@ -173,13 +177,15 @@ public class Guitar implements KinectInstrument {
 			float distance = v1.dist(myString.centerOfVector);
 
 			// Limit Max Distance
-			if (distance > _myNeckDistance) {
-				v1.set(endVector);
+			if (distance >= _myNeckDistance) {
+				//v1.set(endVector);
 			}
 
 			// Mapping
-			float mappedValue = PApplet.map(distance, 0, _myNeckDistance, 0, numberOfNeckAreas);
+			float mappedValue = PApplet.map(distance, 0, _myNeckDistance, numberOfNeckAreas,0);
 			// System.out.println(Math.round(mappedValue));
+			
+			if (mappedValue < 0) mappedValue = 0;
 			neckValue = mappedValue;
 
 			// Player Hand

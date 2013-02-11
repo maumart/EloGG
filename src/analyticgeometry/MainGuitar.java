@@ -30,17 +30,20 @@ public class MainGuitar extends PApplet {
 		k = new KinectData();
 		// ****
 		context = new SimpleOpenNI(this);
-		context.openFileRecording("mau2.oni");
-		context.seekPlayer(20, SimpleOpenNI.PLAYER_SEEK_CUR);
+		//context.openFileRecording("mau.oni");
+		//context.seekPlayer(350, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context.enableDepth();
+		context.enableRGB();
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
-		// context.mirror();
+		//context.setSmoothingHands(0.5f);
+		context.mirror();
 		// *****
 
 		// Midi
-		midi = new Midi();
+		midi = new Midi(this);
 		
-		instrument = new Guitar(5, 10, 300, 150, this, midi,4);
+		instrument = new Guitar(1, 10, 300, 100, this, midi,5);
 	}
 
 	public void draw() {
@@ -159,6 +162,9 @@ public class MainGuitar extends PApplet {
 
 				PVector elbowRight = new PVector();
 				PVector shoulderRight = new PVector();
+				
+				PVector hipLeft = new PVector();
+				PVector hipRight = new PVector();
 
 				// Get joints
 				// context.getJointPositionSkeleton(userList[i],
@@ -171,16 +177,35 @@ public class MainGuitar extends PApplet {
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HAND, handLeft);
 
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_ELBOW, elbowRight);
-				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER, shoulderRight);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER, shoulderRight);				
+				
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_TORSO, centerOfMass);
+				
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HIP, hipLeft);				
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HIP, hipRight);
 
 				context.getCoM(userList[i], centerOfMass);
-
+				
 				// Convert joints
 				context.convertRealWorldToProjective(centerOfMass, centerOfMass);
 				context.convertRealWorldToProjective(handLeft, handLeft);
 				context.convertRealWorldToProjective(handRight, handRight);
 				context.convertRealWorldToProjective(elbowRight, elbowRight);
 				context.convertRealWorldToProjective(shoulderRight, shoulderRight);
+				
+				context.convertRealWorldToProjective(hipLeft, hipLeft);
+				context.convertRealWorldToProjective(hipRight, hipRight);
+				
+				// Temp new Torso
+				PVector tv = new PVector(hipLeft.x - hipRight.x,hipLeft.y - hipRight.y);
+				PVector tv2 = new PVector(tv.y, -tv.x);
+				float mult= 1.1f;
+				//tv2.div(1);
+				
+				centerOfMass.add(tv);
+				tv2.mult(mult);
+				centerOfMass.add(tv2);
+				
 
 				p.setCOM(centerOfMass);
 				p.setHandRight(handRight);
