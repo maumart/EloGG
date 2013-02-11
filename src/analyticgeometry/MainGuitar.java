@@ -30,8 +30,8 @@ public class MainGuitar extends PApplet {
 		k = new KinectData();
 		// ****
 		context = new SimpleOpenNI(this);
-		context.openFileRecording("guitar_short.oni");
-		context.seekPlayer(350, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context.openFileRecording("mau2.oni");
+		context.seekPlayer(20, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
 		// context.mirror();
@@ -40,7 +40,7 @@ public class MainGuitar extends PApplet {
 		// Midi
 		midi = new Midi();
 		
-		instrument = new Guitar(4, 10, 200, 100, this, midi,4);
+		instrument = new Guitar(5, 10, 300, 150, this, midi,4);
 	}
 
 	public void draw() {

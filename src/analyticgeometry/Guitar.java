@@ -16,11 +16,10 @@ public class Guitar implements KinectInstrument {
 	private float numberOfNeckAreas;
 
 	public PApplet p;
-	public boolean debug = false;
+	public boolean debug = true;
 	private Midi midi;
 
 	private boolean fredValue = false;
-	
 
 	public Guitar(float _myNumbrOfStrings, float _myStringSpace, float _myNeckDistance, float _myFredDistance,
 			PApplet p, Midi midi, int numberOfNeckAreas) {
@@ -129,25 +128,27 @@ public class Guitar implements KinectInstrument {
 			PVector tempCenter = myString.centerOfVector.get();
 			tempCenter.normalize();
 
-			float dotProduct = v2.dot(ov2);
+			// Check Neckpostion
+			int neckValue = checkNeckMatch(player);
 			
-			System.out.println(dotProduct);
+			float dotProduct = v2.dot(ov2);
 
 			// Crap
 			if (myString.dotProduct < 0 && dotProduct > 0) {
 				// System.out.println("pass");
 				fredValue = true;
-			} else if (myString.dotProduct > 0 && dotProduct < 0) {
-				// System.out.println("pass");
+				System.out.println("hit up - Neck"+ neckValue);
+			}  else if (myString.dotProduct > 0 && dotProduct < 0) {
 				fredValue = true;
-			}
-			
-			// Check
-			int neckValue = checkNeckMatch(player);			
+				System.out.println("hit down- Neck"+ neckValue);
+			}			
 
 			// Neues Dot Product Speichern
 			myString.dotProduct = dotProduct;
-			//midi.playMidi(myString.id, neckValue);
+
+			if (fredValue) {
+				//midi.playMidi(myString.id, neckValue);
+			}
 		}
 	}
 
@@ -159,8 +160,8 @@ public class Guitar implements KinectInstrument {
 		// PVector rv = new PVector(v1.x - player.centerOfMass.x, v1.y -
 		// player.centerOfMass.y);
 		// rv.normalize();
-		
-		float neckValue=0;
+
+		float neckValue = 0;
 
 		for (GuitarString myString : _myStrings) {
 			PVector rv2 = new PVector(myString.centerOfVector.x, myString.centerOfVector.y);
@@ -189,15 +190,15 @@ public class Guitar implements KinectInstrument {
 			// myString.centerOfVector.y);
 
 			// Endvektor
-			p.ellipse(endVector.x, endVector.y, 10, 10);			
-			
+			p.ellipse(endVector.x, endVector.y, 10, 10);
+
 		}
-		
+
 		return Math.round(neckValue);
 	}
 
 	public void checkHeadFred() {
-		//midi.playMidi(myString.id);
+		// midi.playMidi(myString.id);
 		// System.out.println("Fred " + fredValue);
 		// System.out.println("Neck " + Math.round(neckValue));
 	}
@@ -208,12 +209,12 @@ public class Guitar implements KinectInstrument {
 
 		for (GuitarString myString : _myStrings) {
 			p.stroke(0, 255, 255);
-			p.line(myString.start().x, myString.start().y, myString.end().x,
-			myString.end().y);
+			p.line(myString.start().x, myString.start().y, myString.end().x, myString.end().y);
 		}
 
 		// Draw Player
-		//p.ellipse(player.getHandLeftAbsolute().x,player.getHandLeftAbsolute().y, 10, 10);
-		p.ellipse(player.getHandRightAbsolute().x,player.getHandRightAbsolute().y, 10, 10);
+		// p.ellipse(player.getHandLeftAbsolute().x,player.getHandLeftAbsolute().y,
+		// 10, 10);
+		p.ellipse(player.getHandRightAbsolute().x, player.getHandRightAbsolute().y, 10, 10);
 	}
 }
