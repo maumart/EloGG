@@ -130,6 +130,8 @@ public class Guitar implements KinectInstrument {
 			tempCenter.normalize();
 
 			float dotProduct = v2.dot(ov2);
+			
+			System.out.println(dotProduct);
 
 			// Crap
 			if (myString.dotProduct < 0 && dotProduct > 0) {
@@ -145,7 +147,7 @@ public class Guitar implements KinectInstrument {
 
 			// Neues Dot Product Speichern
 			myString.dotProduct = dotProduct;
-			midi.playMidi(myString.id, neckValue);
+			//midi.playMidi(myString.id, neckValue);
 		}
 	}
 
