@@ -21,7 +21,7 @@ public class Midi {
 		channel = 0;
 		this.p = p;
 		MidiBus.list();
-		bus = new MidiBus(p, 0, 3);
+		bus = new MidiBus(p, 0, 2);
 		keys = new Keys();
 		key = keys.getKey("A", "DUR");
 	}

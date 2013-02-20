@@ -4,7 +4,7 @@ import SimpleOpenNI.SimpleOpenNI;
 import processing.core.PApplet;
 import processing.core.PVector;
 
-public class MainGuitarKinect extends PApplet {
+public class MainDrum extends PApplet {
 	private Player p;
 	private KinectData k;
 	private KinectInstrument instrument;
@@ -30,7 +30,7 @@ public class MainGuitarKinect extends PApplet {
 		k = new KinectData();
 
 		context = new SimpleOpenNI(this);
-		context.openFileRecording("guitar.oni");
+		context.openFileRecording("drum.oni");
 		context.seekPlayer(10, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableDepth();
 		context.enableRGB();
@@ -41,18 +41,18 @@ public class MainGuitarKinect extends PApplet {
 
 		// Midi
 		midi = new Midi(this);
-		
-		instrument = new Guitar(1, 10, 250, 150, this, midi,4);
+
+		instrument = new Guitar(5, 10, 250, 150, this, midi, 4);
 	}
 
 	public void draw() {
 		background(0);
 		// Kinect update
 		context.update();
-		
+
 		// Kinectbild
 		image(context.rgbImage(), 0, 0);
-		
+
 		// Userdaten updaten
 		getuserLimbs();
 
@@ -60,25 +60,7 @@ public class MainGuitarKinect extends PApplet {
 		// k.setMousePosition(new PVector(mouseX, mouseY));
 		// k.setMousePositionUnTansitioned(new PVector(mouseX,mouseY));
 
-		if (kinectReady) {		
-
-			// New Guitar
-			//instrument = new Guitar(1, 100, 200, 100, this, midi);		
-			
-			//System.out.println(p.armLegth());
-
-			// Personen Koordinaten updaten
-			// p.setCOM(k.centerOfMass());
-			// p.setHandRight(k.handRight());
-			// p.setHandLeft(k.handLeft());
-
-			// k.setMousePosition(new PVector(mouseX - p.centerOfMass.x, mouseY
-			// -
-			// p.centerOfMass.y));
-			// p.setHandLeft(new PVector(mouseX - p.centerOfMass.x, mouseY -
-			// p.centerOfMass.y));
-			// p.setHandRight(new PVector(mouseX - p.centerOfMass.x, mouseY -
-			// p.centerOfMass.y));
+		if (kinectReady) {
 
 			pushMatrix();
 
@@ -87,9 +69,9 @@ public class MainGuitarKinect extends PApplet {
 
 			instrument.update(p);
 			instrument.draw(p);
-			instrument.checkFredMatch(p);
-			instrument.checkNeckMatch(p);
-			//instrument.checkHeadFred();
+			//instrument.checkFredMatch(p);
+			//instrument.checkNeckMatch(p);
+			// instrument.checkHeadFred();
 
 			popMatrix();
 		}
@@ -187,7 +169,7 @@ public class MainGuitarKinect extends PApplet {
 				p.setCOM(centerOfMass);
 				p.setHandRight(handRight);
 				p.setHandLeft(handLeft);
-				
+
 				p.setElbow(elbowRight);
 				p.setShoulder(shoulderRight);
 

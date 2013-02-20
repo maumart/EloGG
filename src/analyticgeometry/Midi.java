@@ -5,6 +5,10 @@ import processing.core.PApplet;
 public class Midi {
 	// PApplet p;
 	midi.Midi midi;
+	
+	public Midi(){
+		
+	}
 
 	public Midi(PApplet p) {
 		midi = new midi.Midi(p);
