@@ -42,38 +42,65 @@ public class Drum implements KinectInstrument {
 
 			// System.out.println(padding);
 		}
-	}	
+	}
 
-	public void update(Player player) {	
+	public void update(Player player) {
 		PVector v3 = player.neck.get();
 
 		// Richtungsvektor zu neck
 		PVector rv = new PVector(v3.x - player.centerOfMass.x, v3.y - player.centerOfMass.y);
 		rv.normalize();
-		
+
 		// Ortsvektor -> Orthogonal zu RV
 		PVector ov = new PVector(rv.y, -rv.x);
 		ov.normalize();
 
 		// Position des Necks
 		PVector neckPos = ov.get();
-		neckPos.mult(_myFredDistance/2);
+		neckPos.mult(_myFredDistance / 2);
 
 		// Position des Freds
 		PVector fredPos = ov.get();
-		fredPos.mult(-_myFredDistance/2);
+		fredPos.mult(-_myFredDistance / 2);
 
-		for (DrumSingle myString : _myDrums) {			
+		for (DrumSingle myString : _myDrums) {
 			// Start und Ende verschieben
-			myString.start().set(neckPos);			
+			myString.start().set(neckPos);
 			myString.end().set(fredPos);
-			
+
+			myString.centerOfVector = myString.end().get();
 		}
 	}
 
-	@Override
 	public void checkFredMatch(Player player) {
-		// TODO Auto-generated method stub
+		PVector v2 = player.getHandRightAbsolute().get();
+		v2.normalize();
+
+		for (DrumSingle myString : _myDrums) {
+			// Vektor von Center of Vector zu Ende/Start
+			PVector rv2 = new PVector(myString.start().x - myString.centerOfVector.x, myString.start().y
+					- myString.centerOfVector.y);
+			rv2.normalize();
+
+			// Orthogonaler Vektor zum RV2
+			PVector ov2 = new PVector(rv2.y, -rv2.x);
+			ov2.normalize();
+			// ov2.mult(60f);
+
+			float dotProduct = v2.dot(ov2);
+			// Crap
+			if (myString.dotProduct < 0 && dotProduct > 0) {
+				// System.out.println("pass");
+
+				System.out.println("hit up ");
+				midi.playMidi(myString.id, 0, true);
+
+			} else if (myString.dotProduct > 0 && dotProduct < 0) {
+
+				midi.playMidi(myString.id, 0, false);
+				System.out.println("hit down- Neck");
+			}
+		}
 
 	}
 
@@ -88,16 +115,17 @@ public class Drum implements KinectInstrument {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public void draw(Player player) {
 		p.stroke(255, 0, 255);
 		p.strokeWeight(2);
 
 		for (DrumSingle myString : _myDrums) {
 			p.stroke(0, 255, 255);
-			//p.line(myString.start().x, myString.start().y, myString.end().x, myString.end().y);
+			// p.line(myString.start().x, myString.start().y, myString.end().x,
+			// myString.end().y);
 			p.line(myString.start().x, myString.start().y, myString.end().x, myString.end().y);
-			p.rect(myString.start().x, myString.start().y,_myFredDistance,_myFredDistance);
+			p.rect(myString.start().x, myString.start().y, _myFredDistance, _myFredDistance);
 		}
 
 		// Draw Player

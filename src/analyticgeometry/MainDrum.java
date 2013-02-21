@@ -69,7 +69,7 @@ public class MainDrum extends PApplet {
 
 			instrument.update(p);
 			instrument.draw(p);
-			//instrument.checkFredMatch(p);
+			instrument.checkFredMatch(p);
 			//instrument.checkNeckMatch(p);
 			// instrument.checkHeadFred();
 
