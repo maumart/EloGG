@@ -11,8 +11,7 @@ public class Player {
 	private PVector elbowRight;
 	private PVector shoulderLeft;
 	private PVector shoulderRight;
-	private PVector head;
-	private PVector neck;
+	private PVector head;	
 	private PVector torso;
 
 	private Queue<PVector> GuitarStrum;
@@ -20,6 +19,7 @@ public class Player {
 
 	public PVector handLeft;
 	public PVector handRight;
+	public PVector neck;
 	public PVector centerOfMass;
 
 	public Player() {
@@ -83,6 +83,10 @@ public class Player {
 		centerOfMass = v;
 	}
 	
+	public void setNeck(PVector v) {
+		neck = v;
+	}
+	
 	public PVector getHandRightAbsolute(){
 		PVector newVector = new PVector();
 		newVector.x = handRight.x-centerOfMass.x;
@@ -95,6 +99,14 @@ public class Player {
 		PVector newVector = new PVector();
 		newVector.x = handLeft.x-centerOfMass.x;
 		newVector.y = handLeft.y-centerOfMass.y;
+				
+		return newVector;
+	}
+	
+	public PVector getNeckAbsolute(){
+		PVector newVector = new PVector();
+		newVector.x = neck.x-centerOfMass.x;
+		newVector.y = neck.y-centerOfMass.y;
 				
 		return newVector;
 	}

@@ -42,7 +42,7 @@ public class MainDrum extends PApplet {
 		// Midi
 		midi = new Midi(this);
 
-		instrument = new Guitar(5, 10, 250, 150, this, midi, 4);
+		instrument = new Drum(1, 20, 200,this, midi);		
 	}
 
 	public void draw() {
@@ -143,6 +143,7 @@ public class MainDrum extends PApplet {
 
 				PVector elbowRight = new PVector();
 				PVector shoulderRight = new PVector();
+				PVector neck = new PVector();
 
 				// Get joints
 				// context.getJointPositionSkeleton(userList[i],
@@ -156,6 +157,8 @@ public class MainDrum extends PApplet {
 
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_ELBOW, elbowRight);
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER, shoulderRight);
+				
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_NECK, neck);
 
 				context.getCoM(userList[i], centerOfMass);
 
@@ -165,10 +168,12 @@ public class MainDrum extends PApplet {
 				context.convertRealWorldToProjective(handRight, handRight);
 				context.convertRealWorldToProjective(elbowRight, elbowRight);
 				context.convertRealWorldToProjective(shoulderRight, shoulderRight);
+				context.convertRealWorldToProjective(neck, neck);
 
 				p.setCOM(centerOfMass);
 				p.setHandRight(handRight);
 				p.setHandLeft(handLeft);
+				p.setNeck(neck);
 
 				p.setElbow(elbowRight);
 				p.setShoulder(shoulderRight);
