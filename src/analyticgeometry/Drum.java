@@ -88,18 +88,24 @@ public class Drum implements KinectInstrument {
 			// ov2.mult(60f);
 
 			float dotProduct = v2.dot(ov2);
+			int neckValue = 0;
 			// Crap
 			if (myString.dotProduct < 0 && dotProduct > 0) {
 				// System.out.println("pass");
-
-				System.out.println("hit up ");
-				midi.playMidi(myString.id, 0, true);
+				fredValue = true;
+				System.out.println("hit up - Neck"+ neckValue);
+				midi.playMidi(myString.id, neckValue, true);
 
 			} else if (myString.dotProduct > 0 && dotProduct < 0) {
-
-				midi.playMidi(myString.id, 0, false);
-				System.out.println("hit down- Neck");
+				fredValue = true;
+				midi.playMidi(myString.id, neckValue, false);
+				System.out.println("hit down- Neck"+ neckValue);
 			}
+
+			// Neues Dot Product Speichern
+			myString.dotProduct = dotProduct;
+
+			//System.out.println(dotProduct);
 		}
 
 	}
