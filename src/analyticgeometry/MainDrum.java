@@ -42,7 +42,8 @@ public class MainDrum extends PApplet {
 		// Midi
 		midi = new Midi(this);
 
-		instrument = new Drum(1, 20, 200,this, midi);		
+		// Instrument
+		instrument = new Drum(5, 120, 80, 60,this, midi);		
 	}
 
 	public void draw() {
@@ -54,11 +55,7 @@ public class MainDrum extends PApplet {
 		image(context.rgbImage(), 0, 0);
 
 		// Userdaten updaten
-		getuserLimbs();
-
-		// Workaround
-		// k.setMousePosition(new PVector(mouseX, mouseY));
-		// k.setMousePositionUnTansitioned(new PVector(mouseX,mouseY));
+		getuserLimbs();		
 
 		if (kinectReady) {
 
