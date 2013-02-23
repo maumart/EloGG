@@ -30,8 +30,8 @@ public class MainDrum extends PApplet {
 		k = new KinectData();
 
 		context = new SimpleOpenNI(this, SimpleOpenNI.RUN_MODE_SINGLE_THREADED);
-		context.openFileRecording("drum.oni");
-		context.seekPlayer(10, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context.openFileRecording("drum3.oni");
+		context.seekPlayer(150, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableDepth();
 		context.enableRGB();
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
@@ -43,7 +43,11 @@ public class MainDrum extends PApplet {
 		midi = new Midi(this);
 
 		// Instrument
-		instrument = new Drum(5, 40, 80, 80, this, midi);
+		int InstrumentMargin = 40;
+		int InstrumentWidth = 150;
+		int InstrumentHeight = 120;
+
+		instrument = new Drum(4, InstrumentMargin, InstrumentWidth, InstrumentHeight, this, midi);
 	}
 
 	public void draw() {
@@ -149,11 +153,15 @@ public class MainDrum extends PApplet {
 				// SimpleOpenNI.SKEL_LEFT_HAND, handLeft);
 
 				// Switch Hands
-				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND, handRight);
-				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HAND, handLeft);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND,
+						handRight);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HAND,
+						handLeft);
 
-				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_ELBOW, elbowRight);
-				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER, shoulderRight);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_ELBOW,
+						elbowRight);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER,
+						shoulderRight);
 
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_NECK, neck);
 

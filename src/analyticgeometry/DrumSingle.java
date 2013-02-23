@@ -32,4 +32,9 @@ public class DrumSingle {
 	public PVector center(){
 		return vectorCenter;
 	}	
+	
+	public float distance(){
+		float distance = vectorStart.dist(vectorEnde) /2;		
+		return distance;
+	}
 }

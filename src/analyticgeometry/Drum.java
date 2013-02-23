@@ -20,7 +20,8 @@ public class Drum implements KinectInstrument {
 
 	private boolean fredValue = false;
 
-	public Drum(float _myNumberOfDrums, float _myDrumSpace, float _myDrumWidth, float myDrumHeight, PApplet p, Midi midi) {
+	public Drum(float _myNumberOfDrums, float _myDrumSpace, float _myDrumWidth, float myDrumHeight,
+			PApplet p, Midi midi) {
 		super();
 		this._myNumberOfDrums = _myNumberOfDrums;
 		this._myDrumSpace = _myDrumSpace + _myDrumWidth;
@@ -69,6 +70,7 @@ public class Drum implements KinectInstrument {
 			PVector translation = new PVector(ov.x, ov.y);
 			translation.mult(myDrum.padding * _myDrumSpace);
 
+			// Verschiebungsvektor 2 vom COM
 			PVector translation2 = new PVector(ov.x, ov.y);
 			translation2.mult((myDrum.padding * _myDrumSpace) - _myDrumWidth / 2);
 
@@ -79,18 +81,25 @@ public class Drum implements KinectInstrument {
 			myDrum.end().set(fredPos);
 			myDrum.end().add(translation);
 
+			// Mittelvector
 			myDrum.center().set(neckPos);
 			myDrum.center().add(translation2);
 		}
 	}
 
 	public void checkFredMatch(Player player) {
-		PVector v2 = player.getHandRightAbsolute().get();
+		PVector v1 = player.getHandRightAbsolute().get();
+		PVector v2 = player.getHandLeftAbsolute().get();
+
+		PVector v3 = player.getHandLeftAbsolute().get();
+
+		v1.normalize();
 		v2.normalize();
 
 		for (DrumSingle myDrum : _myDrums) {
 			// Vektor von Center of Vector zu Ende/Start
-			PVector rv2 = new PVector(myDrum.start().x - myDrum.center().x, myDrum.start().y - myDrum.center().y);
+			PVector rv2 = new PVector(myDrum.start().x - myDrum.center().x, myDrum.start().y
+					- myDrum.center().y);
 			rv2.normalize();
 
 			// Orthogonaler Vektor zum RV2
@@ -100,23 +109,27 @@ public class Drum implements KinectInstrument {
 
 			float dotProduct = v2.dot(ov2);
 			int neckValue = 0;
-			// Crap
-			if (myDrum.dotProduct < 0 && dotProduct > 0) {
-				// System.out.println("pass");
-				fredValue = true;
-				System.out.println("hit up - Neck" + neckValue);
-				midi.playMidi(myDrum.id, neckValue, true);
 
-			} else if (myDrum.dotProduct > 0 && dotProduct < 0) {
-				fredValue = true;
-				midi.playMidi(myDrum.id, neckValue, false);
-				System.out.println("hit down- Neck" + neckValue);
+			// Entfernung berechnen
+			float distance = v3.dist(myDrum.center());
+			float maxDistance = _myDrumSpace / 2;
+
+			if (distance < maxDistance) {
+
+				// Crap
+				if (myDrum.dotProduct < 0 && dotProduct > 0) {
+					fredValue = true;
+					System.out.println("hit up " + myDrum.id);
+					midi.playMidi(myDrum.id, neckValue, true);
+
+				} else if (myDrum.dotProduct > 0 && dotProduct < 0) {
+					fredValue = true;
+					midi.playMidi(myDrum.id, neckValue, false);
+					System.out.println("hit down " + myDrum.id);
+				}
 			}
-
 			// Neues Dot Product Speichern
 			myDrum.dotProduct = dotProduct;
-
-			// System.out.println(dotProduct);
 		}
 
 	}
