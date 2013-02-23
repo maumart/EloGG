@@ -23,7 +23,7 @@ public class Drum implements KinectInstrument {
 	public Drum(float _myNumberOfDrums, float _myDrumSpace, float _myDrumWidth, float myDrumHeight, PApplet p, Midi midi) {
 		super();
 		this._myNumberOfDrums = _myNumberOfDrums;
-		this._myDrumSpace = _myDrumSpace;
+		this._myDrumSpace = _myDrumSpace + _myDrumWidth;
 		this._myDrumWidth = _myDrumWidth;
 		this._myDrumHeight = myDrumHeight;
 
@@ -47,7 +47,7 @@ public class Drum implements KinectInstrument {
 	public void update(Player player) {
 		PVector v3 = player.neck.get();
 
-		// Richtungsvektor zu neck
+		// Richtungsvektor zu Neck
 		PVector rv = new PVector(v3.x - player.centerOfMass.x, v3.y - player.centerOfMass.y);
 		rv.normalize();
 
@@ -69,19 +69,18 @@ public class Drum implements KinectInstrument {
 			PVector translation = new PVector(ov.x, ov.y);
 			translation.mult(myDrum.padding * _myDrumSpace);
 
+			PVector translation2 = new PVector(ov.x, ov.y);
+			translation2.mult((myDrum.padding * _myDrumSpace) - _myDrumWidth / 2);
+
 			// Start und Ende verschieben
 			myDrum.start().set(neckPos);
 			myDrum.start().add(translation);
-			
+
 			myDrum.end().set(fredPos);
 			myDrum.end().add(translation);
 
-			PVector centerofVector = new PVector(myDrum.end().x - myDrum.start().y, myDrum.end().y - myDrum.start().y);
-			centerofVector.sub(myDrum.end());
-
-			myDrum.centerOfVector = centerofVector;
-			// new PVector(myDrum.end().x - myDrum.start().y, myDrum.end().y -
-			// myDrum.start().y);
+			myDrum.center().set(neckPos);
+			myDrum.center().add(translation2);
 		}
 	}
 
@@ -91,8 +90,7 @@ public class Drum implements KinectInstrument {
 
 		for (DrumSingle myDrum : _myDrums) {
 			// Vektor von Center of Vector zu Ende/Start
-			PVector rv2 = new PVector(myDrum.start().x - myDrum.centerOfVector.x, myDrum.start().y
-					- myDrum.centerOfVector.y);
+			PVector rv2 = new PVector(myDrum.start().x - myDrum.center().x, myDrum.start().y - myDrum.center().y);
 			rv2.normalize();
 
 			// Orthogonaler Vektor zum RV2
@@ -145,11 +143,11 @@ public class Drum implements KinectInstrument {
 			// myString.end().y);
 			p.line(myDrum.start().x, myDrum.start().y, myDrum.end().x, myDrum.end().y);
 			p.rect(myDrum.start().x, myDrum.start().y, _myDrumWidth, _myDrumHeight);
-			p.ellipse(myDrum.centerOfVector.x, myDrum.centerOfVector.y, 20, 20);
+			p.ellipse(myDrum.center().x, myDrum.center().y, 20, 20);
 
 			// End and Start Vectors
-			p.ellipse(myDrum.start().x, myDrum.start().y, 20, 20);
-			p.ellipse(myDrum.end().x, myDrum.end().y, 20, 20);
+			// p.ellipse(myDrum.start().x, myDrum.start().y, 20, 20);
+			// p.ellipse(myDrum.end().x, myDrum.end().y, 20, 20);
 		}
 
 		// Draw Player

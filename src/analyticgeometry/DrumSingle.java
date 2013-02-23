@@ -5,7 +5,7 @@ import processing.core.PVector;
 public class DrumSingle {
 	private PVector vectorStart;
 	private PVector vectorEnde;
-	public PVector centerOfVector; 
+	private PVector vectorCenter; 
 	
 	public int	id;	
 	
@@ -16,6 +16,7 @@ public class DrumSingle {
 		super();
 		this.vectorStart = new PVector();
 		this.vectorEnde = new PVector();
+		this.vectorCenter = new PVector();
 		this.padding = padding;
 		this.id = id;
 	}
@@ -26,7 +27,9 @@ public class DrumSingle {
 	
 	public PVector end(){
 		return vectorEnde;
-	}	
+	}
 	
-
+	public PVector center(){
+		return vectorCenter;
+	}	
 }

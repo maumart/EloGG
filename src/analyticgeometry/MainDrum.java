@@ -16,7 +16,7 @@ public class MainDrum extends PApplet {
 	private boolean kinectReady = false;
 
 	public void setup() {
-		// Processing Stuff
+		// Processing Stuff´
 		size(640, 480);
 		frameRate(60);
 		smooth();
@@ -29,7 +29,7 @@ public class MainDrum extends PApplet {
 		// Kinect
 		k = new KinectData();
 
-		context = new SimpleOpenNI(this);
+		context = new SimpleOpenNI(this, SimpleOpenNI.RUN_MODE_SINGLE_THREADED);
 		context.openFileRecording("drum.oni");
 		context.seekPlayer(10, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableDepth();
@@ -43,7 +43,7 @@ public class MainDrum extends PApplet {
 		midi = new Midi(this);
 
 		// Instrument
-		instrument = new Drum(5, 120, 80, 60,this, midi);		
+		instrument = new Drum(5, 40, 80, 80, this, midi);
 	}
 
 	public void draw() {
@@ -55,7 +55,7 @@ public class MainDrum extends PApplet {
 		image(context.rgbImage(), 0, 0);
 
 		// Userdaten updaten
-		getuserLimbs();		
+		getuserLimbs();
 
 		if (kinectReady) {
 
@@ -67,7 +67,7 @@ public class MainDrum extends PApplet {
 			instrument.update(p);
 			instrument.draw(p);
 			instrument.checkFredMatch(p);
-			//instrument.checkNeckMatch(p);
+			// instrument.checkNeckMatch(p);
 			// instrument.checkHeadFred();
 
 			popMatrix();
@@ -154,7 +154,7 @@ public class MainDrum extends PApplet {
 
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_ELBOW, elbowRight);
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER, shoulderRight);
-				
+
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_NECK, neck);
 
 				context.getCoM(userList[i], centerOfMass);
