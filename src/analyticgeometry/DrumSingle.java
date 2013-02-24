@@ -8,9 +8,11 @@ public class DrumSingle {
 	private PVector vectorCenter;
 
 	public int id;
-
 	public float padding;
 	public float dotProduct = 1;
+	
+	public float dotProductLeft = 1;
+	public float dotProductRight = 1;
 
 	public DrumSingle(float padding, int id) {
 		super();

@@ -98,31 +98,58 @@ public class Drum implements KinectInstrument {
 
 		for (DrumSingle myDrum : _myDrums) {
 
-			//PVector rv = myDrum.rv(true);
+			// PVector rv = myDrum.rv(true);
 			PVector ov = myDrum.ov(true);
 
-			// Dot Product
-			float dotProduct = v2.dot(ov);
+			// Collision detection
+			checkCollision(v2, v3, myDrum, true);
+			checkCollision(v1, v4, myDrum, false);
+		}
 
-			// Entfernung berechnen
-			float distance = v3.dist(myDrum.center());
-			float maxDistance = _myDrumSpace / 2;
+	}
 
-			if (distance <= maxDistance) {
-				// Crap
-				if (myDrum.dotProduct < 0 && dotProduct > 0) {
+	private void checkCollision(PVector handAbsolute, PVector hand, DrumSingle myDrum, boolean left) {
+		PVector ov = myDrum.ov(true);
+
+		// Dot Product
+		float dotProduct = handAbsolute.dot(ov);
+
+		// Entfernung berechnen
+		float distance = hand.dist(myDrum.center());
+		float maxDistance = _myDrumSpace / 2;
+
+		if (distance <= maxDistance) {
+			// Crap
+			if (left) {
+				if (myDrum.dotProductLeft < 0 && dotProduct > 0) {
 
 					System.out.println("hit up " + myDrum.id);
 					midi.playMidi(myDrum.id, myDrum.id, true);
 
-				} else if (myDrum.dotProduct > 0 && dotProduct < 0) {
+				} else if (myDrum.dotProductLeft > 0 && dotProduct < 0) {
+
+					midi.playMidi(myDrum.id, myDrum.id, false);
+					System.out.println("hit down " + myDrum.id);
+				}
+			} else {
+				if (myDrum.dotProductRight < 0 && dotProduct > 0) {
+
+					System.out.println("hit up " + myDrum.id);
+					midi.playMidi(myDrum.id, myDrum.id, true);
+
+				} else if (myDrum.dotProductRight > 0 && dotProduct < 0) {
 
 					midi.playMidi(myDrum.id, myDrum.id, false);
 					System.out.println("hit down " + myDrum.id);
 				}
 			}
-			// Neues Dot Product Speichern
-			myDrum.dotProduct = dotProduct;
+
+		}
+		// Neues Dot Product Speichern
+		if (left) {
+			myDrum.dotProductLeft = dotProduct;
+		} else {
+			myDrum.dotProductRight = dotProduct;
 		}
 
 	}
