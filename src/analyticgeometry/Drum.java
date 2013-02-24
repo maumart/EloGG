@@ -18,8 +18,6 @@ public class Drum implements KinectInstrument {
 	public boolean debug = true;
 	private Midi midi;
 
-	private boolean fredValue = false;
-
 	public Drum(float _myNumberOfDrums, float _myDrumSpace, float _myDrumWidth, float myDrumHeight,
 			PApplet p, Midi midi) {
 		super();
@@ -99,33 +97,27 @@ public class Drum implements KinectInstrument {
 		v2.normalize();
 
 		for (DrumSingle myDrum : _myDrums) {
-			// Vektor von Center of Vector zu Ende/Start
-			PVector rv = new PVector(myDrum.start().x - myDrum.center().x, myDrum.start().y
-					- myDrum.center().y);
-			rv.normalize();
 
-			// Orthogonaler Vektor zum Richtungsvektor
-			PVector ov = new PVector(rv.y, -rv.x);
-			ov.normalize();
+			//PVector rv = myDrum.rv(true);
+			PVector ov = myDrum.ov(true);
 
 			// Dot Product
 			float dotProduct = v2.dot(ov);
-			int neckValue = myDrum.id;
 
 			// Entfernung berechnen
 			float distance = v3.dist(myDrum.center());
 			float maxDistance = _myDrumSpace / 2;
 
-			if (distance < maxDistance) {
+			if (distance <= maxDistance) {
 				// Crap
 				if (myDrum.dotProduct < 0 && dotProduct > 0) {
-					fredValue = true;
+
 					System.out.println("hit up " + myDrum.id);
-					midi.playMidi(myDrum.id, neckValue, true);
+					midi.playMidi(myDrum.id, myDrum.id, true);
 
 				} else if (myDrum.dotProduct > 0 && dotProduct < 0) {
-					fredValue = true;
-					midi.playMidi(myDrum.id, neckValue, false);
+
+					midi.playMidi(myDrum.id, myDrum.id, false);
 					System.out.println("hit down " + myDrum.id);
 				}
 			}
@@ -152,7 +144,7 @@ public class Drum implements KinectInstrument {
 		p.fill(255, 0, 255, 125);
 
 		for (DrumSingle myDrum : _myDrums) {
-			
+
 			// Line Check
 			// p.line(myDrum.start().x, myDrum.start().y, myDrum.end().x,
 			// myDrum.end().y);
@@ -172,5 +164,4 @@ public class Drum implements KinectInstrument {
 		// 10);
 		p.ellipse(player.getHandRightAbsolute().x, player.getHandRightAbsolute().y, 10, 10);
 	}
-
 }
