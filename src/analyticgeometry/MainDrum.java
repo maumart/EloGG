@@ -37,6 +37,7 @@ public class MainDrum extends PApplet {
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
 		context.setSmoothingHands(0.5f);
+		context.setSmoothingSkeleton(0.5f);
 		context.mirror();
 
 		// Midi

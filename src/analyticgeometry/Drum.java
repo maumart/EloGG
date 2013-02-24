@@ -54,6 +54,8 @@ public class Drum implements KinectInstrument {
 		// Ortsvektor -> Orthogonal zu RV
 		PVector ov = new PVector(rv.y, -rv.x);
 		ov.normalize();
+		
+		//ov = new PVector(-1f,0);
 
 		// Position des Necks
 		PVector neckPos = ov.get();
@@ -87,8 +89,8 @@ public class Drum implements KinectInstrument {
 	}
 
 	public void checkFredMatch(Player player) {
-		PVector v1 = player.getHandRightAbsolute().get();
-		PVector v2 = player.getHandLeftAbsolute().get();
+		PVector v1 = player.getHandLeftAbsolute().get();
+		PVector v2 = player.getHandRightAbsolute().get();
 
 		PVector v3 = player.getHandLeftAbsolute().get();
 		PVector v4 = player.getHandRightAbsolute().get();
@@ -102,8 +104,8 @@ public class Drum implements KinectInstrument {
 			PVector ov = myDrum.ov(true);
 
 			// Collision detection
-			checkCollision(v2, v3, myDrum, true);
-			checkCollision(v1, v4, myDrum, false);
+			checkCollision(v1, v3, myDrum, true);
+			checkCollision(v2, v4, myDrum, false);
 		}
 
 	}
@@ -145,7 +147,7 @@ public class Drum implements KinectInstrument {
 			}
 
 		}
-		// Neues Dot Product Speichern
+		// Neues Dot Product speichern
 		if (left) {
 			myDrum.dotProductLeft = dotProduct;
 		} else {
@@ -169,6 +171,7 @@ public class Drum implements KinectInstrument {
 	public void draw(Player player) {
 		p.noStroke();
 		p.fill(255, 0, 255, 125);
+		int size = 10;
 
 		for (DrumSingle myDrum : _myDrums) {
 
@@ -177,7 +180,7 @@ public class Drum implements KinectInstrument {
 			// myDrum.end().y);
 
 			p.rect(myDrum.start().x, myDrum.start().y, _myDrumWidth, _myDrumHeight);
-			p.ellipse(myDrum.center().x, myDrum.center().y, 10, 10);
+			p.ellipse(myDrum.center().x, myDrum.center().y, size, size);
 
 			// End and Start Vectors
 			// p.ellipse(myDrum.start().x, myDrum.start().y, 20, 20);
@@ -187,8 +190,7 @@ public class Drum implements KinectInstrument {
 		p.fill(255);
 
 		// Draw Player Hands
-		// p.ellipse(player.getHandLeftAbsolute().x,player.getHandLeftAbsolute().y,10,
-		// 10);
-		p.ellipse(player.getHandRightAbsolute().x, player.getHandRightAbsolute().y, 10, 10);
+		p.ellipse(player.getHandLeftAbsolute().x, player.getHandLeftAbsolute().y, size, size);
+		p.ellipse(player.getHandRightAbsolute().x, player.getHandRightAbsolute().y, size, size);
 	}
 }
