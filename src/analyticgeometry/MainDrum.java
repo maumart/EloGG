@@ -31,7 +31,7 @@ public class MainDrum extends PApplet {
 
 		context = new SimpleOpenNI(this, SimpleOpenNI.RUN_MODE_SINGLE_THREADED);
 		context.openFileRecording("drum3.oni");
-		context.seekPlayer(150, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context.seekPlayer(10, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableDepth();
 		context.enableRGB();
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
@@ -43,11 +43,13 @@ public class MainDrum extends PApplet {
 		midi = new Midi(this);
 
 		// Instrument
-		int InstrumentMargin = 40;
-		int InstrumentWidth = 150;
-		int InstrumentHeight = 120;
+		int InstrumentNumber = 5;
+		int InstrumentMargin = 20;
+		int InstrumentWidth = 100;
+		int InstrumentHeight = 60;
 
-		instrument = new Drum(4, InstrumentMargin, InstrumentWidth, InstrumentHeight, this, midi);
+		instrument = new Drum(InstrumentNumber, InstrumentMargin, InstrumentWidth,
+				InstrumentHeight, this, midi);
 	}
 
 	public void draw() {

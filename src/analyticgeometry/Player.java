@@ -110,6 +110,12 @@ public class Player {
 				
 		return newVector;
 	}
+	
+	public PVector getCenterOfTorso(){
+		PVector newVector = new PVector();
+		
+		return newVector;
+	}
 
 	public int armLegth() {
 		int armLengthDefault = 200;

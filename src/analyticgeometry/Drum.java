@@ -31,6 +31,7 @@ public class Drum implements KinectInstrument {
 		this.p = p;
 		this.midi = midi;
 
+		// Drums erstellen
 		generateDrums(_myNumberOfDrums);
 	}
 
@@ -92,30 +93,30 @@ public class Drum implements KinectInstrument {
 		PVector v2 = player.getHandLeftAbsolute().get();
 
 		PVector v3 = player.getHandLeftAbsolute().get();
+		PVector v4 = player.getHandRightAbsolute().get();
 
 		v1.normalize();
 		v2.normalize();
 
 		for (DrumSingle myDrum : _myDrums) {
 			// Vektor von Center of Vector zu Ende/Start
-			PVector rv2 = new PVector(myDrum.start().x - myDrum.center().x, myDrum.start().y
+			PVector rv = new PVector(myDrum.start().x - myDrum.center().x, myDrum.start().y
 					- myDrum.center().y);
-			rv2.normalize();
+			rv.normalize();
 
-			// Orthogonaler Vektor zum RV2
-			PVector ov2 = new PVector(rv2.y, -rv2.x);
-			ov2.normalize();
-			// ov2.mult(60f);
+			// Orthogonaler Vektor zum Richtungsvektor
+			PVector ov = new PVector(rv.y, -rv.x);
+			ov.normalize();
 
-			float dotProduct = v2.dot(ov2);
-			int neckValue = 0;
+			// Dot Product
+			float dotProduct = v2.dot(ov);
+			int neckValue = myDrum.id;
 
 			// Entfernung berechnen
 			float distance = v3.dist(myDrum.center());
 			float maxDistance = _myDrumSpace / 2;
 
 			if (distance < maxDistance) {
-
 				// Crap
 				if (myDrum.dotProduct < 0 && dotProduct > 0) {
 					fredValue = true;
@@ -147,23 +148,26 @@ public class Drum implements KinectInstrument {
 	}
 
 	public void draw(Player player) {
-		p.stroke(255, 0, 255);
-		p.strokeWeight(2);
+		p.noStroke();
+		p.fill(255, 0, 255, 125);
 
 		for (DrumSingle myDrum : _myDrums) {
-			p.stroke(0, 255, 255);
-			// p.line(myString.start().x, myString.start().y, myString.end().x,
-			// myString.end().y);
-			p.line(myDrum.start().x, myDrum.start().y, myDrum.end().x, myDrum.end().y);
+			
+			// Line Check
+			// p.line(myDrum.start().x, myDrum.start().y, myDrum.end().x,
+			// myDrum.end().y);
+
 			p.rect(myDrum.start().x, myDrum.start().y, _myDrumWidth, _myDrumHeight);
-			p.ellipse(myDrum.center().x, myDrum.center().y, 20, 20);
+			p.ellipse(myDrum.center().x, myDrum.center().y, 10, 10);
 
 			// End and Start Vectors
 			// p.ellipse(myDrum.start().x, myDrum.start().y, 20, 20);
 			// p.ellipse(myDrum.end().x, myDrum.end().y, 20, 20);
 		}
 
-		// Draw Player
+		p.fill(255);
+
+		// Draw Player Hands
 		// p.ellipse(player.getHandLeftAbsolute().x,player.getHandLeftAbsolute().y,10,
 		// 10);
 		p.ellipse(player.getHandRightAbsolute().x, player.getHandRightAbsolute().y, 10, 10);
