@@ -1,21 +1,22 @@
 package analyticgeometry;
 
-import SimpleOpenNI.SimpleOpenNI;
 import processing.core.PApplet;
 import processing.core.PVector;
+import SimpleOpenNI.SimpleOpenNI;
 
-public class MainDrum extends PApplet {
+public class MainContrabass extends PApplet {
 	private Player p;
 	private KinectData k;
 	private KinectInstrument instrument;
 	private Midi midi;
+
 	private SimpleOpenNI context;
-	
 	private boolean autoCalib = true;
+
 	private boolean kinectReady = false;
 
 	public void setup() {
-		// Processing Stuff´
+		// Processing Stuff
 		size(640, 480);
 		frameRate(60);
 		smooth();
@@ -28,28 +29,20 @@ public class MainDrum extends PApplet {
 		// Kinect
 		k = new KinectData();
 
-		context = new SimpleOpenNI(this, SimpleOpenNI.RUN_MODE_SINGLE_THREADED);
-		context.openFileRecording("drum3.oni");
-		context.seekPlayer(10, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context = new SimpleOpenNI(this);
+		context.openFileRecording("contrabass.oni");
+		context.seekPlayer(100, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableDepth();
 		context.enableRGB();
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
-		context.setSmoothingHands(0.5f);
-		context.setSmoothingSkeleton(0.5f);
+		// context.setSmoothingHands(0.5f);
 		context.mirror();
 
 		// Midi
 		midi = new Midi(this);
 
-		// Instrument
-		int InstrumentNumber = 5;
-		int InstrumentMargin = 20;
-		int InstrumentWidth = 100;
-		int InstrumentHeight = 60;
-
-		instrument = new Drum(InstrumentNumber, InstrumentMargin, InstrumentWidth,
-				InstrumentHeight, this, midi);
+		instrument = new Guitar(1, 70, 300, 100, this, midi, 5);
 	}
 
 	public void draw() {
@@ -74,7 +67,7 @@ public class MainDrum extends PApplet {
 			instrument.update(p);
 			instrument.draw(p);
 			instrument.checkFredMatch(p);
-			// instrument.checkNeckMatch(p);
+			instrument.checkNeckMatch(p);
 			// instrument.checkHeadFred();
 
 			popMatrix();
@@ -147,7 +140,9 @@ public class MainDrum extends PApplet {
 
 				PVector elbowRight = new PVector();
 				PVector shoulderRight = new PVector();
-				PVector neck = new PVector();
+
+				PVector hipLeft = new PVector();
+				PVector hipRight = new PVector();
 
 				// Get joints
 				// context.getJointPositionSkeleton(userList[i],
@@ -166,7 +161,10 @@ public class MainDrum extends PApplet {
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_SHOULDER,
 						shoulderRight);
 
-				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_NECK, neck);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_TORSO, centerOfMass);
+
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HIP, hipLeft);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HIP, hipRight);
 
 				context.getCoM(userList[i], centerOfMass);
 
@@ -176,12 +174,23 @@ public class MainDrum extends PApplet {
 				context.convertRealWorldToProjective(handRight, handRight);
 				context.convertRealWorldToProjective(elbowRight, elbowRight);
 				context.convertRealWorldToProjective(shoulderRight, shoulderRight);
-				context.convertRealWorldToProjective(neck, neck);
+
+				context.convertRealWorldToProjective(hipLeft, hipLeft);
+				context.convertRealWorldToProjective(hipRight, hipRight);
+
+				// Temp new Torso
+				PVector tv = new PVector(hipLeft.x - hipRight.x, hipLeft.y - hipRight.y);
+				PVector tv2 = new PVector(tv.y, -tv.x);
+				float mult = 1.1f;
+				// tv2.div(1);
+
+				centerOfMass.add(tv);
+				tv2.mult(mult);
+				centerOfMass.add(tv2);
 
 				p.setCOM(centerOfMass);
 				p.setHandRight(handRight);
 				p.setHandLeft(handLeft);
-				p.setNeck(neck);
 
 				p.setElbow(elbowRight);
 				p.setShoulder(shoulderRight);
