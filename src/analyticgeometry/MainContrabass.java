@@ -42,7 +42,7 @@ public class MainContrabass extends PApplet {
 		// Midi
 		midi = new Midi(this);
 
-		instrument = new Guitar(1, 70, 300, 100, this, midi, 5);
+		instrument = new Contrabass(1, 70, 300, 100, this, midi, 5);
 	}
 
 	public void draw() {
