@@ -210,17 +210,16 @@ public class Contrabass implements KinectInstrument {
 
 	public void draw(Player player) {
 		p.stroke(255, 0, 255);
-		p.strokeWeight(2);
+		p.fill(255, 0, 255, 125);
+
+		int size = 10;
 
 		for (ContrabassString myString : _myStrings) {
-			p.stroke(0, 255, 255);
 			p.line(myString.start().x, myString.start().y, myString.end().x, myString.end().y);
 		}
 
-		// Draw Player
-		// p.ellipse(player.getHandLeftAbsolute().x,player.getHandLeftAbsolute().y,
-		// 10, 10);
-		// p.ellipse(player.getHandRightAbsolute().x,
-		// player.getHandRightAbsolute().y, 10, 10);
+		// Draw Player Hands
+		p.ellipse(player.getHandLeftAbsolute().x, player.getHandLeftAbsolute().y, size, size);
+		p.ellipse(player.getHandRightAbsolute().x, player.getHandRightAbsolute().y, size, size);
 	}
 }

@@ -31,7 +31,7 @@ public class MainContrabass extends PApplet {
 
 		context = new SimpleOpenNI(this);
 		context.openFileRecording("contrabass.oni");
-		context.seekPlayer(100, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context.seekPlayer(10, SimpleOpenNI.PLAYER_SEEK_CUR);
 		context.enableDepth();
 		context.enableRGB();
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
@@ -143,12 +143,8 @@ public class MainContrabass extends PApplet {
 
 				PVector hipLeft = new PVector();
 				PVector hipRight = new PVector();
-
-				// Get joints
-				// context.getJointPositionSkeleton(userList[i],
-				// SimpleOpenNI.SKEL_RIGHT_HAND, handRight);
-				// context.getJointPositionSkeleton(userList[i],
-				// SimpleOpenNI.SKEL_LEFT_HAND, handLeft);
+				
+				PVector neck = new PVector();
 
 				// Switch Hands
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND,
@@ -165,6 +161,8 @@ public class MainContrabass extends PApplet {
 
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HIP, hipLeft);
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HIP, hipRight);
+				
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_NECK, neck);
 
 				context.getCoM(userList[i], centerOfMass);
 
@@ -173,20 +171,19 @@ public class MainContrabass extends PApplet {
 				context.convertRealWorldToProjective(handLeft, handLeft);
 				context.convertRealWorldToProjective(handRight, handRight);
 				context.convertRealWorldToProjective(elbowRight, elbowRight);
-				context.convertRealWorldToProjective(shoulderRight, shoulderRight);
+				context.convertRealWorldToProjective(shoulderRight, shoulderRight);				
 
 				context.convertRealWorldToProjective(hipLeft, hipLeft);
 				context.convertRealWorldToProjective(hipRight, hipRight);
+				
+				context.convertRealWorldToProjective(neck, neck);
 
 				// Temp new Torso
-				PVector tv = new PVector(hipLeft.x - hipRight.x, hipLeft.y - hipRight.y);
-				PVector tv2 = new PVector(tv.y, -tv.x);
-				float mult = 1.1f;
-				// tv2.div(1);
-
-				centerOfMass.add(tv);
-				tv2.mult(mult);
-				centerOfMass.add(tv2);
+				PVector tv = new PVector(centerOfMass.x -neck.x, centerOfMass.y-neck.y);				
+				float mult = 1.5f;
+				
+				tv.mult(mult);
+				centerOfMass.add(tv);				
 
 				p.setCOM(centerOfMass);
 				p.setHandRight(handRight);
