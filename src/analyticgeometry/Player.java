@@ -11,7 +11,7 @@ public class Player {
 	private PVector elbowRight;
 	private PVector shoulderLeft;
 	private PVector shoulderRight;
-	private PVector head;	
+	private PVector head;
 	private PVector torso;
 
 	private Queue<PVector> GuitarStrum;
@@ -39,8 +39,22 @@ public class Player {
 		this.centerOfMass = centerOfMass;
 	}
 
-	public Player(int id, PVector handLeft, PVector handRight, PVector elbowLeft, PVector elbowRight,
-			PVector shoulderLeft, PVector shoulderRight, PVector head, PVector neck, PVector torso, PVector centerOfMass) {
+	public Player(int id, PVector handLeft, PVector handRight, PVector centerOfMass,
+			PVector shoulderLeft, PVector shoulderRight, PVector elbowLeft, PVector elbowRight) {
+		super();
+		this.id = id;
+		this.handLeft = handLeft;
+		this.handRight = handRight;
+		this.centerOfMass = centerOfMass;
+		this.shoulderLeft = shoulderLeft;
+		this.shoulderRight = shoulderRight;
+		this.elbowLeft = elbowLeft;
+		this.elbowRight = elbowRight;
+	}
+
+	public Player(int id, PVector handLeft, PVector handRight, PVector elbowLeft,
+			PVector elbowRight, PVector shoulderLeft, PVector shoulderRight, PVector head,
+			PVector neck, PVector torso, PVector centerOfMass) {
 		super();
 		this.id = id;
 		this.handLeft = handLeft;
@@ -82,53 +96,84 @@ public class Player {
 	public void setCOM(PVector v) {
 		centerOfMass = v;
 	}
-	
+
 	public void setNeck(PVector v) {
 		neck = v;
 	}
-	
-	public PVector getHandRightAbsolute(){
+
+	public PVector getHandRightAbsolute() {
 		PVector newVector = new PVector();
-		newVector.x = handRight.x-centerOfMass.x;
-		newVector.y = handRight.y-centerOfMass.y;
-				
+		newVector.x = handRight.x - centerOfMass.x;
+		newVector.y = handRight.y - centerOfMass.y;
+
 		return newVector;
 	}
-	
-	public PVector getHandLeftAbsolute(){
+
+	public PVector getHandLeftAbsolute() {
 		PVector newVector = new PVector();
-		newVector.x = handLeft.x-centerOfMass.x;
-		newVector.y = handLeft.y-centerOfMass.y;
-				
+		newVector.x = handLeft.x - centerOfMass.x;
+		newVector.y = handLeft.y - centerOfMass.y;
+
 		return newVector;
 	}
-	
-	public PVector getNeckAbsolute(){
+
+	public PVector getNeckAbsolute() {
 		PVector newVector = new PVector();
-		newVector.x = neck.x-centerOfMass.x;
-		newVector.y = neck.y-centerOfMass.y;
-				
+		newVector.x = neck.x - centerOfMass.x;
+		newVector.y = neck.y - centerOfMass.y;
+
 		return newVector;
 	}
-	
-	public PVector getCenterOfTorso(){
+
+	public PVector getCenterOfTorso() {
 		PVector newVector = new PVector();
-		
+
 		return newVector;
 	}
 
 	public int armLegth() {
 		int armLengthDefault = 200;
-		
+
 		return Math.round(armLengthDefault);
-		
+
 		/*
-		float armLengthCalculated = handLeft.mag() + elbowLeft.mag() + shoulderLeft.mag();
-		if (armLengthCalculated > armLengthDefault) {
-			return Math.round(armLengthCalculated);
-		} else {
-			return Math.round(armLengthDefault);
-		}
-		*/
+		 * float armLengthCalculated = handLeft.mag() + elbowLeft.mag() +
+		 * shoulderLeft.mag(); if (armLengthCalculated > armLengthDefault) {
+		 * return Math.round(armLengthCalculated); } else { return
+		 * Math.round(armLengthDefault); }
+		 */
+	}
+	
+	public void setElbowLeft(PVector v) {
+		elbowLeft = v;
+	}
+
+	public void setShoulderLeft(PVector v) {
+		shoulderLeft = v;
+	}
+
+	
+	public void setShoulderRight(PVector v) {
+		shoulderRight = v;
+	}
+	
+	public void setElbowRight(PVector v) {
+		elbowRight = v;
+	}
+
+	public PVector getElbowLeft() {
+		return elbowLeft;
+	}
+
+	public PVector getShoulderLeft() {
+		return shoulderLeft;
+	}
+
+	public PVector getElbowRight() {
+		return elbowRight;
+	}
+
+	public PVector getShoulderRight() {
+		return shoulderRight;
 	}
 }

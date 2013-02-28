@@ -1,8 +1,9 @@
 package analyticgeometry;
 
-import SimpleOpenNI.SimpleOpenNI;
 import processing.core.PApplet;
 import processing.core.PVector;
+import SimpleOpenNI.SimpleOpenNI;
+import controlP5.ControlP5;
 
 public class MainDrum extends PApplet {
 	private Player p;
@@ -13,6 +14,8 @@ public class MainDrum extends PApplet {
 	
 	private boolean autoCalib = true;
 	private boolean kinectReady = false;
+	
+	private ControlP5 cp5;
 
 	public void setup() {
 		// Processing Stuff´
@@ -145,6 +148,7 @@ public class MainDrum extends PApplet {
 
 				PVector centerOfMass = new PVector();
 
+				PVector elbowLeft = new PVector();
 				PVector elbowRight = new PVector();
 				PVector shoulderRight = new PVector();
 				PVector neck = new PVector();

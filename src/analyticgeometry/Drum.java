@@ -130,8 +130,8 @@ public class Drum implements KinectInstrument {
 
 				} else if (myDrum.dotProductLeft > 0 && dotProduct < 0) {
 
-					midi.playMidi(myDrum.id, myDrum.id, false);
-					System.out.println("hit down " + myDrum.id);
+					//midi.playMidi(myDrum.id, myDrum.id, false);
+					//System.out.println("hit down " + myDrum.id);
 				}
 			} else {
 				if (myDrum.dotProductRight < 0 && dotProduct > 0) {
@@ -141,8 +141,8 @@ public class Drum implements KinectInstrument {
 
 				} else if (myDrum.dotProductRight > 0 && dotProduct < 0) {
 
-					midi.playMidi(myDrum.id, myDrum.id, false);
-					System.out.println("hit down " + myDrum.id);
+					//midi.playMidi(myDrum.id, myDrum.id, false);
+					//System.out.println("hit down " + myDrum.id);
 				}
 			}
 
