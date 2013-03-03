@@ -7,20 +7,20 @@ import processing.core.PVector;
 public class Player {
 	private int id;
 
-	private PVector elbowLeft;
-	private PVector elbowRight;
-	private PVector shoulderLeft;
-	private PVector shoulderRight;
-	private PVector head;
-	private PVector torso;
+	private PVector elbowLeft = new PVector();
+	private PVector elbowRight = new PVector();
+	private PVector shoulderLeft = new PVector();
+	private PVector shoulderRight = new PVector();
+	private PVector head = new PVector();
+	private PVector torso = new PVector();
 
 	private Queue<PVector> GuitarStrum;
 	private Queue<PVector> GuitarHead;
 
-	public PVector handLeft;
-	public PVector handRight;
-	public PVector neck;
-	public PVector centerOfMass;
+	public PVector handLeft = new PVector();
+	public PVector handRight = new PVector();
+	public PVector neck = new PVector();
+	public PVector centerOfMass = new PVector();
 
 	public Player() {
 
@@ -143,7 +143,29 @@ public class Player {
 		 * Math.round(armLengthDefault); }
 		 */
 	}
-	
+
+	public PVector elbowHandLeft() {
+		PVector elbowHandLeft = new PVector(handLeft.x - elbowLeft.x, handLeft.y - elbowLeft.y);
+		return elbowHandLeft;
+	}
+
+	public PVector elbowShoulderLeft() {
+		PVector elbowShoulderLeft = new PVector(shoulderLeft.x - elbowLeft.x, shoulderLeft.y
+				- elbowLeft.y);
+		return elbowShoulderLeft;
+	}
+
+	public PVector elbowHandRight() {
+		PVector elbowHandRight = new PVector(handRight.x - elbowRight.x, handRight.y - elbowRight.y);
+		return elbowHandRight;
+	}
+
+	public PVector elbowShoulderRight() {
+		PVector elbowShoulderRight = new PVector(shoulderRight.x - elbowRight.x, shoulderRight.y
+				- elbowRight.y);
+		return elbowShoulderRight;
+	}
+
 	public void setElbowLeft(PVector v) {
 		elbowLeft = v;
 	}
@@ -152,11 +174,10 @@ public class Player {
 		shoulderLeft = v;
 	}
 
-	
 	public void setShoulderRight(PVector v) {
 		shoulderRight = v;
 	}
-	
+
 	public void setElbowRight(PVector v) {
 		elbowRight = v;
 	}
