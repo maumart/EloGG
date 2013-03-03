@@ -75,25 +75,25 @@ public class MainScreen extends PApplet {
 		int frameRateCharts = (int) frameRate * 20;
 
 		/*
-		 
-		int sizeWidth = 300;
-		int sizeHeight = 150;
-		
-		Chart angleChart = cp5.addChart("Angle").setPosition(50, 50).setSize(sizeWidth, sizeHeight)
-				.setRange(0, 200).setView(Chart.AREA).addDataSet("angle");
-
-		Chart accelerationChart = cp5.addChart("Angle-Acceleration").setPosition(50, 300)
-				.setSize(sizeWidth, sizeHeight).setRange(-90, +90).setView(Chart.LINE)
-				.addDataSet("xacc");
-
-		Chart xavg = cp5.addChart("X-Average").setPosition(50, 550).setSize(sizeWidth, sizeHeight)
-				.setRange(0, this.width).setView(Chart.LINE).addDataSet("xavg");
-
-		charts.put("angle", angleChart);
-		charts.put("xacc", accelerationChart);
-		charts.put("xavg", xavg);
-		
-		*/
+		 * 
+		 * int sizeWidth = 300; int sizeHeight = 150;
+		 * 
+		 * Chart angleChart = cp5.addChart("Angle").setPosition(50,
+		 * 50).setSize(sizeWidth, sizeHeight) .setRange(0,
+		 * 200).setView(Chart.AREA).addDataSet("angle");
+		 * 
+		 * Chart accelerationChart =
+		 * cp5.addChart("Angle-Acceleration").setPosition(50, 300)
+		 * .setSize(sizeWidth, sizeHeight).setRange(-90,
+		 * +90).setView(Chart.LINE) .addDataSet("xacc");
+		 * 
+		 * Chart xavg = cp5.addChart("X-Average").setPosition(50,
+		 * 550).setSize(sizeWidth, sizeHeight) .setRange(0,
+		 * this.width).setView(Chart.LINE).addDataSet("xavg");
+		 * 
+		 * charts.put("angle", angleChart); charts.put("xacc",
+		 * accelerationChart); charts.put("xavg", xavg);
+		 */
 
 		setStuff(frameRateCharts);
 
@@ -330,7 +330,4 @@ public class MainScreen extends PApplet {
 
 	}
 
-	public void test() {
-
-	}
 }

@@ -11,6 +11,7 @@ import SimpleOpenNI.SimpleOpenNI;
 
 import controlP5.Chart;
 import controlP5.ControlP5;
+import controlP5.Textlabel;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PVector;
@@ -22,6 +23,8 @@ public class SecondScreen extends PApplet {
 	private SimpleOpenNI context;
 
 	public boolean kinectReady = false;
+	
+	Textlabel myTextlabelA;
 
 	// Graph
 	private HashMap<String, Chart> charts = new HashMap<>();
@@ -48,8 +51,14 @@ public class SecondScreen extends PApplet {
 		int sizeHeight = 140;
 		int frameRateCharts = (int) frameRate * 50;
 
-		Chart angleChart = cp5.addChart("Angle").setPosition(50, 50).setSize(sizeWidth, sizeHeight)
-				.setRange(0, 200).setView(Chart.AREA).addDataSet("angle");
+		Chart angleChart = cp5.addChart("Angle")
+				.setPosition(50, 50)
+				.setSize(sizeWidth, sizeHeight)
+				.setRange(0, 200)
+				.setView(Chart.AREA)
+				.addDataSet("angle")
+				.setCaptionLabel("Angle")
+				.setColorValueLabel(255);
 
 		Chart accelerationChart = cp5.addChart("Angle-Acceleration").setPosition(50, 250)
 				.setSize(sizeWidth, sizeHeight).setRange(-90, +90).setView(Chart.LINE)
@@ -67,6 +76,13 @@ public class SecondScreen extends PApplet {
 
 		// Set Graphes
 		setStuff(frameRateCharts);
+		
+		myTextlabelA = cp5.addTextlabel("Angle Chart")
+                .setText(angleChart.getLabel())
+                .setPosition(50,50)
+                .setColor(255)                
+                .setFont(createFont("Verdana",16,true))
+                .setColorBackground(0);
 	}
 
 	public void draw() {
