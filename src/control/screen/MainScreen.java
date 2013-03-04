@@ -62,7 +62,7 @@ public class MainScreen extends PApplet {
 		context.enableScene(640, 480, 60);
 		context.setSmoothingHands(0.5f);
 		context.setSmoothingSkeleton(0.5f);
-		context.mirror();
+		//context.mirror();
 
 		// Midi
 		// midi = new Midi(this);
@@ -132,12 +132,9 @@ public class MainScreen extends PApplet {
 					p.getShoulderLeft().y);
 			line(p.getElbowLeft().x, p.getElbowLeft().y, p.handLeft.x, p.handLeft.y);
 
-			/*
-			 * line(p.getElbowRight().x, p.getElbowRight().y,
-			 * p.getShoulderRight().x, p.getShoulderRight().y);
-			 * line(p.getElbowRight().x, p.getElbowRight().y, p.handRight.x,
-			 * p.handRight.y);
-			 */
+			line(p.getElbowRight().x, p.getElbowRight().y,p.getShoulderRight().x, p.getShoulderRight().y);
+			line(p.getElbowRight().x, p.getElbowRight().y, p.handRight.x,p.handRight.y);
+			 
 
 			// Angle
 			// elbowHandLeft.normalize();

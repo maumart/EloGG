@@ -53,47 +53,54 @@ public class SecondScreen extends PApplet {
 		int sizeWidth = 300;
 		int sizeHeight = 150;
 		int frameRateCharts = (int) frameRate * 50;
+		PFont font = createFont("Verdana", 16, true);
 
 		// Charts & Labels
-		Chart angleLeftChart = cp5.addChart("angle Left")
+		Chart angleLeftChart = cp5.addChart("Angle Left")
 				.setPosition(50, 50)
 				.setSize(sizeWidth, sizeHeight)
 				.setRange(0, 200)
 				.setView(Chart.LINE)
 				.addDataSet("angle Left");
 		
-		Textlabel angleLeftLabel = cp5.addTextlabel("Angle Left Chart")
+		Textlabel angleLeftLabel = cp5.addTextlabel("Angle Left Label")
 				.setText(angleLeftChart.getLabel())
 				.setPosition(50, 50).setColor(color(255, 0, 255))
-				.setFont(createFont("Verdana", 16, true))
+				.setFont(font)
 				.setColorBackground(0);
 		
-		Chart accelerationLeftChart = cp5.addChart("angle Left Acceleration")
+		Chart accelerationLeftChart = cp5.addChart("Acceleration Left")
 				.setPosition(50, 250)
 				.setSize(sizeWidth, sizeHeight)
 				.setColorBackground(color(255,0,255))
 				.setRange(-90, +90)
 				.setView(Chart.LINE)
-				.addDataSet("angle Left Acceleration");
+				.addDataSet("acceleration Left");
 		
-		Textlabel accelerationLeftLabel = cp5.addTextlabel("Acceleration Left Chart")
+		Textlabel accelerationLeftLabel = cp5.addTextlabel("Acceleration Left Label")
 				.setText(accelerationLeftChart.getLabel())
 				.setPosition(50, 250).setColor(color(255, 0, 255))
-				.setFont(createFont("Verdana", 16, true))
+				.setFont(font)
 				.setColorBackground(0);		
 		
-		Chart velocityLeftChart = cp5.addChart("angle Left Velocity")
+		Chart velocityLeftChart = cp5.addChart("Velocity Left")
 				.setPosition(50, 450)
 				.setSize(sizeWidth, sizeHeight)
 				.setColorBackground(color(255,0,255))
 				.setRange(-90, +90)
 				.setView(Chart.LINE)
-				.addDataSet("angle Left Velocity");		
+				.addDataSet("velocity Left");	
+		
+		Textlabel velocityLeftLabel = cp5.addTextlabel("Velocity Left Label")
+				.setText(velocityLeftChart.getLabel())
+				.setPosition(50, 450).setColor(color(255, 0, 255))
+				.setFont(font)
+				.setColorBackground(0);		
 
+		// Add to HashMap
 		charts.put("angle Left", angleLeftChart);
-		charts.put("angle Left Acceleration", accelerationLeftChart);
-		charts.put("angle Left Velocity", velocityLeftChart);
-		//charts.put("xavg", xavg);
+		charts.put("acceleration Left", accelerationLeftChart);
+		charts.put("velocity Left", velocityLeftChart);
 
 		// Ques
 		queAngleLeft = new ArrayDeque<Float>(10);
@@ -124,16 +131,19 @@ public class SecondScreen extends PApplet {
 		elbowHandLeft.normalize();
 		elbowShoulderLeft.normalize();
 
-		float dotProduct = elbowHandLeft.dot(elbowShoulderLeft);
-		float angle = (float) Math.acos(dotProduct);
-		angle = degrees(angle);
+		float dotProductLeft = elbowHandLeft.dot(elbowShoulderLeft);
+		
+		float angle = degrees((float) Math.acos(dotProductLeft));
+		float acceleration = calcAcceleration(queAngleLeft, angle);
+		float velocity = calcVelocity(queAcceleration, acceleration);				
 
 		charts.get("angle Left").push("angle Left", angle);
-		charts.get("angle Left Acceleration").push("angle Left Acceleration", calcAcceleration(queAngleLeft, angle));
-		charts.get("angle Left Velocity").push("angle Left Velocity", calcAcceleration(queAngleLeft, angle));
+		charts.get("acceleration Left").push("acceleration Left", acceleration);
+		charts.get("velocity Left").push("velocity Left", velocity);
 
 		// Add Ques
 		queAngleLeft.add(angle);	
+		queAcceleration.add(acceleration);
 
 	}
 
@@ -144,7 +154,6 @@ public class SecondScreen extends PApplet {
 			e.getValue().setColors(e.getKey(), color(255), color(0, 255, 0));
 			e.getValue().setData(e.getKey(), new float[frameRateCharts]);
 		}
-
 	}
 
 	private float calcAcceleration(Deque<Float> queAngle, float curValue) {
@@ -158,13 +167,13 @@ public class SecondScreen extends PApplet {
 	}
 	
 	private float calcVelocity(Deque<Float> queAngle, float curValue) {
-		float acceleration = 0;
+		float velocity = 0;
 
 		if (queAngle.peekLast() != null) {
-			acceleration = queAngle.getLast() - curValue;
+			velocity = queAngle.getLast() - curValue;
 		}
 
-		return acceleration;
+		return velocity;
 	}
 
 }
