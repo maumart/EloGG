@@ -1,9 +1,12 @@
 package control.screen;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
+import com.jogamp.opengl.util.texture.TextureData.Flusher;
 
 import analyticgeometry.Player;
 
@@ -23,13 +26,13 @@ public class SecondScreen extends PApplet {
 	private SimpleOpenNI context;
 
 	public boolean kinectReady = false;
-	
+
 	Textlabel myTextlabelA;
 
 	// Graph
 	private HashMap<String, Chart> charts = new HashMap<>();
-	private Deque<Float> queAngle;
-	private Deque<Integer> queY;
+	private Deque<Float> queAngleLeft;
+	private Deque<Float> queAcceleration;
 
 	private ControlP5 cp5;
 
@@ -47,42 +50,66 @@ public class SecondScreen extends PApplet {
 		// Charts
 		cp5 = new ControlP5(this);
 
-		int sizeWidth = 400;
-		int sizeHeight = 140;
+		int sizeWidth = 300;
+		int sizeHeight = 150;
 		int frameRateCharts = (int) frameRate * 50;
 
-		Chart angleChart = cp5.addChart("Angle")
+		// Charts & Labels
+		Chart angleLeftChart = cp5.addChart("angle Left")
 				.setPosition(50, 50)
 				.setSize(sizeWidth, sizeHeight)
 				.setRange(0, 200)
-				.setView(Chart.AREA)
-				.addDataSet("angle")
-				.setCaptionLabel("Angle")
-				.setColorValueLabel(255);
+				.setView(Chart.LINE)
+				.addDataSet("angle Left");
+		
+		Textlabel angleLeftLabel = cp5.addTextlabel("Angle Left Chart")
+				.setText(angleLeftChart.getLabel())
+				.setPosition(50, 50).setColor(color(255, 0, 255))
+				.setFont(createFont("Verdana", 16, true))
+				.setColorBackground(0);
+		
+		Chart accelerationLeftChart = cp5.addChart("angle Left Acceleration")
+				.setPosition(50, 250)
+				.setSize(sizeWidth, sizeHeight)
+				.setColorBackground(color(255,0,255))
+				.setRange(-90, +90)
+				.setView(Chart.LINE)
+				.addDataSet("angle Left Acceleration");
+		
+		Textlabel accelerationLeftLabel = cp5.addTextlabel("Acceleration Left Chart")
+				.setText(accelerationLeftChart.getLabel())
+				.setPosition(50, 250).setColor(color(255, 0, 255))
+				.setFont(createFont("Verdana", 16, true))
+				.setColorBackground(0);		
+		
+		Chart velocityLeftChart = cp5.addChart("angle Left Velocity")
+				.setPosition(50, 450)
+				.setSize(sizeWidth, sizeHeight)
+				.setColorBackground(color(255,0,255))
+				.setRange(-90, +90)
+				.setView(Chart.LINE)
+				.addDataSet("angle Left Velocity");		
 
-		Chart accelerationChart = cp5.addChart("Angle-Acceleration").setPosition(50, 250)
-				.setSize(sizeWidth, sizeHeight).setRange(-90, +90).setView(Chart.LINE)
-				.addDataSet("xacc");
-
-		Chart xavg = cp5.addChart("X-Average").setPosition(50, 450).setSize(sizeWidth, sizeHeight)
-				.setRange(0, this.width).setView(Chart.LINE).addDataSet("xavg");
-
-		charts.put("angle", angleChart);
-		charts.put("xacc", accelerationChart);
-		charts.put("xavg", xavg);
+		charts.put("angle Left", angleLeftChart);
+		charts.put("angle Left Acceleration", accelerationLeftChart);
+		charts.put("angle Left Velocity", velocityLeftChart);
+		//charts.put("xavg", xavg);
 
 		// Ques
-		queAngle = new ArrayDeque<Float>(10);
+		queAngleLeft = new ArrayDeque<Float>(10);
+		queAcceleration = new ArrayDeque<Float>(10);
 
 		// Set Graphes
 		setStuff(frameRateCharts);
-		
-		myTextlabelA = cp5.addTextlabel("Angle Chart")
-                .setText(angleChart.getLabel())
-                .setPosition(50,50)
-                .setColor(255)                
-                .setFont(createFont("Verdana",16,true))
-                .setColorBackground(0);
+
+		/*
+		myTextlabelA = cp5.addTextlabel("Angle Chart").setText(angleChart.getLabel())
+				.setPosition(50, 50).setColor(color(255, 0, 255))
+				.setFont(createFont("Verdana", 16, true)).setColorBackground(0);
+			*/
+
+		ArrayList t = (ArrayList) cp5.getAll();
+		System.out.println(t.size());
 	}
 
 	public void draw() {
@@ -101,11 +128,12 @@ public class SecondScreen extends PApplet {
 		float angle = (float) Math.acos(dotProduct);
 		angle = degrees(angle);
 
-		charts.get("angle").push("angle", angle);
-		charts.get("xacc").push("xacc", calcAcceleration(queAngle, angle));
+		charts.get("angle Left").push("angle Left", angle);
+		charts.get("angle Left Acceleration").push("angle Left Acceleration", calcAcceleration(queAngleLeft, angle));
+		charts.get("angle Left Velocity").push("angle Left Velocity", calcAcceleration(queAngleLeft, angle));
 
 		// Add Ques
-		queAngle.add(angle);
+		queAngleLeft.add(angle);	
 
 	}
 
@@ -119,13 +147,23 @@ public class SecondScreen extends PApplet {
 
 	}
 
-	private float calcAcceleration(Deque<Float> queAngle2, float curValue) {
+	private float calcAcceleration(Deque<Float> queAngle, float curValue) {
 		float acceleration = 0;
 
-		if (queAngle2.peekLast() != null) {
-			acceleration = queAngle2.getLast() - curValue;
+		if (queAngle.peekLast() != null) {
+			acceleration = queAngle.getLast() - curValue;
 		}
-		// System.out.println(acceleration);
+
+		return acceleration;
+	}
+	
+	private float calcVelocity(Deque<Float> queAngle, float curValue) {
+		float acceleration = 0;
+
+		if (queAngle.peekLast() != null) {
+			acceleration = queAngle.getLast() - curValue;
+		}
+
 		return acceleration;
 	}
 
