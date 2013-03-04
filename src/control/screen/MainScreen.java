@@ -54,15 +54,15 @@ public class MainScreen extends PApplet {
 		k = new KinectData();
 
 		context = new SimpleOpenNI(this, SimpleOpenNI.RUN_MODE_SINGLE_THREADED);
-		context.openFileRecording("smite2.oni");
-		context.seekPlayer(100, SimpleOpenNI.PLAYER_SEEK_CUR);
+		context.openFileRecording("smite1.oni");
+		context.seekPlayer(150, SimpleOpenNI.PLAYER_SEEK_CUR);		
 		context.enableDepth();
 		context.enableRGB();
 		context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
 		context.enableScene(640, 480, 60);
-		context.setSmoothingHands(0.5f);
-		context.setSmoothingSkeleton(0.5f);
-		//context.mirror();
+		context.setSmoothingHands(0.2f);
+		context.setSmoothingSkeleton(0.2f);
+		context.mirror();
 
 		// Midi
 		// midi = new Midi(this);
@@ -114,7 +114,7 @@ public class MainScreen extends PApplet {
 		getuserLimbs();
 
 		// Draw
-		strokeWeight(10);
+		strokeWeight(5);
 		stroke(255, 0, 255);
 
 		if (kinectReady) {
@@ -128,13 +128,17 @@ public class MainScreen extends PApplet {
 			PVector elbowShoulderRight = p.elbowShoulderRight();
 
 			// Draw
+
 			line(p.getElbowLeft().x, p.getElbowLeft().y, p.getShoulderLeft().x,
 					p.getShoulderLeft().y);
 			line(p.getElbowLeft().x, p.getElbowLeft().y, p.handLeft.x, p.handLeft.y);
 
-			line(p.getElbowRight().x, p.getElbowRight().y,p.getShoulderRight().x, p.getShoulderRight().y);
-			line(p.getElbowRight().x, p.getElbowRight().y, p.handRight.x,p.handRight.y);
-			 
+			stroke(0, 255, 0);
+			line(p.getElbowRight().x, p.getElbowRight().y, p.getShoulderRight().x,
+					p.getShoulderRight().y);
+			line(p.getElbowRight().x, p.getElbowRight().y, p.handRight.x, p.handRight.y);
+
+			// System.out.println(p.getShoulderLeft().equals(p.getShoulderRight()));
 
 			// Angle
 			// elbowHandLeft.normalize();
@@ -265,10 +269,9 @@ public class MainScreen extends PApplet {
 				PVector neck = new PVector();
 
 				// Switch Hands
-				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND,
-						handRight);
+				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_HAND, handLeft);
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_RIGHT_HAND,
-						handLeft);
+						handRight);
 
 				context.getJointPositionSkeleton(userList[i], SimpleOpenNI.SKEL_LEFT_ELBOW,
 						elbowLeft);
@@ -300,17 +303,13 @@ public class MainScreen extends PApplet {
 				p.setCOM(centerOfMass);
 				p.setHandRight(handRight);
 				p.setHandLeft(handLeft);
-				p.setNeck(neck);
+				p.setNeck(neck);	
 
-				// p.setElbow(elbowLeft);
-
-				p.setElbowLeft(elbowRight);
-				p.setElbowRight(elbowLeft);
+				p.setElbowLeft(elbowLeft);
+				p.setElbowRight(elbowRight);
 
 				p.setShoulderLeft(shoulderLeft);
-				p.setShoulderRight(shoulderRight);
-
-				p.setShoulder(shoulderRight);
+				p.setShoulderRight(shoulderRight);			
 
 				kinectReady = true;
 			}

@@ -31,8 +31,12 @@ public class SecondScreen extends PApplet {
 
 	// Graph
 	private HashMap<String, Chart> charts = new HashMap<>();
+	
 	private Deque<Float> queAngleLeft;
-	private Deque<Float> queAcceleration;
+	private Deque<Float> queAccelerationLeft;
+
+	private Deque<Float> queAngleRight;
+	private Deque<Float> queAccelerationRight;
 
 	private ControlP5 cp5;
 
@@ -42,20 +46,12 @@ public class SecondScreen extends PApplet {
 		this.height = height;
 		this.player = player;
 	}
-
-	public void setup() {
-		size(width, height);
-		frameRate(60);
-
-		// Charts
-		cp5 = new ControlP5(this);
-
-		int sizeWidth = 300;
-		int sizeHeight = 150;
-		int frameRateCharts = (int) frameRate * 50;
+	
+	private void addLeftControlls(int sizeWidth, int sizeHeight, int frameRateCharts){
+	
 		PFont font = createFont("Verdana", 16, true);
-
-		// Charts & Labels
+		
+		// Charts & Labels Left
 		Chart angleLeftChart = cp5.addChart("Angle Left")
 				.setPosition(50, 50)
 				.setSize(sizeWidth, sizeHeight)
@@ -95,7 +91,7 @@ public class SecondScreen extends PApplet {
 				.setText(velocityLeftChart.getLabel())
 				.setPosition(50, 450).setColor(color(255, 0, 255))
 				.setFont(font)
-				.setColorBackground(0);		
+				.setColorBackground(0);	
 
 		// Add to HashMap
 		charts.put("angle Left", angleLeftChart);
@@ -104,17 +100,87 @@ public class SecondScreen extends PApplet {
 
 		// Ques
 		queAngleLeft = new ArrayDeque<Float>(10);
-		queAcceleration = new ArrayDeque<Float>(10);
+		queAccelerationLeft = new ArrayDeque<Float>(10);
 
 		// Set Graphes
 		setStuff(frameRateCharts);
+	}
+	
+	private void addRightControlls(int sizeWidth, int sizeHeight, int frameRateCharts){
+		
+		PFont font = createFont("Verdana", 16, true);
+		
+		// Charts & Labels Left
+		Chart angleRightChart = cp5.addChart("Angle Right")
+				.setPosition(450, 50)
+				.setSize(sizeWidth, sizeHeight)
+				.setRange(0, 200)
+				.setView(Chart.LINE)
+				.addDataSet("angle Right");
+		
+		Textlabel angleRightLabel = cp5.addTextlabel("Angle Right Label")
+				.setText(angleRightChart.getLabel())
+				.setPosition(450, 50).setColor(color(255, 0, 255))
+				.setFont(font)
+				.setColorBackground(0);
+		
+		Chart accelerationRightChart = cp5.addChart("Acceleration Right")
+				.setPosition(450, 250)
+				.setSize(sizeWidth, sizeHeight)
+				.setColorBackground(color(255,0,255))
+				.setRange(-90, +90)
+				.setView(Chart.LINE)
+				.addDataSet("acceleration Right");
+		
+		Textlabel accelerationRightLabel = cp5.addTextlabel("Acceleration Right Label")
+				.setText(accelerationRightChart.getLabel())
+				.setPosition(450, 250).setColor(color(255, 0, 255))
+				.setFont(font)
+				.setColorBackground(0);		
+		
+		Chart velocityRightChart = cp5.addChart("Velocity Right")
+				.setPosition(450, 450)
+				.setSize(sizeWidth, sizeHeight)
+				.setColorBackground(color(255,0,255))
+				.setRange(-90, +90)
+				.setView(Chart.LINE)
+				.addDataSet("velocity Right");	
+		
+		Textlabel velocityRightLabel = cp5.addTextlabel("Velocity Right Label")
+				.setText(velocityRightChart.getLabel())
+				.setPosition(450, 450).setColor(color(255, 0, 255))
+				.setFont(font)
+				.setColorBackground(0);	
 
-		/*
-		myTextlabelA = cp5.addTextlabel("Angle Chart").setText(angleChart.getLabel())
-				.setPosition(50, 50).setColor(color(255, 0, 255))
-				.setFont(createFont("Verdana", 16, true)).setColorBackground(0);
-			*/
+		// Add to HashMap
+		charts.put("angle Right", angleRightChart);
+		charts.put("acceleration Right", accelerationRightChart);
+		charts.put("velocity Right", velocityRightChart);
 
+		// Ques
+		queAngleRight = new ArrayDeque<Float>(10);
+		queAccelerationRight = new ArrayDeque<Float>(10);
+
+		// Set Graphes
+		setStuff(frameRateCharts);
+	}
+
+	public void setup() {
+		size(width, height);
+		frameRate(60);
+
+		// Charts
+		cp5 = new ControlP5(this);
+		
+		// Settings
+		int sizeWidth = 300;
+		int sizeHeight = 150;
+		int frameRateCharts = (int) frameRate * 50;
+
+		addLeftControlls(sizeWidth,sizeHeight,frameRateCharts);
+		addRightControlls(sizeWidth,sizeHeight,frameRateCharts);
+
+		// Test
 		ArrayList t = (ArrayList) cp5.getAll();
 		System.out.println(t.size());
 	}
@@ -126,24 +192,40 @@ public class SecondScreen extends PApplet {
 		PVector elbowHandRight = player.elbowHandRight().get();
 
 		PVector elbowShoulderLeft = player.elbowShoulderLeft().get();
-		PVector elbowShoulderRight = player.elbowShoulderRight();
+		PVector elbowShoulderRight = player.elbowShoulderRight().get();
 
 		elbowHandLeft.normalize();
 		elbowShoulderLeft.normalize();
+		
+		elbowHandRight.normalize();
+		elbowShoulderRight.normalize();
 
 		float dotProductLeft = elbowHandLeft.dot(elbowShoulderLeft);
+		float dotProductRight = elbowHandRight.dot(elbowShoulderRight);
 		
-		float angle = degrees((float) Math.acos(dotProductLeft));
-		float acceleration = calcAcceleration(queAngleLeft, angle);
-		float velocity = calcVelocity(queAcceleration, acceleration);				
+		float angleLeft = degrees((float) Math.acos(dotProductLeft));
+		float accelerationLeft = calcAcceleration(queAngleLeft, angleLeft);
+		float velocityLeft = calcVelocity(queAccelerationLeft, accelerationLeft);
+		
+		float angleRight = degrees((float) Math.acos(dotProductRight));
+		float accelerationRight = calcAcceleration(queAngleRight, angleRight);
+		float velocityRight = calcVelocity(queAccelerationRight, accelerationRight);
 
-		charts.get("angle Left").push("angle Left", angle);
-		charts.get("acceleration Left").push("acceleration Left", acceleration);
-		charts.get("velocity Left").push("velocity Left", velocity);
+		// Push Values Charts
+		charts.get("angle Left").push("angle Left", angleLeft);
+		charts.get("acceleration Left").push("acceleration Left", accelerationLeft);
+		charts.get("velocity Left").push("velocity Left", velocityLeft);
+		
+		charts.get("angle Right").push("angle Right", angleRight);
+		charts.get("acceleration Right").push("acceleration Right", accelerationRight);
+		charts.get("velocity Right").push("velocity Right", velocityRight);
 
 		// Add Ques
-		queAngleLeft.add(angle);	
-		queAcceleration.add(acceleration);
+		queAngleLeft.add(angleLeft);	
+		queAccelerationLeft.add(accelerationLeft);
+		
+		queAngleRight.add(angleRight);	
+		queAccelerationRight.add(accelerationRight);
 
 	}
 

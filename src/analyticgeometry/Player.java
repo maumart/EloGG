@@ -136,12 +136,6 @@ public class Player {
 
 		return Math.round(armLengthDefault);
 
-		/*
-		 * float armLengthCalculated = handLeft.mag() + elbowLeft.mag() +
-		 * shoulderLeft.mag(); if (armLengthCalculated > armLengthDefault) {
-		 * return Math.round(armLengthCalculated); } else { return
-		 * Math.round(armLengthDefault); }
-		 */
 	}
 
 	public PVector elbowHandLeft() {
@@ -166,16 +160,18 @@ public class Player {
 		return elbowShoulderRight;
 	}
 
-	public void setElbowLeft(PVector v) {
-		elbowLeft = v;
-	}
+	
 
 	public void setShoulderLeft(PVector v) {
-		shoulderLeft = v;
+		shoulderLeft = v.get();
 	}
 
 	public void setShoulderRight(PVector v) {
-		shoulderRight = v;
+		shoulderRight = v.get();
+	}
+	
+	public void setElbowLeft(PVector v) {
+		elbowLeft = v;
 	}
 
 	public void setElbowRight(PVector v) {
