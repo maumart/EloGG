@@ -6,18 +6,14 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.jogamp.opengl.util.texture.TextureData.Flusher;
-
-import analyticgeometry.Player;
-
-import SimpleOpenNI.SimpleOpenNI;
-
-import controlP5.Chart;
-import controlP5.ControlP5;
-import controlP5.Textlabel;
 import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PVector;
+import SimpleOpenNI.SimpleOpenNI;
+import analyticgeometry.Player;
+import controlP5.Chart;
+import controlP5.ControlP5;
+import controlP5.Textlabel;
 
 public class SecondScreen extends PApplet {
 	private int width, height;
@@ -27,16 +23,16 @@ public class SecondScreen extends PApplet {
 
 	public boolean kinectReady = false;
 
-	Textlabel myTextlabelA;
-
 	// Graph
 	private HashMap<String, Chart> charts = new HashMap<>();
 	
 	private Deque<Float> queAngleLeft;
 	private Deque<Float> queAccelerationLeft;
+	private Deque<Float> queVelocityLeft;
 
 	private Deque<Float> queAngleRight;
 	private Deque<Float> queAccelerationRight;
+	private Deque<Float> queVelocityRight;	
 
 	private ControlP5 cp5;
 
@@ -47,11 +43,8 @@ public class SecondScreen extends PApplet {
 		this.player = player;
 	}
 	
-	private void addLeftControlls(int sizeWidth, int sizeHeight, int frameRateCharts){
-	
-		PFont font = createFont("Verdana", 16, true);
-		
-		// Charts & Labels Left
+	private void addLeftControlls(int sizeWidth, int sizeHeight, int frameRateCharts, PFont font){		
+
 		Chart angleLeftChart = cp5.addChart("Angle Left")
 				.setPosition(50, 50)
 				.setSize(sizeWidth, sizeHeight)
@@ -101,16 +94,14 @@ public class SecondScreen extends PApplet {
 		// Ques
 		queAngleLeft = new ArrayDeque<Float>(10);
 		queAccelerationLeft = new ArrayDeque<Float>(10);
+		queVelocityLeft = new ArrayDeque<Float>(10);
 
 		// Set Graphes
 		setStuff(frameRateCharts);
 	}
 	
-	private void addRightControlls(int sizeWidth, int sizeHeight, int frameRateCharts){
-		
-		PFont font = createFont("Verdana", 16, true);
-		
-		// Charts & Labels Left
+	private void addRightControlls(int sizeWidth, int sizeHeight, int frameRateCharts, PFont font){		
+
 		Chart angleRightChart = cp5.addChart("Angle Right")
 				.setPosition(450, 50)
 				.setSize(sizeWidth, sizeHeight)
@@ -160,6 +151,7 @@ public class SecondScreen extends PApplet {
 		// Ques
 		queAngleRight = new ArrayDeque<Float>(10);
 		queAccelerationRight = new ArrayDeque<Float>(10);
+		queVelocityRight = new ArrayDeque<Float>(3);
 
 		// Set Graphes
 		setStuff(frameRateCharts);
@@ -176,23 +168,20 @@ public class SecondScreen extends PApplet {
 		int sizeWidth = 300;
 		int sizeHeight = 150;
 		int frameRateCharts = (int) frameRate * 50;
+		PFont font = createFont("Verdana", 16, true);
 
-		addLeftControlls(sizeWidth,sizeHeight,frameRateCharts);
-		addRightControlls(sizeWidth,sizeHeight,frameRateCharts);
-
-		// Test
-		ArrayList t = (ArrayList) cp5.getAll();
-		System.out.println(t.size());
+		addLeftControlls(sizeWidth,sizeHeight,frameRateCharts,font);
+		addRightControlls(sizeWidth,sizeHeight,frameRateCharts,font);		
 	}
 
 	public void draw() {
 		background(0);
 
-		PVector elbowHandLeft = player.elbowHandLeft().get();
-		PVector elbowHandRight = player.elbowHandRight().get();
+		PVector elbowHandLeft = player.elbowHandLeft();
+		PVector elbowHandRight = player.elbowHandRight();
 
-		PVector elbowShoulderLeft = player.elbowShoulderLeft().get();
-		PVector elbowShoulderRight = player.elbowShoulderRight().get();
+		PVector elbowShoulderLeft = player.elbowShoulderLeft();
+		PVector elbowShoulderRight = player.elbowShoulderRight();
 
 		elbowHandLeft.normalize();
 		elbowShoulderLeft.normalize();
@@ -223,10 +212,15 @@ public class SecondScreen extends PApplet {
 		// Add Ques
 		queAngleLeft.add(angleLeft);	
 		queAccelerationLeft.add(accelerationLeft);
+		queVelocityLeft.add(velocityLeft);
 		
 		queAngleRight.add(angleRight);	
 		queAccelerationRight.add(accelerationRight);
-
+		queVelocityRight.add(velocityRight);
+		
+		//Hit Detection
+		hitDetection(queAngleLeft,queAccelerationLeft, queVelocityLeft, "Left");
+		hitDetection(queAngleRight,queAccelerationRight, queVelocityRight, "Right");
 	}
 
 	private void setStuff(int frameRateCharts) {
@@ -242,20 +236,51 @@ public class SecondScreen extends PApplet {
 		float acceleration = 0;
 
 		if (queAngle.peekLast() != null) {
-			acceleration = queAngle.getLast() - curValue;
+			acceleration = queAngle.getLast() - curValue;			
 		}
-
+		
 		return acceleration;
 	}
 	
-	private float calcVelocity(Deque<Float> queAngle, float curValue) {
+	private float calcVelocity(Deque<Float> queAcceleration, float curValue) {
 		float velocity = 0;
 
-		if (queAngle.peekLast() != null) {
-			velocity = queAngle.getLast() - curValue;
-		}
+		if (queAcceleration.peekLast() != null) {
+			velocity = queAcceleration.getLast() - curValue;
+		}		
 
 		return velocity;
 	}
-
+	
+	private void hitDetection(Deque<Float> queAngle,Deque<Float> queAcceleration, 
+			Deque<Float> queVelocity, String hand ){
+		if (queAngle.peekLast() != null && queAcceleration.peekLast() != null) {
+			
+			float thresholdAngle = 50;
+			float thresholdAcceleration = 10;
+			float thresholdVelocity = -10;
+			
+			if (queAngle.getLast() > thresholdAngle) {
+				
+				if (queAcceleration.getLast() > thresholdAcceleration) {
+				
+					if (queVelocity.getLast() < thresholdVelocity) {
+						System.out.println("Hit " + hand);
+					}					
+				}				
+			}			
+			
+			if (queVelocity.getLast() > 0 && queVelocity.getLast() < 0.5f ) {
+				//System.out.println(queVelocity.getLast());
+			}			
+			
+			if (queAngle.getLast() > thresholdAngle 
+					&& queAcceleration.getLast() > thresholdAcceleration
+						 && queVelocity.getLast() < thresholdVelocity
+							) {				
+					
+			}
+			
+		}		
+	}
 }

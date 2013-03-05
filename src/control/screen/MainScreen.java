@@ -98,7 +98,7 @@ public class MainScreen extends PApplet {
 		setStuff(frameRateCharts);
 
 		mainFrame = new ControlP5(this);
-		SecondScreen controlFrame = addControlFrame("Controll", 1024, 768, p);
+		SecondScreen controlFrame = addControlFrame("Controll", 800, 768, p);
 	}
 
 	public void draw() {
@@ -309,7 +309,7 @@ public class MainScreen extends PApplet {
 				p.setElbowRight(elbowRight);
 
 				p.setShoulderLeft(shoulderLeft);
-				p.setShoulderRight(shoulderRight);			
+				p.setShoulderRight(shoulderRight);		
 
 				kinectReady = true;
 			}

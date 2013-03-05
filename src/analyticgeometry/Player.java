@@ -1,19 +1,19 @@
 package analyticgeometry;
 
+import java.util.Deque;
 import java.util.Queue;
+import java.util.concurrent.DelayQueue;
 
 import processing.core.PVector;
 
 public class Player {
 	private int id;
-
 	private PVector elbowLeft = new PVector();
 	private PVector elbowRight = new PVector();
 	private PVector shoulderLeft = new PVector();
 	private PVector shoulderRight = new PVector();
 	private PVector head = new PVector();
 	private PVector torso = new PVector();
-
 	private Queue<PVector> GuitarStrum;
 	private Queue<PVector> GuitarHead;
 
@@ -160,8 +160,6 @@ public class Player {
 		return elbowShoulderRight;
 	}
 
-	
-
 	public void setShoulderLeft(PVector v) {
 		shoulderLeft = v.get();
 	}
@@ -169,7 +167,7 @@ public class Player {
 	public void setShoulderRight(PVector v) {
 		shoulderRight = v.get();
 	}
-	
+
 	public void setElbowLeft(PVector v) {
 		elbowLeft = v;
 	}
@@ -179,18 +177,19 @@ public class Player {
 	}
 
 	public PVector getElbowLeft() {
-		return elbowLeft;
+		return elbowLeft.get();
 	}
 
 	public PVector getShoulderLeft() {
-		return shoulderLeft;
+		return shoulderLeft.get();
 	}
 
 	public PVector getElbowRight() {
-		return elbowRight;
+		return elbowRight.get();
 	}
 
 	public PVector getShoulderRight() {
-		return shoulderRight;
+		return shoulderRight.get();
 	}
+
 }
