@@ -37,6 +37,8 @@ public class SecondScreen extends PApplet {
 	private Deque<Float> queVelocityRight;	
 	private Deque<Float> quePositionRight;
 	private Deque<Float> queAccelerationPositionRight;
+	
+	private int hitCounter = 0;
 
 	private ControlP5 cp5;
 
@@ -44,7 +46,7 @@ public class SecondScreen extends PApplet {
 		this.p = p;
 		this.width = width;
 		this.height = height;
-		this.player = player;
+		this.player = player;		
 	}
 	
 	private void addLeftControlls(int sizeWidth, int sizeHeight, int frameRateCharts, PFont font){		
@@ -60,24 +62,10 @@ public class SecondScreen extends PApplet {
 				.setText(angleLeftChart.getLabel())
 				.setPosition(50, 20).setColor(color(255, 0, 255))
 				.setFont(font)
-				.setColorBackground(0);
-		
-		Chart accelerationLeftChart = cp5.addChart("Acceleration Left")
-				.setPosition(50, 170)
-				.setSize(sizeWidth, sizeHeight)
-				.setColorBackground(color(255,0,255))
-				.setRange(-90, +90)
-				.setView(Chart.LINE)
-				.addDataSet("acceleration Left");
-		
-		Textlabel accelerationLeftLabel = cp5.addTextlabel("Acceleration Left Label")
-				.setText(accelerationLeftChart.getLabel())
-				.setPosition(50, 170).setColor(color(255, 0, 255))
-				.setFont(font)
-				.setColorBackground(0);		
+				.setColorBackground(0);			
 		
 		Chart velocityLeftChart = cp5.addChart("Velocity Left")
-				.setPosition(50, 320)
+				.setPosition(50, 170)
 				.setSize(sizeWidth, sizeHeight)
 				.setColorBackground(color(255,0,255))
 				.setRange(-90, +90)
@@ -86,9 +74,24 @@ public class SecondScreen extends PApplet {
 		
 		Textlabel velocityLeftLabel = cp5.addTextlabel("Velocity Left Label")
 				.setText(velocityLeftChart.getLabel())
+				.setPosition(50, 170)
+				.setColor(color(255, 0, 255))
+				.setFont(font)
+				.setColorBackground(0);
+		
+		Chart accelerationLeftChart = cp5.addChart("Acceleration Left")
+				.setPosition(50, 320)
+				.setSize(sizeWidth, sizeHeight)
+				.setColorBackground(color(255,0,255))
+				.setRange(-90, +90)
+				.setView(Chart.LINE)
+				.addDataSet("acceleration Left");
+		
+		Textlabel accelerationLeftLabel = cp5.addTextlabel("Acceleration Left Label")
+				.setText(accelerationLeftChart.getLabel())
 				.setPosition(50, 320).setColor(color(255, 0, 255))
 				.setFont(font)
-				.setColorBackground(0);	
+				.setColorBackground(0);		
 		
 		Chart positionLeftChart = cp5.addChart("Position Left")
 				.setPosition(50, 470)
@@ -117,6 +120,14 @@ public class SecondScreen extends PApplet {
 				.setPosition(50, 620).setColor(color(255, 0, 255))
 				.setFont(font)
 				.setColorBackground(0);	
+		
+		Chart hitChart = cp5.addChart("Hit Charts")
+				.setPosition(50, 820)
+				.setSize(sizeWidth, sizeHeight)
+				.setColorBackground(color(255,0,255))
+				.setRange(0, 1.1f)
+				.setView(Chart.LINE)
+				.addDataSet("hit Chart");
 
 		// Add to HashMap
 		charts.put("angle Left", angleLeftChart);
@@ -124,6 +135,7 @@ public class SecondScreen extends PApplet {
 		charts.put("velocity Left", velocityLeftChart);
 		charts.put("position Left", positionLeftChart);
 		charts.put("acceleration Position Left", accelerationPositionLeftChart);
+		charts.put("hit Chart", hitChart);
 
 		// Ques
 		queAngleLeft = new ArrayDeque<Float>(10);
@@ -204,8 +216,7 @@ public class SecondScreen extends PApplet {
 				.setText(accelerationPositionRightChart.getLabel())
 				.setPosition(420, 620).setColor(color(255, 0, 255))
 				.setFont(font)
-				.setColorBackground(0);	
-
+				.setColorBackground(0);
 		
 		// Add to HashMap
 		charts.put("angle Right", angleRightChart);
@@ -234,7 +245,7 @@ public class SecondScreen extends PApplet {
 		// Settings
 		int sizeWidth = 300;
 		int sizeHeight = 130;
-		int frameRateCharts = (int) frameRate * 50;
+		int frameRateCharts = (int) frameRate * 10;
 		PFont font = createFont("Verdana", 16, true);
 
 		addLeftControlls(sizeWidth,sizeHeight,frameRateCharts,font);
@@ -264,16 +275,18 @@ public class SecondScreen extends PApplet {
 		
 		// Left
 		float angleLeft = degrees((float) Math.acos(dotProductLeft));
-		float accelerationLeft = calcAcceleration(queAngleLeft, angleLeft);
-		float velocityLeft = calcVelocity(queAccelerationLeft, accelerationLeft);
 		
+		if (queAccelerationLeft.size() > 0 && angleLeft == queAngleLeft.getLast()) return;
+		
+		float velocityLeft = calcAcceleration(queAngleLeft, angleLeft);
+		float accelerationLeft = calcVelocity(queVelocityLeft, velocityLeft);		
 		float positionLeft = handLeft.y;
 		float accelerationPositionLeft = calcAcceleration(quePositionLeft, positionLeft);
 		
 		// Right
 		float angleRight = degrees((float) Math.acos(dotProductRight));
-		float accelerationRight = calcAcceleration(queAngleRight, angleRight);
-		float velocityRight = calcVelocity(queAccelerationRight, accelerationRight);		
+		float velocityRight = calcAcceleration(queAngleRight, angleRight);
+		float accelerationRight = calcVelocity(queVelocityRight, velocityRight);		
 		
 		float positionRight = handRight.y;
 		float accelerationPositionRight = calcAcceleration(quePositionRight, positionRight);
@@ -285,7 +298,7 @@ public class SecondScreen extends PApplet {
 		charts.get("position Left").push("position Left", positionLeft);
 		charts.get("acceleration Position Left").push("acceleration Position Left",accelerationPositionLeft);
 		
-		
+		// Push Values Charts
 		charts.get("angle Right").push("angle Right", angleRight);
 		charts.get("acceleration Right").push("acceleration Right", accelerationRight);
 		charts.get("velocity Right").push("velocity Right", velocityRight);
@@ -302,10 +315,17 @@ public class SecondScreen extends PApplet {
 		queAccelerationRight.add(accelerationRight);
 		queVelocityRight.add(velocityRight);
 		quePositionRight.add(positionRight);
-		
-		//Hit Detection
-		hitDetection(queAngleLeft,queAccelerationLeft, queVelocityLeft, "Left");
-		hitDetection(queAngleRight,queAccelerationRight, queVelocityRight, "Right");		
+				
+		//Hit Detection		
+		if (hitCounter >= 5) {
+			
+			int leftHit = hitDetection(queAngleLeft,queAccelerationLeft, queVelocityLeft, "Left");			
+			charts.get("hit Chart").push("hit Chart",leftHit);
+			
+			
+			//hitDetection(queAngleRight,queAccelerationRight, queVelocityRight, "Right");
+		}		
+		hitCounter++;
 	}
 
 	private void setStuff(int frameRateCharts) {
@@ -321,8 +341,11 @@ public class SecondScreen extends PApplet {
 		float acceleration = 0;
 
 		if (queAngle.peekLast() != null) {
-			acceleration = queAngle.getLast() - curValue;			
+			//acceleration = queAngle.getLast() - curValue;
+			acceleration = curValue -queAngle.getLast();
 		}
+		
+		//System.out.println(acceleration);
 		
 		return acceleration;
 	}
@@ -331,41 +354,37 @@ public class SecondScreen extends PApplet {
 		float velocity = 0;
 
 		if (queAcceleration.peekLast() != null) {
-			velocity = queAcceleration.getLast() - curValue;
+			//velocity = queAcceleration.getLast() - curValue;
+			velocity = curValue -queAcceleration.getLast();
 		}		
 
 		return velocity;
 	}
 	
-	private void hitDetection(Deque<Float> queAngle,Deque<Float> queAcceleration, 
+	private int hitDetection(Deque<Float> queAngle,Deque<Float> queAcceleration, 
 			Deque<Float> queVelocity, String hand ){
 		if (queAngle.peekLast() != null && queAcceleration.peekLast() != null) {
 			
-			float thresholdAngle = 50;
-			float thresholdAcceleration = 10;
-			float thresholdVelocity = -10;
+			float thresholdAngle = -50;
+			float thresholdVelocity = 20;
+			float thresholdAcceleration = 10;		
 			
-			if (queAngle.getLast() > thresholdAngle) {
+			//if (queAngle.getLast() > thresholdAngle) {
 				
-				if (queAcceleration.getLast() > thresholdAcceleration) {
+				//if (queAcceleration.getLast() > thresholdAcceleration) {
 				
-					if (queVelocity.getLast() < thresholdVelocity) {
-						System.out.println("Hit " + hand);
+					if (queVelocity.getLast() > 0 
+							&& Math.abs(queVelocity.getLast()) > thresholdVelocity) {
+								//&& queAcceleration.getLast() < 0) {						
+												
+						System.out.println("hit");
+						hitCounter = 0;
+						return 1;						
 					}					
-				}				
-			}			
+				//}				
+			//}		
 			
-			if (queVelocity.getLast() > 0 && queVelocity.getLast() < 0.5f ) {
-				//System.out.println(queVelocity.getLast());
-			}			
-			
-			if (queAngle.getLast() > thresholdAngle 
-					&& queAcceleration.getLast() > thresholdAcceleration
-						 && queVelocity.getLast() < thresholdVelocity
-							) {				
-					
-			}
-			
-		}		
+		}
+		return 0;		
 	}
 }
