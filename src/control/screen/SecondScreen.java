@@ -111,6 +111,12 @@ public class SecondScreen extends PApplet {
 				.setRange(-90, 90)
 				.setView(Chart.LINE)
 				.addDataSet("acceleration Position Left");
+		
+		Textlabel accelerationPositionLeftLabel = cp5.addTextlabel("Acceleration Position Left Label")
+				.setText(accelerationPositionLeftChart.getLabel())
+				.setPosition(50, 825).setColor(color(255, 0, 255))
+				.setFont(font)
+				.setColorBackground(0);	
 
 		// Add to HashMap
 		charts.put("angle Left", angleLeftChart);
@@ -193,6 +199,12 @@ public class SecondScreen extends PApplet {
 				.setRange(-90, 90)
 				.setView(Chart.LINE)
 				.addDataSet("acceleration Position Right");
+		
+		Textlabel accelerationPositionRightLabel = cp5.addTextlabel("Acceleration Position Right Label")
+				.setText(accelerationPositionRightChart.getLabel())
+				.setPosition(450, 825).setColor(color(255, 0, 255))
+				.setFont(font)
+				.setColorBackground(0);	
 
 		// Add to HashMap
 		charts.put("angle Right", angleRightChart);
