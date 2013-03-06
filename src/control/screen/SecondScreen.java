@@ -30,11 +30,13 @@ public class SecondScreen extends PApplet {
 	private Deque<Float> queAccelerationLeft;
 	private Deque<Float> queVelocityLeft;
 	private Deque<Float> quePositionLeft;
+	private Deque<Float> queAccelerationPositionLeft;
 
 	private Deque<Float> queAngleRight;
 	private Deque<Float> queAccelerationRight;
 	private Deque<Float> queVelocityRight;	
 	private Deque<Float> quePositionRight;
+	private Deque<Float> queAccelerationPositionRight;
 
 	private ControlP5 cp5;
 
@@ -48,7 +50,7 @@ public class SecondScreen extends PApplet {
 	private void addLeftControlls(int sizeWidth, int sizeHeight, int frameRateCharts, PFont font){		
 
 		Chart angleLeftChart = cp5.addChart("Angle Left")
-				.setPosition(50, 50)
+				.setPosition(50, 25)
 				.setSize(sizeWidth, sizeHeight)
 				.setRange(0, 200)
 				.setView(Chart.LINE)
@@ -56,12 +58,12 @@ public class SecondScreen extends PApplet {
 		
 		Textlabel angleLeftLabel = cp5.addTextlabel("Angle Left Label")
 				.setText(angleLeftChart.getLabel())
-				.setPosition(50, 50).setColor(color(255, 0, 255))
+				.setPosition(50, 25).setColor(color(255, 0, 255))
 				.setFont(font)
 				.setColorBackground(0);
 		
 		Chart accelerationLeftChart = cp5.addChart("Acceleration Left")
-				.setPosition(50, 250)
+				.setPosition(50, 225)
 				.setSize(sizeWidth, sizeHeight)
 				.setColorBackground(color(255,0,255))
 				.setRange(-90, +90)
@@ -70,12 +72,12 @@ public class SecondScreen extends PApplet {
 		
 		Textlabel accelerationLeftLabel = cp5.addTextlabel("Acceleration Left Label")
 				.setText(accelerationLeftChart.getLabel())
-				.setPosition(50, 250).setColor(color(255, 0, 255))
+				.setPosition(50, 225).setColor(color(255, 0, 255))
 				.setFont(font)
 				.setColorBackground(0);		
 		
 		Chart velocityLeftChart = cp5.addChart("Velocity Left")
-				.setPosition(50, 450)
+				.setPosition(50, 425)
 				.setSize(sizeWidth, sizeHeight)
 				.setColorBackground(color(255,0,255))
 				.setRange(-90, +90)
@@ -84,12 +86,12 @@ public class SecondScreen extends PApplet {
 		
 		Textlabel velocityLeftLabel = cp5.addTextlabel("Velocity Left Label")
 				.setText(velocityLeftChart.getLabel())
-				.setPosition(50, 450).setColor(color(255, 0, 255))
+				.setPosition(50, 425).setColor(color(255, 0, 255))
 				.setFont(font)
 				.setColorBackground(0);	
 		
 		Chart positionLeftChart = cp5.addChart("Position Left")
-				.setPosition(50, 650)
+				.setPosition(50, 625)
 				.setSize(sizeWidth, sizeHeight)
 				.setColorBackground(color(255,0,255))
 				.setRange(0, 640)
@@ -98,15 +100,24 @@ public class SecondScreen extends PApplet {
 		
 		Textlabel positionLeftLabel = cp5.addTextlabel("Position Left Label")
 				.setText(positionLeftChart.getLabel())
-				.setPosition(50, 650).setColor(color(255, 0, 255))
+				.setPosition(50, 625).setColor(color(255, 0, 255))
 				.setFont(font)
 				.setColorBackground(0);	
+		
+		Chart accelerationPositionLeftChart = cp5.addChart("Acceleration Position Left")
+				.setPosition(50, 825)
+				.setSize(sizeWidth, sizeHeight)
+				.setColorBackground(color(255,0,255))
+				.setRange(-90, 90)
+				.setView(Chart.LINE)
+				.addDataSet("acceleration Position Left");
 
 		// Add to HashMap
 		charts.put("angle Left", angleLeftChart);
 		charts.put("acceleration Left", accelerationLeftChart);
 		charts.put("velocity Left", velocityLeftChart);
 		charts.put("position Left", positionLeftChart);
+		charts.put("acceleration Position Left", accelerationPositionLeftChart);
 
 		// Ques
 		queAngleLeft = new ArrayDeque<Float>(10);
@@ -121,7 +132,7 @@ public class SecondScreen extends PApplet {
 	private void addRightControlls(int sizeWidth, int sizeHeight, int frameRateCharts, PFont font){		
 
 		Chart angleRightChart = cp5.addChart("Angle Right")
-				.setPosition(450, 50)
+				.setPosition(450, 25)
 				.setSize(sizeWidth, sizeHeight)
 				.setRange(0, 200)
 				.setView(Chart.LINE)
@@ -129,12 +140,12 @@ public class SecondScreen extends PApplet {
 		
 		Textlabel angleRightLabel = cp5.addTextlabel("Angle Right Label")
 				.setText(angleRightChart.getLabel())
-				.setPosition(450, 50).setColor(color(255, 0, 255))
+				.setPosition(450, 25).setColor(color(255, 0, 255))
 				.setFont(font)
 				.setColorBackground(0);
 		
 		Chart accelerationRightChart = cp5.addChart("Acceleration Right")
-				.setPosition(450, 250)
+				.setPosition(450, 225)
 				.setSize(sizeWidth, sizeHeight)
 				.setColorBackground(color(255,0,255))
 				.setRange(-90, +90)
@@ -143,12 +154,12 @@ public class SecondScreen extends PApplet {
 		
 		Textlabel accelerationRightLabel = cp5.addTextlabel("Acceleration Right Label")
 				.setText(accelerationRightChart.getLabel())
-				.setPosition(450, 250).setColor(color(255, 0, 255))
+				.setPosition(450, 225).setColor(color(255, 0, 255))
 				.setFont(font)
 				.setColorBackground(0);		
 		
 		Chart velocityRightChart = cp5.addChart("Velocity Right")
-				.setPosition(450, 450)
+				.setPosition(450, 425)
 				.setSize(sizeWidth, sizeHeight)
 				.setColorBackground(color(255,0,255))
 				.setRange(-90, +90)
@@ -157,12 +168,12 @@ public class SecondScreen extends PApplet {
 		
 		Textlabel velocityRightLabel = cp5.addTextlabel("Velocity Right Label")
 				.setText(velocityRightChart.getLabel())
-				.setPosition(450, 450).setColor(color(255, 0, 255))
+				.setPosition(450, 425).setColor(color(255, 0, 255))
 				.setFont(font)
 				.setColorBackground(0);	
 		
 		Chart positionRightChart = cp5.addChart("Position Right")
-				.setPosition(450, 650)
+				.setPosition(450, 625)
 				.setSize(sizeWidth, sizeHeight)
 				.setColorBackground(color(255,0,255))
 				.setRange(0, 640)
@@ -171,21 +182,30 @@ public class SecondScreen extends PApplet {
 		
 		Textlabel positionLeftLabel = cp5.addTextlabel("Position Right Label")
 				.setText(positionRightChart.getLabel())
-				.setPosition(450, 650).setColor(color(255, 0, 255))
+				.setPosition(450, 625).setColor(color(255, 0, 255))
 				.setFont(font)
 				.setColorBackground(0);	
+		
+		Chart accelerationPositionRightChart = cp5.addChart("Acceleration Position Right")
+				.setPosition(450, 825)
+				.setSize(sizeWidth, sizeHeight)
+				.setColorBackground(color(255,0,255))
+				.setRange(-90, 90)
+				.setView(Chart.LINE)
+				.addDataSet("acceleration Position Right");
 
 		// Add to HashMap
 		charts.put("angle Right", angleRightChart);
 		charts.put("acceleration Right", accelerationRightChart);
 		charts.put("velocity Right", velocityRightChart);
 		charts.put("position Right", positionRightChart);
+		charts.put("acceleration Position Right", accelerationPositionRightChart);
 
 		// Ques
 		queAngleRight = new ArrayDeque<Float>(10);
 		queAccelerationRight = new ArrayDeque<Float>(10);
 		queVelocityRight = new ArrayDeque<Float>(3);
-		quePositionRight = new ArrayDeque<Float>(10);
+		quePositionRight = new ArrayDeque<Float>(10);		
 
 		// Set Graphes
 		setStuff(frameRateCharts);
@@ -229,40 +249,52 @@ public class SecondScreen extends PApplet {
 		float dotProductLeft = elbowHandLeft.dot(elbowShoulderLeft);
 		float dotProductRight = elbowHandRight.dot(elbowShoulderRight);
 		
+		// Left
 		float angleLeft = degrees((float) Math.acos(dotProductLeft));
 		float accelerationLeft = calcAcceleration(queAngleLeft, angleLeft);
 		float velocityLeft = calcVelocity(queAccelerationLeft, accelerationLeft);
 		
+		float positionLeft = handLeft.y;
+		float accelerationPositionLeft = calcAcceleration(quePositionLeft, positionLeft);
+		
+		// Right
 		float angleRight = degrees((float) Math.acos(dotProductRight));
 		float accelerationRight = calcAcceleration(queAngleRight, angleRight);
-		float velocityRight = calcVelocity(queAccelerationRight, accelerationRight);
-				
-		float positionLeft = handLeft.y;
+		float velocityRight = calcVelocity(queAccelerationRight, accelerationRight);		
+		
 		float positionRight = handRight.y;
+		float accelerationPositionRight = calcAcceleration(quePositionRight, positionRight);
 
 		// Push Values Charts
 		charts.get("angle Left").push("angle Left", angleLeft);
 		charts.get("acceleration Left").push("acceleration Left", accelerationLeft);
 		charts.get("velocity Left").push("velocity Left", velocityLeft);
 		charts.get("position Left").push("position Left", positionLeft);
+		charts.get("acceleration Position Left").push("acceleration Position Left",accelerationPositionLeft);
+		
 		
 		charts.get("angle Right").push("angle Right", angleRight);
 		charts.get("acceleration Right").push("acceleration Right", accelerationRight);
 		charts.get("velocity Right").push("velocity Right", velocityRight);
 		charts.get("position Right").push("position Right", positionRight);
+		charts.get("acceleration Position Right").push("acceleration Position Right",accelerationPositionRight);
 
 		// Add Ques
 		queAngleLeft.add(angleLeft);	
 		queAccelerationLeft.add(accelerationLeft);
 		queVelocityLeft.add(velocityLeft);
+		quePositionLeft.add(positionLeft);
 		
 		queAngleRight.add(angleRight);	
 		queAccelerationRight.add(accelerationRight);
 		queVelocityRight.add(velocityRight);
+		quePositionRight.add(positionRight);
 		
 		//Hit Detection
 		hitDetection(queAngleLeft,queAccelerationLeft, queVelocityLeft, "Left");
 		hitDetection(queAngleRight,queAccelerationRight, queVelocityRight, "Right");
+		
+		System.out.println(accelerationPositionLeft);
 	}
 
 	private void setStuff(int frameRateCharts) {
