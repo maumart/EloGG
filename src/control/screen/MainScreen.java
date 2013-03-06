@@ -98,7 +98,7 @@ public class MainScreen extends PApplet {
 		setStuff(frameRateCharts);
 
 		mainFrame = new ControlP5(this);
-		SecondScreen controlFrame = addControlFrame("Controll", 800, 1024, p);
+		SecondScreen controlFrame = addControlFrame("Controll", 768, 800, p);
 	}
 
 	public void draw() {
