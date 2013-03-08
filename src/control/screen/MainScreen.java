@@ -45,7 +45,7 @@ public class MainScreen extends PApplet {
 		// Processing Stuff´
 		size(640, 480);
 		frameRate(60);
-		smooth();
+		//smooth();
 		stroke(255, 0, 255);
 		strokeWeight(2);
 

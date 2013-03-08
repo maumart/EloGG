@@ -15,6 +15,7 @@ public class Test extends PApplet{
 	private TabNavigation nav;
 	
 	public void setup(){
+		size(1024,768);
 		
 		cp = new ControlP5(this);
 		nav = new TabNavigation(cp);
@@ -25,7 +26,8 @@ public class Test extends PApplet{
 		
 	}
 	
-	public void draw(){
+	public void draw(){		
+		background(255);
 		
 	}
 
