@@ -27,7 +27,7 @@ public class Test extends PApplet{
 	}
 	
 	public void draw(){		
-		background(255);
+		background(unhex("BADA55"));
 		
 	}
 
